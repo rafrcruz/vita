@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  quality:
+    name: Lint, typecheck e testes
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      # Valores dummy só para o boot/validação de env nos testes (não conectam a serviços reais).
+      JWT_SECRET: ci-dummy-jwt-secret-com-32-mais-caracteres
+      DATABASE_URL: postgresql://user:pass@localhost:5432/vita?sslmode=require
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+
+  secret-scan:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

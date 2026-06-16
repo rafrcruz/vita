@@ -55,7 +55,7 @@ Monorepo npm workspaces: `apps/web/`, `apps/api/`, `packages/shared/`, `.github/
 - [x] T013 Scaffold do web com Vite + React + TypeScript + Tailwind e roteamento (React Router) em `apps/web/` (`index.html`, `src/main.tsx`, `src/App.tsx`, `tailwind.config.ts`)
 - [x] T014 [P] Configurar PWA mínimo (manifest + service worker) com vite-plugin-pwa em `apps/web/vite.config.ts`
 - [x] T015 [P] Criar API client (fetch para `/api`) e provider do TanStack Query em `apps/web/src/lib/api.ts` e `apps/web/src/lib/queryClient.ts`
-- [ ] T016 Criar `apps/web/vercel.json` com rewrite `/api/:path*` → projeto da API (cookie first-party) e `apps/api/vercel.json` (build serverless). **Dep.: o destino do rewrite depende da URL do projeto Vercel da API (criado em T051); usar a URL definitiva e fechar/validar em US5.** (resolve F1)
+- [x] T016 Criar `apps/web/vercel.json` com rewrite `/api/:path*` → projeto da API (cookie first-party) e `apps/api/vercel.json` (build serverless). **Dep.: o destino do rewrite depende da URL do projeto Vercel da API (criado em T051); usar a URL definitiva e fechar/validar em US5.** (resolve F1)
 
 **Checkpoint**: Fundação pronta — app Express sobe, web shell carrega, web↔api configurados.
 
@@ -166,10 +166,10 @@ Monorepo npm workspaces: `apps/web/`, `apps/api/`, `packages/shared/`, `.github/
 
 ### Implementation for User Story 5
 
-- [ ] T050 [US5] Criar workflow de CI (lint, typecheck, test + **secret-scan com gitleaks**) em `.github/workflows/ci.yml` (resolve C1/SC-003)
-- [ ] T051 [P] [US5] Documentar/automatizar configuração dos 2 projetos Vercel (Root Directory `apps/web` e `apps/api`, env vars) em `docs/deploy.md`
-- [ ] T052 [P] [US5] Documentar/automatizar branch protection com o job de CI como required status check (via `gh` API) em `docs/deploy.md`
-- [ ] T053 [P] [US5] Documentar automação de provisionamento (gh/vercel/neon/sentry CLI e secrets) em `docs/provisioning.md`
+- [x] T050 [US5] Criar workflow de CI (lint, typecheck, test + **secret-scan com gitleaks**) em `.github/workflows/ci.yml` (resolve C1/SC-003)
+- [x] T051 [P] [US5] Documentar/automatizar configuração dos 2 projetos Vercel (Root Directory `apps/web` e `apps/api`, env vars) em `docs/deploy.md`
+- [x] T052 [P] [US5] Documentar/automatizar branch protection com o job de CI como required status check (via `gh` API) em `docs/deploy.md`
+- [x] T053 [P] [US5] Documentar automação de provisionamento (gh/vercel/neon/sentry CLI e secrets) em `docs/provisioning.md`
 
 **Checkpoint**: Todas as user stories independentemente funcionais; pipeline de qualidade/entrega ativo.
 
@@ -179,10 +179,10 @@ Monorepo npm workspaces: `apps/web/`, `apps/api/`, `packages/shared/`, `.github/
 
 **Purpose**: Endurecimento e validação final
 
-- [ ] T054 [P] Endurecer segurança da API (helmet, CORS restrito à origem do web, revisão de flags de cookie `httpOnly`/`Secure`/`SameSite`, **garantir HTTPS-only/redirect e HSTS** — FR-026) em `apps/api/src/app.ts` (resolve C1/FR-026)
-- [ ] T055 [P] Atualizar `README.md` e `quickstart.md` com comandos finais e fluxo de setup
-- [ ] T056 Executar a validação ponta a ponta do `quickstart.md` e registrar resultados
-- [ ] T057 Re-checar conformidade com a Constitution (segurança/privacidade, simplicidade, testes orientados a risco)
+- [x] T054 [P] Endurecer segurança da API (helmet, CORS restrito à origem do web, revisão de flags de cookie `httpOnly`/`Secure`/`SameSite`, **garantir HTTPS-only/redirect e HSTS** — FR-026) em `apps/api/src/app.ts` (resolve C1/FR-026)
+- [x] T055 [P] Atualizar `README.md` e `quickstart.md` com comandos finais e fluxo de setup
+- [x] T056 Executar a validação ponta a ponta do `quickstart.md` e registrar resultados
+- [x] T057 Re-checar conformidade com a Constitution (segurança/privacidade, simplicidade, testes orientados a risco)
 
 ---
 

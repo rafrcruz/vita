@@ -1,5 +1,8 @@
 import express, { type Express } from 'express';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import helmet from 'helmet';
+import { env, isProduction } from './config/env';
 import { httpLogger } from './middleware/logging';
 import { errorHandler, notFoundHandler } from './middleware/error';
 import { healthRouter } from './health/health.route';
@@ -11,7 +14,38 @@ import { docsRouter } from './docs/docs.route';
 export function createApp(): Express {
   const app = express();
 
+  app.set('trust proxy', 1);
   app.disable('x-powered-by');
+
+  app.use((req, res, next) => {
+    const forwardedProto = req.header('x-forwarded-proto');
+    if (isProduction && forwardedProto === 'http') {
+      res.redirect(308, `https://${req.header('host') ?? env.WEB_ORIGIN}${req.originalUrl}`);
+      return;
+    }
+    next();
+  });
+
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      hsts: isProduction
+        ? {
+            maxAge: 15552000,
+            includeSubDomains: true,
+          }
+        : false,
+    })
+  );
+  app.use(
+    cors({
+      origin(origin, callback) {
+        callback(null, !origin || origin === env.WEB_ORIGIN);
+      },
+      credentials: true,
+    })
+  );
+
   app.use(express.json());
   app.use(cookieParser());
   app.use(httpLogger);

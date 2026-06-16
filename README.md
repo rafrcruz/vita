@@ -38,23 +38,59 @@ Em resumo:
 
 ## Estrutura do repositório
 
-```text
-.specify/    # Spec Kit: constituição, templates e specs das features
-.claude/     # Configuração do Claude Code
-```
+O projeto é estruturado como um monorepo utilizando npm workspaces:
 
-> A estrutura de código-fonte (`frontend/`, `backend/`) será adicionada conforme as
-> features forem planejadas e implementadas.
+```text
+apps/
+├── web/                 # Frontend SPA/PWA (React + Vite + Tailwind CSS)
+└── api/                 # Backend Express (Serverless na Vercel)
+packages/
+└── shared/              # Schemas Zod e tipos TypeScript compartilhados
+docs/
+├── deploy.md            # Guia de deploy na Vercel e branch protection
+└── provisioning.md      # Guia de provisionamento de recursos e matriz de segredos
+.specify/                # Spec Kit: constituição, templates e especificações
+specs/
+└── 001-foundation-setup/ # Especificação e plano da fundação técnica
+```
 
 ## Desenvolvimento
 
-> _A configuração de ambiente, scripts e instruções de execução serão documentados
-> conforme o projeto evoluir._
+Para rodar o projeto localmente, siga os passos abaixo:
 
-Variáveis de ambiente sensíveis (credenciais, chaves, tokens) **nunca** devem ser
-versionadas — use arquivos `.env` locais (ignorados pelo Git) a partir de um
-`.env.example`.
+1. **Pré-requisitos**: Certifique-se de ter o Node.js 22.x e o npm instalados.
+2. **Instalação**: Instale as dependências de todos os workspaces na raiz:
+   ```bash
+   npm install
+   ```
+3. **Configuração de ambiente**: Copie o arquivo de exemplo e preencha as variáveis necessárias:
+   ```bash
+   cp .env.example .env
+   ```
+4. **Banco de Dados (Migrations)**: Aplique as migrations no banco Neon:
+   ```bash
+   npm run db:migrate
+   ```
+5. **Execução**: Inicie o servidor de desenvolvimento para o frontend e o backend simultaneamente:
+   ```bash
+   npm run dev
+   ```
+
+### Scripts Disponíveis (raiz)
+
+| Script | Descrição |
+|--------|-----------|
+| `npm run dev` | Inicia o frontend (Vite) e backend (Express) localmente com hot-reload |
+| `npm run build` | Compila o frontend e backend para produção |
+| `npm run lint` | Executa o ESLint em todo o monorepo |
+| `npm run typecheck` | Executa a checagem de tipos do TypeScript |
+| `npm run test` | Executa a suíte de testes com Vitest |
+| `npm run db:generate` | Gera novas migrations a partir do schema Drizzle |
+| `npm run db:migrate` | Executa as migrations pendentes no banco Neon |
+
+Para mais detalhes sobre a validação ponta a ponta e a arquitetura técnica da fundação, consulte o [quickstart.md](file:///c:/projects/vita/specs/001-foundation-setup/quickstart.md).
 
 ## Licença
 
 Ver [LICENSE](LICENSE).
+
