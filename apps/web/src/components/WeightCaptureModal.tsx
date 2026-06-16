@@ -63,7 +63,7 @@ export function WeightCaptureModal({ isOpen, onClose }: WeightCaptureModalProps)
           toastSuccess(`Peso de ${parsedWeight} kg registrado com sucesso!`);
           onClose();
         },
-        onError: (error: any) => {
+        onError: (error: { message?: string }) => {
           toastError(error.message || 'Falha ao salvar registro de peso.');
         },
       }

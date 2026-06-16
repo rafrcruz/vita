@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../lib/auth';
 import { AppShell } from '../components/layout/AppShell';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
+import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -76,7 +74,7 @@ export function History() {
     if (confirm(`Tem certeza de que deseja excluir a medição de peso de ${weight} kg?`)) {
       deleteWeight(id, {
         onSuccess: () => toastSuccess('Registro de peso excluído com sucesso.'),
-        onError: (err: any) => toastError(err.message || 'Erro ao excluir peso.'),
+        onError: (err: { message?: string }) => toastError(err.message || 'Erro ao excluir peso.'),
       });
     }
   };
@@ -86,7 +84,7 @@ export function History() {
     if (confirm(`Excluir a medição de pressão de ${systolic}x${diastolic} mmHg?`)) {
       deleteBP(id, {
         onSuccess: () => toastSuccess('Registro de pressão excluído.'),
-        onError: (err: any) => toastError(err.message || 'Erro ao excluir pressão.'),
+        onError: (err: { message?: string }) => toastError(err.message || 'Erro ao excluir pressão.'),
       });
     }
   };
@@ -117,7 +115,7 @@ export function History() {
           toastSuccess('Registro de peso atualizado!');
           setEditingWeight(null);
         },
-        onError: (err: any) => toastError(err.message || 'Erro ao atualizar peso.'),
+        onError: (err: { message?: string }) => toastError(err.message || 'Erro ao atualizar peso.'),
       }
     );
   };
@@ -154,7 +152,7 @@ export function History() {
           toastSuccess('Registro de pressão atualizado!');
           setEditingBP(null);
         },
-        onError: (err: any) => toastError(err.message || 'Erro ao atualizar pressão.'),
+        onError: (err: { message?: string }) => toastError(err.message || 'Erro ao atualizar pressão.'),
       }
     );
   };

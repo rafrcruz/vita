@@ -143,8 +143,8 @@ export function Home() {
                     <p className="text-xs text-muted-foreground font-medium">Última medição</p>
                     <p className="text-lg font-black tracking-tight">
                       {metric === 'weight'
-                        ? `${(lastEntry as any).weight} kg`
-                        : `${(lastEntry as any).systolic}x${(lastEntry as any).diastolic} mmHg`}
+                        ? `${(lastEntry as { weight: number }).weight} kg`
+                        : `${(lastEntry as { systolic: number; diastolic: number }).systolic}x${(lastEntry as { systolic: number; diastolic: number }).diastolic} mmHg`}
                     </p>
                   </div>
                 </div>

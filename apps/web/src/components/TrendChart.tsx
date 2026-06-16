@@ -7,7 +7,7 @@ interface ChartPoint {
 }
 
 interface TrendChartProps {
-  data: any[];
+  data: { loggedAt: string; weight?: number; systolic?: number; diastolic?: number }[];
   type: 'weight' | 'bp';
 }
 

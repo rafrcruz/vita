@@ -70,7 +70,7 @@ export function BPCaptureModal({ isOpen, onClose }: BPCaptureModalProps) {
           toastSuccess(`Pressão arterial de ${sysNum}x${diaNum} mmHg registrada!`);
           onClose();
         },
-        onError: (error: any) => {
+        onError: (error: { message?: string }) => {
           toastError(error.message || 'Falha ao salvar registro de pressão.');
         },
       }

@@ -15,7 +15,7 @@ export function parseDecimalInput(value: string | number): number | null {
   return isNaN(parsed) ? null : parsed;
 }
 
-export async function createWeightLog(userEmail: string, data: any) {
+export async function createWeightLog(userEmail: string, data: { weight?: unknown; loggedAt?: unknown }) {
   // Handle string input parsing before schema validation
   if (typeof data.weight === 'string') {
     const parsed = parseDecimalInput(data.weight);
@@ -39,7 +39,7 @@ export async function createWeightLog(userEmail: string, data: any) {
   return inserted;
 }
 
-export async function createBPLog(userEmail: string, data: any) {
+export async function createBPLog(userEmail: string, data: { systolic?: unknown; diastolic?: unknown; loggedAt?: unknown }) {
   const result = bpLogInputSchema.safeParse(data);
   if (!result.success) {
     throw new AppError(400, 'validation_error', result.error.errors[0]?.message || 'Dados de pressão inválidos.');
@@ -100,7 +100,7 @@ export async function getBPHistory(userEmail: string, timeframe = 'all') {
     .orderBy(asc(bloodPressureLogs.loggedAt));
 }
 
-export async function updateWeightLog(id: string, userEmail: string, data: any) {
+export async function updateWeightLog(id: string, userEmail: string, data: { weight?: unknown; loggedAt?: unknown }) {
   if (typeof data.weight === 'string') {
     const parsed = parseDecimalInput(data.weight);
     if (parsed === null) {
@@ -143,7 +143,7 @@ export async function deleteWeightLog(id: string, userEmail: string) {
   return deleted;
 }
 
-export async function updateBPLog(id: string, userEmail: string, data: any) {
+export async function updateBPLog(id: string, userEmail: string, data: { systolic?: unknown; diastolic?: unknown; loggedAt?: unknown }) {
   const result = bpLogInputSchema.safeParse(data);
   if (!result.success) {
     throw new AppError(400, 'validation_error', result.error.errors[0]?.message || 'Dados inválidos.');
