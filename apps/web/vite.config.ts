@@ -9,6 +9,11 @@ export default defineConfig({
     tsconfigPaths(),
     VitePWA({
       registerType: 'autoUpdate',
+      workbox: {
+        // Não interceptar navegações para /api/ — elas devem ir para o Vercel
+        // rewrite (proxy) ou para o backend local, não para o index.html em cache.
+        navigateFallbackDenylist: [/^\/api\//],
+      },
       manifest: {
         name: 'VITA',
         short_name: 'VITA',
