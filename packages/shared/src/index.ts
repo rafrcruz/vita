@@ -1,4 +1,5 @@
 // Schemas e tipos compartilhados entre web e api (Zod como fonte única de verdade).
+export { z } from 'zod';
 export * from './auth';
 export * from './health';
 
