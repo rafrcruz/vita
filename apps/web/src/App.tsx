@@ -9,6 +9,7 @@ import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { AdminAllowlist } from './pages/AdminAllowlist';
 import { StyleGuide } from './pages/StyleGuide';
+import { History } from './pages/History';
 
 export function App() {
   return (
@@ -23,6 +24,14 @@ export function App() {
                 element={
                   <ProtectedRoute>
                     <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/history"
+                element={
+                  <ProtectedRoute>
+                    <History />
                   </ProtectedRoute>
                 }
               />

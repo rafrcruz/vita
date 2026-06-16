@@ -1,5 +1,6 @@
 // Schemas e tipos compartilhados entre web e api (Zod como fonte única de verdade).
 export * from './auth';
+export * from './health';
 
 export const SHARED_PACKAGE_VERSION = '0.1.0';
 

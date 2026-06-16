@@ -13,6 +13,7 @@ export default defineConfig({
         // Não interceptar navegações para /api/ — elas devem ir para o Vercel
         // rewrite (proxy) ou para o backend local, não para o index.html em cache.
         navigateFallbackDenylist: [/^\/api\//],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
       },
       manifest: {
         name: 'VITA',

@@ -8,6 +8,13 @@
       "when": 1781622745194,
       "tag": "0000_careless_karnak",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781646797033,
+      "tag": "0001_solid_annihilus",
+      "breakpoints": true
     }
   ]
 }

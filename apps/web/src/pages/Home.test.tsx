@@ -39,6 +39,9 @@ describe('Home (app shell)', () => {
         if (String(url).includes('/auth/me')) {
           return { ok: true, status: 200, json: async () => ({ email: 'a@b.com', role: 'admin' }) };
         }
+        if (String(url).includes('/metrics/')) {
+          return { ok: true, status: 200, json: async () => [] };
+        }
         return {
           ok: true,
           status: 200,
