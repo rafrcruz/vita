@@ -40,7 +40,12 @@ export function createApp(): Express {
   app.use(
     cors({
       origin(origin, callback) {
-        callback(null, !origin || origin === env.WEB_ORIGIN);
+        const isAllowed =
+          !origin ||
+          origin === env.WEB_ORIGIN ||
+          origin === 'http://localhost:5173' ||
+          /^https:\/\/vita-web.*\.vercel\.app$/.test(origin);
+        callback(null, isAllowed);
       },
       credentials: true,
     })

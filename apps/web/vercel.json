@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://vita-api-rafrcruz-1665-rafael-cruzs-projects-f14e4c07.vercel.app/api/:path*"
+      "destination": "https://vita-api-eight.vercel.app/api/:path*"
     },
     {
       "source": "/(.*)",
