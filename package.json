@@ -20,6 +20,7 @@
     "format": "prettier --write .",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "db:generate": "npm -w @vita/api run db:generate",
     "db:migrate": "npm -w @vita/api run db:migrate"
   },
@@ -36,6 +37,7 @@
     "prettier": "^3.4.2",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.0",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "@vitest/coverage-v8": "^2.1.8"
   }
 }

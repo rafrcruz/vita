@@ -1,0 +1,34 @@
+version: 2
+updates:
+  # Dependências npm (monorepo com lockfile único na raiz cobre todos os workspaces).
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+    groups:
+      # Agrupa minor/patch para reduzir ruído de PRs (mais adequado a projeto solo + IA).
+      dev-minor-patch:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+      prod-minor-patch:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+    # Atualizações major vêm em PRs individuais (mudança potencialmente breaking).
+
+  # Versões das GitHub Actions usadas nos workflows.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    labels:
+      - dependencies
+      - github-actions
