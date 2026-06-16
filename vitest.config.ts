@@ -1,12 +1,14 @@
 import { defineConfig } from 'vitest/config';
 
-// Config raiz só para opções globais (coverage). Os "projects" de teste continuam
-// definidos em vitest.workspace.ts (apps/api e apps/web).
+// Config raiz: agrega os projetos de teste (api e web) e define opções globais
+// (coverage). A partir do Vitest 4 o arquivo vitest.workspace.ts foi removido —
+// os projetos agora ficam em `test.projects`.
 //
 // Cobertura é INFORMATIVA, não um gate: alinhado à constituição do projeto
 // (testes orientados a risco, não por percentual). Por isso não há `thresholds`.
 export default defineConfig({
   test: {
+    projects: ['apps/api/vitest.config.ts', 'apps/web/vitest.config.ts'],
     coverage: {
       provider: 'v8',
       // json-summary + json são consumidos pela action que comenta o resumo no PR;
