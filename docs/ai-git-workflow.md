@@ -12,9 +12,11 @@
   invoque pelo caminho completo. (winget é bloqueado por política da org — ver `docs/deploy.md` §3.)
 - Shell: PowerShell 5.1 como primário. **Pegadinha**: `Out-File -Encoding utf8` adiciona BOM e
   quebra o parse de JSON pela API do GitHub — gere arquivos JSON com um editor, não com `Out-File`.
-- Proteção da `main` (detalhe completo em `docs/deploy.md` §3): PR obrigatório, checks
-  `Lint, typecheck e testes` + `Secret scan (gitleaks)`, `strict`, enforce admins, histórico linear,
-  sem force-push/deleção. Aprovações exigidas = **0**.
+- Proteção da `main` (detalhe completo em `docs/deploy.md` §3): PR obrigatório, checks obrigatórios
+  `Lint, typecheck e testes` + `Secret scan (gitleaks)` + `Analyze (javascript-typescript)` (CodeQL),
+  `strict`, enforce admins, histórico linear, sem force-push/deleção. Aprovações exigidas = **0**.
+  Checks **não** obrigatórios (informativos): `Auditoria de dependências (npm audit)` e o relatório
+  de cobertura — não bloqueiam o merge. Ferramentas de qualidade/segurança detalhadas em `docs/deploy.md` §4.
 
 ## O que o usuário pede vs. o que a IA faz
 

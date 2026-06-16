@@ -84,7 +84,7 @@ Regras ativas:
 | Regra | Valor |
 | --- | --- |
 | Pull Request obrigatório antes do merge | sim (`required_pull_request_reviews`, 0 aprovações exigidas) |
-| Status checks obrigatórios | `Lint, typecheck e testes`, `Secret scan (gitleaks)` |
+| Status checks obrigatórios | `Lint, typecheck e testes`, `Secret scan (gitleaks)`, `Analyze (javascript-typescript)` (CodeQL) |
 | Branch atualizada antes do merge (`strict`) | sim |
 | Enforce admins (vale para o owner) | sim |
 | Histórico linear (`required_linear_history`) | sim — merge precisa ser **squash** ou **rebase**, não merge-commit |
@@ -127,7 +127,7 @@ $gh="$env:LOCALAPPDATA\gh-portable\bin\gh.exe"
 {
   "required_status_checks": {
     "strict": true,
-    "contexts": ["Lint, typecheck e testes", "Secret scan (gitleaks)"]
+    "contexts": ["Lint, typecheck e testes", "Secret scan (gitleaks)", "Analyze (javascript-typescript)"]
   },
   "enforce_admins": true,
   "required_pull_request_reviews": { "required_approving_review_count": 0, "dismiss_stale_reviews": true },
@@ -142,3 +142,21 @@ Para **remover** toda a proteção: `gh api -X DELETE repos/rafrcruz/vita/branch
 
 > O fluxo de commit/push/PR/merge assistido por IA (o caminho normal de subir mudanças, já que
 > ninguém mais faz push direto na `main`) está documentado em [`docs/ai-git-workflow.md`](./ai-git-workflow.md).
+
+## 4. Qualidade e Segurança automatizadas (gratuito)
+
+Ferramentas grátis incorporadas para reduzir risco sem reforçar padrões estilísticos
+voltados a humanos (decisão consciente de **não** adotar SonarCloud por gerar ruído de
+"code smell"/complexidade com pouco ganho num projeto TS estrito guiado por IA).
+
+| Ferramenta | Arquivo | Papel | Required na `main`? |
+| --- | --- | --- | --- |
+| **Dependabot** | `.github/dependabot.yml` | PRs semanais de updates (npm + github-actions), agrupando minor/patch; alerta de CVE | n/a (abre PRs) |
+| **CodeQL** | `.github/workflows/codeql.yml` | SAST com queries `security-extended` (só segurança); por PR + semanal | **Sim** — `Analyze (javascript-typescript)` |
+| **npm audit** | job `audit` em `ci.yml` | `--omit=dev --audit-level=high`: vulnerabilidades high/critical só em deps de **produção** | **Não** (informativo; evita travar merge por CVE de tooling/transitiva) |
+| **Cobertura Vitest** | `vitest.config.ts` (raiz) | Relatório v8 comentado no PR (`vitest-coverage-report-action`) | **Não** — sem gate de %, alinhado à constituição (testes orientados a risco) |
+
+Notas:
+- O `npm audit` roda só em produção de propósito: vulns de build (esbuild/vite/vitest) não
+  chegam ao runtime serverless. O Dependabot ainda assim abre PRs para corrigi-las.
+- A cobertura é **informativa**, não um portão. Não há `thresholds` em `vitest.config.ts`.
