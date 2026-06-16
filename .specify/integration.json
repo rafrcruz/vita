@@ -4,7 +4,8 @@
   "installed_integrations": [
     "claude",
     "codex",
-    "opencode"
+    "opencode",
+    "agy"
   ],
   "integration_settings": {
     "claude": {
@@ -18,6 +19,10 @@
     "opencode": {
       "script": "ps",
       "invoke_separator": "."
+    },
+    "agy": {
+      "script": "ps",
+      "invoke_separator": "-"
     }
   },
   "integration": "claude",

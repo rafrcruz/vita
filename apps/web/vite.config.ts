@@ -1,0 +1,30 @@
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+import tsconfigPaths from 'vite-tsconfig-paths';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    tsconfigPaths(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'VITA',
+        short_name: 'VITA',
+        description: 'Plataforma pessoal de observabilidade de saúde',
+        theme_color: '#0f172a',
+        background_color: '#0f172a',
+        display: 'standalone',
+        start_url: '/',
+      },
+    }),
+  ],
+  server: {
+    port: 5173,
+    // Em dev, encaminha /api para o backend Express local (mesma origem).
+    proxy: {
+      '/api': 'http://localhost:3001',
+    },
+  },
+});

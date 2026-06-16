@@ -1,0 +1,220 @@
+openapi: 3.0.3
+info:
+  title: VITA Foundation API
+  version: 0.1.0
+  description: >
+    Contratos da fundação técnica do VITA (health, autenticação Google + sessão stateless,
+    administração da allowlist). Nenhum endpoint de domínio de saúde. Todas as rotas são prefixadas
+    por /api e acessadas pela origem do web via rewrite (cookie first-party).
+servers:
+  - url: /api
+    description: Mesma origem do SPA (rewrite para o projeto Vercel da API)
+
+tags:
+  - name: health
+  - name: auth
+  - name: allowlist
+
+paths:
+  /health:
+    get:
+      tags: [health]
+      summary: Verificação de saúde
+      security: []
+      responses:
+        "200":
+          description: Saudável
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+        "503":
+          description: Degradado (ex.: banco indisponível)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+
+  /auth/google:
+    get:
+      tags: [auth]
+      summary: Inicia o fluxo OAuth (redireciona para o Google)
+      security: []
+      responses:
+        "302":
+          description: Redirecionamento para o consentimento do Google
+
+  /auth/google/callback:
+    get:
+      tags: [auth]
+      summary: Callback do OAuth; valida identidade, checa allowlist e emite cookie de sessão
+      security: []
+      parameters:
+        - in: query
+          name: code
+          required: true
+          schema: { type: string }
+        - in: query
+          name: state
+          required: true
+          schema: { type: string }
+      responses:
+        "302":
+          description: >
+            Sucesso → redireciona ao app com cookie de sessão (httpOnly/Secure) setado.
+          headers:
+            Set-Cookie:
+              schema: { type: string }
+        "403":
+          description: E-mail autenticado não está na allowlist
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /auth/me:
+    get:
+      tags: [auth]
+      summary: Retorna o usuário da sessão atual
+      responses:
+        "200":
+          description: Usuário autenticado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CurrentUser" }
+        "401":
+          description: Sem sessão válida
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /auth/logout:
+    post:
+      tags: [auth]
+      summary: Encerra a sessão (limpa o cookie)
+      responses:
+        "204":
+          description: Sessão encerrada
+
+  /allowlist:
+    get:
+      tags: [allowlist]
+      summary: Lista entradas da allowlist (admin)
+      responses:
+        "200":
+          description: Lista
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/AllowlistEntry" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      tags: [allowlist]
+      summary: Adiciona um e-mail à allowlist (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AllowlistCreate" }
+      responses:
+        "201":
+          description: Criado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AllowlistEntry" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409":
+          description: E-mail já existente
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /allowlist/{id}:
+    delete:
+      tags: [allowlist]
+      summary: Remove uma entrada da allowlist (admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "204":
+          description: Removido
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409":
+          description: Operação proibida (ex.: remover o último admin)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: vita_session
+  security:
+    - sessionCookie: []
+  responses:
+    Unauthorized:
+      description: Sem sessão válida
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Forbidden:
+      description: Sem permissão (não-admin)
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    BadRequest:
+      description: Dados inválidos
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+  schemas:
+    Health:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string, enum: [ok, degraded] }
+        db: { type: string, enum: [up, down] }
+        time: { type: string, format: date-time }
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string }
+            message: { type: string }
+    CurrentUser:
+      type: object
+      required: [email, role]
+      properties:
+        email: { type: string, format: email }
+        role: { type: string, enum: [admin, member] }
+    AllowlistEntry:
+      type: object
+      required: [id, email, role, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string, format: email }
+        role: { type: string, enum: [admin, member] }
+        createdAt: { type: string, format: date-time }
+        createdBy: { type: string, nullable: true }
+    AllowlistCreate:
+      type: object
+      required: [email]
+      properties:
+        email: { type: string, format: email }
+        role: { type: string, enum: [admin, member], default: member }
+
+security:
+  - sessionCookie: []
