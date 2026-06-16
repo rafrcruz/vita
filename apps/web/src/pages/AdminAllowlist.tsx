@@ -1,14 +1,42 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import type { AllowlistEntryDto, Role } from '@vita/shared';
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import type { AllowlistEntryDto } from '@vita/shared';
 import { apiFetch } from '../lib/api';
+import { ThemeToggle } from '../theme/ThemeToggle';
+import { AppShell } from '../components/layout/AppShell';
+import { Button } from '../components/ui/button';
+import { FormField } from '../components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
+import { Badge } from '../components/ui/badge';
+import { Label } from '../components/ui/label';
+import { Alert, AlertDescription } from '../components/feedback/Alert';
+import { EmptyState } from '../components/feedback/EmptyState';
+import { LoadingState } from '../components/feedback/LoadingState';
+import { AlertCircle, Trash2, UserPlus, Users } from 'lucide-react';
+
+const formSchema = z.object({
+  email: z.string().email('E-mail inválido'),
+  role: z.enum(['member', 'admin']),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 export function AdminAllowlist() {
   const queryClient = useQueryClient();
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState<Role>('member');
   const [error, setError] = useState<string | null>(null);
+
+  const methods = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      role: 'member',
+    },
+  });
 
   const { data: entries, isLoading } = useQuery({
     queryKey: ['allowlist'],
@@ -18,10 +46,9 @@ export function AdminAllowlist() {
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['allowlist'] });
 
   const addMutation = useMutation({
-    mutationFn: () => apiFetch('/allowlist', { method: 'POST', body: JSON.stringify({ email, role }) }),
+    mutationFn: (data: FormData) => apiFetch('/allowlist', { method: 'POST', body: JSON.stringify(data) }),
     onSuccess: () => {
-      setEmail('');
-      setRole('member');
+      methods.reset();
       setError(null);
       void invalidate();
     },
@@ -34,75 +61,105 @@ export function AdminAllowlist() {
     onError: (e: unknown) => setError(e instanceof Error ? e.message : 'Erro ao remover'),
   });
 
+  const onSubmit = (data: FormData) => {
+    addMutation.mutate(data);
+  };
+
   return (
-    <main className="min-h-screen bg-slate-900 text-slate-100 p-6">
-      <div className="mx-auto max-w-2xl">
+    <AppShell>
+      <div className="py-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Allowlist</h1>
-          <Link to="/" className="text-slate-400 hover:text-slate-200">
-            ← Início
-          </Link>
+          <h1>Allowlist</h1>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <Link to="/" className="text-muted-foreground hover:text-foreground">
+              ← Início
+            </Link>
+          </div>
         </div>
 
-        <form
-          className="mt-6 flex flex-wrap gap-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-            addMutation.mutate();
-          }}
-        >
-          <input
-            type="email"
-            required
-            placeholder="email@exemplo.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="flex-1 rounded-lg bg-slate-800 px-3 py-2 text-slate-100 outline-none ring-1 ring-slate-700"
-          />
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value as Role)}
-            className="rounded-lg bg-slate-800 px-3 py-2 ring-1 ring-slate-700"
-          >
-            <option value="member">member</option>
-            <option value="admin">admin</option>
-          </select>
-          <button
-            type="submit"
-            disabled={addMutation.isPending}
-            className="rounded-lg bg-emerald-500 px-4 py-2 font-medium text-slate-900 hover:bg-emerald-400 disabled:opacity-50"
-          >
-            Adicionar
-          </button>
-        </form>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)} className="mt-6 flex flex-wrap items-end gap-4">
+            <FormField<FormData>
+              name="email"
+              label="E-mail"
+              type="email"
+              inputMode="email"
+              placeholder="email@exemplo.com"
+              className="flex-1 min-w-[200px]"
+            />
+            <div className="w-32">
+              <Label htmlFor="role">Role</Label>
+              <Select
+                value={methods.watch('role')}
+                onValueChange={(value) => methods.setValue('role', value as 'member' | 'admin')}
+              >
+                <SelectTrigger id="role">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="member">member</SelectItem>
+                  <SelectItem value="admin">admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button type="submit" loading={addMutation.isPending}>
+              <UserPlus className="mr-2 h-4 w-4" />
+              Adicionar
+            </Button>
+          </form>
+        </FormProvider>
 
         {error && (
-          <p className="mt-3 text-red-400" role="alert">
-            {error}
-          </p>
+          <Alert variant="destructive" className="mt-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         )}
 
-        <ul className="mt-6 divide-y divide-slate-800 rounded-lg ring-1 ring-slate-800">
-          {isLoading && <li className="p-4 text-slate-400">Carregando…</li>}
-          {entries?.map((entry) => (
-            <li key={entry.id} className="flex items-center justify-between p-4">
-              <span>
-                {entry.email}{' '}
-                <span className="ml-2 rounded bg-slate-700 px-2 py-0.5 text-xs uppercase">
-                  {entry.role}
-                </span>
-              </span>
-              <button
-                onClick={() => removeMutation.mutate(entry.id)}
-                disabled={removeMutation.isPending}
-                className="text-red-400 hover:text-red-300 disabled:opacity-50"
-              >
-                Remover
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-6">
+          {isLoading && <LoadingState />}
+          {!isLoading && entries?.length === 0 && (
+            <EmptyState
+              icon={<Users className="h-12 w-12" />}
+              title="Nenhum usuário na allowlist"
+              description="Adicione o primeiro usuário usando o formulário acima."
+            />
+          )}
+          {!isLoading && entries && entries.length > 0 && (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>E-mail</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead className="text-right">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {entries.map((entry) => (
+                  <TableRow key={entry.id}>
+                    <TableCell>{entry.email}</TableCell>
+                    <TableCell>
+                      <Badge variant={entry.role === 'admin' ? 'default' : 'secondary'}>{entry.role}</Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeMutation.mutate(entry.id)}
+                        disabled={removeMutation.isPending}
+                        className="text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </div>
       </div>
-    </main>
+    </AppShell>
   );
 }

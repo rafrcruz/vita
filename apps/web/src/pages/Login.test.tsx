@@ -1,20 +1,20 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, waitFor, act } from '@testing-library/react';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 import { axe } from 'vitest-axe';
-import { Home } from './Home';
+import { Login } from './Login';
 import { AuthProvider } from '../lib/auth';
 import { ThemeProvider } from '../theme/ThemeProvider';
 
-function renderHome() {
+function renderLogin() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <QueryClientProvider client={client}>
       <ThemeProvider>
         <MemoryRouter>
           <AuthProvider>
-            <Home />
+            <Login />
           </AuthProvider>
         </MemoryRouter>
       </ThemeProvider>
@@ -22,7 +22,7 @@ function renderHome() {
   );
 }
 
-describe('Home (app shell)', () => {
+describe('Login (accessibility)', () => {
   beforeEach(() => {
     vi.stubGlobal(
       'matchMedia',
@@ -35,16 +35,7 @@ describe('Home (app shell)', () => {
     );
     vi.stubGlobal(
       'fetch',
-      vi.fn(async (url: string) => {
-        if (String(url).includes('/auth/me')) {
-          return { ok: true, status: 200, json: async () => ({ email: 'a@b.com', role: 'admin' }) };
-        }
-        return {
-          ok: true,
-          status: 200,
-          json: async () => ({ status: 'ok', db: 'up', time: '2026-06-16T00:00:00.000Z' }),
-        };
-      }) as unknown as typeof fetch
+      vi.fn(async () => ({ ok: false, status: 401, json: async () => null })) as unknown as typeof fetch
     );
   });
 
@@ -52,18 +43,14 @@ describe('Home (app shell)', () => {
     vi.unstubAllGlobals();
   });
 
-  it('exibe o título e o status saudável vindo da API', async () => {
-    renderHome();
-    expect(screen.getByRole('heading', { name: 'VITA' })).toBeInTheDocument();
-    await waitFor(() => {
-      expect(screen.getByTestId('health-status')).toBeInTheDocument();
-    });
-  });
-
   it('has no accessibility violations', async () => {
-    const { container } = renderHome();
+    const { container } = renderLogin();
     await waitFor(() => {
-      expect(screen.getByTestId('health-status')).toBeInTheDocument();
+      expect(globalThis.fetch).toHaveBeenCalled();
+    });
+    // Garante que o estado pós-carregamento foi atualizado
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 10));
     });
     const results = await axe(container);
     expect(results).toHaveNoViolations();

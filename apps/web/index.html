@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0f172a" />
     <title>VITA</title>
+    <script>
+      (function() {
+        try {
+          var theme = localStorage.getItem('vita.theme') || 'system';
+          var resolved = theme;
+          if (theme === 'system') {
+            resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          if (resolved === 'dark') {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {
+          // fallback: light theme (no dark class)
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
