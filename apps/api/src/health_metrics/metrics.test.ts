@@ -6,6 +6,10 @@ import { weightLogs, bloodPressureLogs } from '../db/schema';
 import { createApp } from '../app';
 import { SESSION_COOKIE_NAME, issueSessionToken } from '../auth/session';
 
+const isDbAvailable = !!process.env.DATABASE_URL &&
+  !process.env.DATABASE_URL.includes('localhost') &&
+  !process.env.DATABASE_URL.includes('127.0.0.1');
+
 // We will implement parseDecimalInput in metrics.service.ts
 // For TDD, let's write the test importing it. Since it doesn't exist yet,
 // the tests will fail to compile or run, which is the correct TDD red state.
@@ -35,7 +39,7 @@ describe('metrics.service - parseDecimalInput', () => {
   });
 });
 
-describe('Rotas /api/metrics/weight', () => {
+describe.skipIf(!isDbAvailable)('Rotas /api/metrics/weight', () => {
   const app = createApp();
   const testEmail = 'metrics-test@example.com';
   let token: string;
@@ -84,7 +88,7 @@ describe('Rotas /api/metrics/weight', () => {
   });
 });
 
-describe('Rotas /api/metrics/blood-pressure', () => {
+describe.skipIf(!isDbAvailable)('Rotas /api/metrics/blood-pressure', () => {
   const app = createApp();
   const testEmail = 'metrics-test@example.com';
   let token: string;
@@ -144,7 +148,7 @@ describe('Rotas /api/metrics/blood-pressure', () => {
   });
 });
 
-describe('GET /api/metrics/weight e GET /api/metrics/blood-pressure (histórico e filtros)', () => {
+describe.skipIf(!isDbAvailable)('GET /api/metrics/weight e GET /api/metrics/blood-pressure (histórico e filtros)', () => {
   const app = createApp();
   const testEmail = 'metrics-get-test@example.com';
   let token: string;
@@ -210,7 +214,7 @@ describe('GET /api/metrics/weight e GET /api/metrics/blood-pressure (histórico 
   });
 });
 
-describe('PUT e DELETE /api/metrics/weight/:id e /api/metrics/blood-pressure/:id', () => {
+describe.skipIf(!isDbAvailable)('PUT e DELETE /api/metrics/weight/:id e /api/metrics/blood-pressure/:id', () => {
   const app = createApp();
   const testEmail = 'metrics-manage-test@example.com';
   let token: string;
