@@ -225,14 +225,14 @@ describe('PUT e DELETE /api/metrics/weight/:id e /api/metrics/blood-pressure/:id
       userEmail: testEmail,
       weight: 85.0,
     }).returning();
-    weightId = weightLog.id;
+    weightId = weightLog!.id;
 
     const [bpLog] = await db.insert(bloodPressureLogs).values({
       userEmail: testEmail,
       systolic: 140,
       diastolic: 90,
     }).returning();
-    bpId = bpLog.id;
+    bpId = bpLog!.id;
   });
 
   afterEach(async () => {

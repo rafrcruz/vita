@@ -39,8 +39,8 @@ export function TrendChart({ data, type }: TrendChartProps) {
   const points: ChartPoint[] = data.map((item) => {
     return {
       date: new Date(item.loggedAt),
-      val1: type === 'weight' ? item.weight : item.systolic,
-      val2: type === 'bp' ? item.diastolic : undefined,
+      val1: type === 'weight' ? item.weight! : item.systolic!,
+      val2: type === 'bp' ? item.diastolic! : undefined,
     };
   });
 
