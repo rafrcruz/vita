@@ -25,6 +25,6 @@
       "invoke_separator": "-"
     }
   },
-  "integration": "agy",
-  "default_integration": "codex"
+  "integration": "claude",
+  "default_integration": "claude"
 }
