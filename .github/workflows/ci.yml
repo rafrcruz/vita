@@ -9,6 +9,9 @@ jobs:
   quality:
     name: Lint, typecheck e testes
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # para a action comentar o resumo de cobertura no PR
     env:
       NODE_ENV: test
       # Valores dummy só para o boot/validação de env nos testes (não conectam a serviços reais).
@@ -23,7 +26,28 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
-      - run: npm run test
+      - run: npm run test:coverage
+      # Comenta/atualiza um resumo de cobertura no PR. Informativo — não falha o build.
+      - name: Report coverage
+        if: github.event_name == 'pull_request'
+        uses: davelosert/vitest-coverage-report-action@v2
+
+  audit:
+    name: Auditoria de dependências (npm audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Só dependências de produção (--omit=dev) e só high/critical: reflete a
+      # superfície real de ataque do app em runtime, sem o ruído de tooling de
+      # build (esbuild/vite/vitest etc., que não vão para produção). Complementa o
+      # Dependabot (que abre PRs de correção). NÃO é required na branch protection,
+      # para não bloquear merges por CVE em dep transitiva sem relação com o PR.
+      - run: npm audit --omit=dev --audit-level=high
 
   secret-scan:
     name: Secret scan (gitleaks)
