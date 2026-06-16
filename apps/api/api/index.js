@@ -592,6 +592,8 @@ function createApp() {
   app.use(
     helmet({
       contentSecurityPolicy: false,
+      crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+      crossOriginEmbedderPolicy: false,
       hsts: isProduction ? {
         maxAge: 15552e3,
         includeSubDomains: true
