@@ -75,39 +75,70 @@ Se o domínio do frontend mudar, atualize os quatro pontos (origins + redirect n
 
 ## 3. Configuração de Proteção de Branch (Branch Protection)
 
-Para garantir que nenhuma alteração seja integrada à `main` sem passar pelos testes e validações de segurança automatizadas, é obrigatório habilitar regras de branch protection no GitHub.
+A `main` está protegida no GitHub (`rafrcruz/vita`) — **estado real aplicado em 2026-06-16**.
+Nenhuma alteração entra na `main` sem passar pelo CI e por um Pull Request. As regras valem
+**inclusive para o owner** (`enforce_admins`), então `git push` direto na `main` é rejeitado.
 
-### Configuração Automática via GitHub CLI (`gh`)
+Regras ativas:
 
-Execute o seguinte comando para ativar as verificações de status obrigatórias para a branch `main`:
+| Regra | Valor |
+| --- | --- |
+| Pull Request obrigatório antes do merge | sim (`required_pull_request_reviews`, 0 aprovações exigidas) |
+| Status checks obrigatórios | `Lint, typecheck e testes`, `Secret scan (gitleaks)` |
+| Branch atualizada antes do merge (`strict`) | sim |
+| Enforce admins (vale para o owner) | sim |
+| Histórico linear (`required_linear_history`) | sim — merge precisa ser **squash** ou **rebase**, não merge-commit |
+| Force push / deleção da `main` | bloqueados |
 
-```bash
-gh api -X PUT /repos/:owner/:repo/branches/main/protection \
-  -H "Accept: application/vnd.github+json" \
-  --input - <<EOF
+> `required_approving_review_count = 0` permite que o autor faça o merge do próprio PR
+> (o GitHub não deixa o autor *aprovar* o próprio PR, mas com 0 aprovações isso não trava o merge).
+
+### Como o `gh` está instalado neste ambiente
+
+A instalação via `winget` é bloqueada por política da organização (máquina Enterprise gerenciada).
+Por isso o GitHub CLI roda em modo **portátil** (sem MSI/admin):
+
+* Binário: `%LOCALAPPDATA%\gh-portable\bin\gh.exe`
+* Já autenticado (token no keyring do Windows), conta `rafrcruz`, escopos `repo, read:org, workflow, gist`.
+
+Para reinstalar/atualizar o portátil:
+
+```powershell
+$ver='2.94.0'
+$dest="$env:LOCALAPPDATA\gh-portable"
+Invoke-WebRequest "https://github.com/cli/cli/releases/download/v$ver/gh_${ver}_windows_amd64.zip" -OutFile "$env:TEMP\gh.zip"
+Expand-Archive "$env:TEMP\gh.zip" -DestinationPath $dest -Force
+& "$dest\bin\gh.exe" auth login --hostname github.com --git-protocol https --web
+```
+
+### Reaplicar/auditar a proteção via `gh`
+
+```powershell
+$gh="$env:LOCALAPPDATA\gh-portable\bin\gh.exe"
+# JSON sem BOM (PowerShell 5.1 Out-File -utf8 quebra o parse da API). Gere o arquivo com um editor.
+& $gh api -X PUT repos/rafrcruz/vita/branches/main/protection -H "Accept: application/vnd.github+json" --input bp.json
+# auditar:
+& $gh api repos/rafrcruz/vita/branches/main/protection
+```
+
+`bp.json` (payload exato aplicado):
+
+```json
 {
   "required_status_checks": {
     "strict": true,
-    "contexts": [
-      "Lint, typecheck e testes",
-      "Secret scan (gitleaks)"
-    ]
+    "contexts": ["Lint, typecheck e testes", "Secret scan (gitleaks)"]
   },
   "enforce_admins": true,
-  "required_pull_request_reviews": null,
-  "restrictions": null
+  "required_pull_request_reviews": { "required_approving_review_count": 0, "dismiss_stale_reviews": true },
+  "restrictions": null,
+  "required_linear_history": true,
+  "allow_force_pushes": false,
+  "allow_deletions": false
 }
-EOF
 ```
 
-### Configuração Manual via Interface do GitHub
-1. Vá até as configurações do repositório (`Settings`).
-2. Clique em `Branches` no menu lateral.
-3. Clique em `Add branch protection rule` ou edite a regra para `main`.
-4. Defina o padrão de branch para `main`.
-5. Marque **"Require status checks to pass before merging"**.
-6. Ative **"Require branches to be up to date before merging"** (strict checking).
-7. Adicione os seguintes status checks como obrigatórios:
-   * `Lint, typecheck e testes`
-   * `Secret scan (gitleaks)`
-8. Clique em `Save changes`.
+Para **remover** toda a proteção: `gh api -X DELETE repos/rafrcruz/vita/branches/main/protection`.
+
+> O fluxo de commit/push/PR/merge assistido por IA (o caminho normal de subir mudanças, já que
+> ninguém mais faz push direto na `main`) está documentado em [`docs/ai-git-workflow.md`](./ai-git-workflow.md).
