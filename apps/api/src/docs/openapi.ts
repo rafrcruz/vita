@@ -3,8 +3,12 @@ import {
   OpenApiGeneratorV3,
   extendZodWithOpenApi,
 } from '@asteasolutions/zod-to-openapi';
-import { z } from 'zod';
-import { allowlistCreateSchema, allowlistEntrySchema, currentUserSchema } from '@vita/shared';
+import {
+  z,
+  allowlistCreateSchema,
+  allowlistEntrySchema,
+  currentUserSchema,
+} from '@vita/shared';
 
 extendZodWithOpenApi(z);
 
