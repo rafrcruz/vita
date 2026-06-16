@@ -143,16 +143,16 @@ Monorepo npm workspaces: `apps/web/`, `apps/api/`, `packages/shared/`, `.github/
 
 ### Tests for User Story 4
 
-- [ ] T043 [P] [US4] Teste: erro tratado e não tratado retornam formato `{ error: { code, message } }` sem stack em `apps/api/src/middleware/error.test.ts`
-- [ ] T044 [P] [US4] Teste: redação de campos sensíveis no logger (sem segredos/PII) em `apps/api/src/middleware/logging.test.ts`
+- [x] T043 [P] [US4] Teste: erro tratado e não tratado retornam formato `{ error: { code, message } }` sem stack em `apps/api/src/middleware/error.test.ts`
+- [x] T044 [P] [US4] Teste: redação de campos sensíveis no logger (sem segredos/PII) em `apps/api/src/middleware/logging.test.ts`
 
 ### Implementation for User Story 4
 
-- [ ] T045 [P] [US4] Inicializar Sentry no backend (DSN via env, `beforeSend` com scrubbing) em `apps/api/src/observability/sentry.ts` e integrar no app factory
-- [ ] T046 [P] [US4] Inicializar Sentry no frontend em `apps/web/src/lib/sentry.ts`
-- [ ] T047 [US4] Configurar redação de campos sensíveis no pino e garantir captura de erros não tratados em `apps/api/src/middleware/logging.ts`
-- [ ] T048 [US4] Gerar OpenAPI a partir dos schemas Zod (zod-to-openapi) em `apps/api/src/docs/openapi.ts`
-- [ ] T049 [US4] Servir Swagger UI em `GET /api/docs` (swagger-ui-express) em `apps/api/src/docs/docs.route.ts`
+- [x] T045 [P] [US4] Inicializar Sentry no backend (DSN via env, `beforeSend` com scrubbing) em `apps/api/src/observability/sentry.ts` e integrar no app factory
+- [x] T046 [P] [US4] Inicializar Sentry no frontend em `apps/web/src/lib/sentry.ts`
+- [x] T047 [US4] Configurar redação de campos sensíveis no pino e garantir captura de erros não tratados em `apps/api/src/middleware/logging.ts`
+- [x] T048 [US4] Gerar OpenAPI a partir dos schemas Zod (zod-to-openapi) em `apps/api/src/docs/openapi.ts`
+- [x] T049 [US4] Servir Swagger UI em `GET /api/docs` (swagger-ui-express) em `apps/api/src/docs/docs.route.ts`
 
 **Checkpoint**: US1–US4 funcionam; sistema observável e documentado.
 

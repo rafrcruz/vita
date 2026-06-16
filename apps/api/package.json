@@ -14,7 +14,9 @@
     "db:seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^7.3.0",
     "@neondatabase/serverless": "^0.10.4",
+    "@sentry/node": "^8.47.0",
     "@vita/shared": "*",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
@@ -24,6 +26,7 @@
     "jose": "^5.9.6",
     "pino": "^9.5.0",
     "pino-http": "^10.3.0",
+    "swagger-ui-express": "^5.0.1",
     "zod": "^3.24.1"
   },
   "devDependencies": {
@@ -31,6 +34,7 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.2",
     "@types/supertest": "^6.0.2",
+    "@types/swagger-ui-express": "^4.1.7",
     "drizzle-kit": "^0.31.10",
     "supertest": "^7.0.0",
     "tsx": "^4.19.2",

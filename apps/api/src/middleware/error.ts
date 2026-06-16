@@ -2,6 +2,7 @@ import type { ErrorRequestHandler, RequestHandler } from 'express';
 import type { ApiError } from '@vita/shared';
 import { isProduction } from '../config/env';
 import { logger } from './logging';
+import { captureException } from '../observability/sentry';
 
 /** Erro de aplicação com código e status HTTP explícitos. */
 export class AppError extends Error {
@@ -34,6 +35,7 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   }
 
   logger.error({ err }, 'Erro não tratado');
+  captureException(err); // reporta erros não tratados ao Sentry (FR-016)
   const body: ApiError = {
     error: {
       code: 'internal_error',
