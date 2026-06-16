@@ -46,8 +46,8 @@ foreach ($key in $api_keys) {
   if ($envs.Contains($key)) {
     $val = $envs[$key]
     Write-Host "Definindo $key..."
-    echo "$val" | vercel env add $key production --force
-    echo "$val" | vercel env add $key preview --force
+    vercel env add $key production --value "$val" --force --yes
+    vercel env add $key preview --value "$val" --force --yes
   } else {
     Write-Warning "A variável $key não foi encontrada no arquivo .env local."
   }
@@ -65,8 +65,8 @@ foreach ($key in $web_keys) {
   if ($envs.Contains($key)) {
     $val = $envs[$key]
     Write-Host "Definindo $key..."
-    echo "$val" | vercel env add $key production --force
-    echo "$val" | vercel env add $key preview --force
+    vercel env add $key production --value "$val" --force --yes
+    vercel env add $key preview --value "$val" --force --yes
   } else {
     Write-Warning "A variável $key não foi encontrada no arquivo .env local."
   }
