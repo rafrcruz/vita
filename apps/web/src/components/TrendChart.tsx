@@ -120,10 +120,31 @@ export function TrendChart({ data, type }: TrendChartProps) {
 
   // X-axis: 3–6 marcas adaptativas; formato de data conforme o período.
   const useMonthYear = xRange > 180 * 24 * 60 * 60 * 1000; // intervalos longos ("Tudo")
-  const formatTick = (date: Date) =>
-    useMonthYear
-      ? date.toLocaleDateString(undefined, { month: '2-digit', year: '2-digit' })
-      : date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' });
+  
+  const hasMultipleMeasurementsSameDay = React.useMemo(() => {
+    const days = new Set<string>();
+    for (const p of points) {
+      const dayStr = p.date.toDateString();
+      if (days.has(dayStr)) {
+        return true;
+      }
+      days.add(dayStr);
+    }
+    return false;
+  }, [points]);
+
+  const formatTick = (date: Date) => {
+    if (useMonthYear) {
+      return date.toLocaleDateString(undefined, { month: '2-digit', year: '2-digit' });
+    }
+    if (hasMultipleMeasurementsSameDay || xRange <= 7 * 24 * 60 * 60 * 1000) {
+      const dayMonth = date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' });
+      const time = date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+      return `${dayMonth} ${time}`;
+    }
+    return date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' });
+  };
+
   const formatFull = (date: Date) =>
     date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit', year: 'numeric' });
 
@@ -178,7 +199,7 @@ export function TrendChart({ data, type }: TrendChartProps) {
       >
         {/* Horizontal grid lines + Y labels com unidade */}
         {gridLines.map((line, idx) => (
-          <g key={idx} className="opacity-20">
+          <g key={idx}>
             <line
               x1={padding.left}
               y1={line.y}
@@ -187,12 +208,13 @@ export function TrendChart({ data, type }: TrendChartProps) {
               stroke="currentColor"
               strokeDasharray="4 4"
               strokeWidth="1"
+              className="opacity-20"
             />
             <text
               x={padding.left - 8}
               y={line.y + 4}
               textAnchor="end"
-              className="text-[10px] font-medium fill-muted-foreground"
+              className="text-[10px] font-medium fill-muted-foreground opacity-90"
             >
               {line.val}
             </text>

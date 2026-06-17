@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { profileInputSchema, type ProfileInput } from '@vita/shared';
+import { toDisplayDate, toApiDate } from '../utils/metrics';
 import { AppShell } from '../components/layout/AppShell';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { Button } from '../components/ui/button';
@@ -11,7 +12,7 @@ import { ErrorState } from '../components/feedback/ErrorState';
 import { useProfile, useUpdateProfile } from '../services/api';
 import { useAuth } from '../lib/auth';
 import { toastSuccess, toastError } from '../lib/toast';
-import { UserCircle } from 'lucide-react';
+import { UserCircle, LogOut } from 'lucide-react';
 
 interface ProfileFormValues {
   fullName: string;
@@ -23,7 +24,9 @@ interface ProfileFormValues {
 function toProfileInput(values: ProfileFormValues): ProfileInput {
   const input: ProfileInput = {};
   if (values.fullName.trim()) input.fullName = values.fullName.trim();
-  if (values.birthDate.trim()) input.birthDate = values.birthDate.trim();
+  if (values.birthDate.trim()) {
+    input.birthDate = toApiDate(values.birthDate.trim());
+  }
   if (values.heightCm.trim()) {
     const normalized = values.heightCm.trim().replace(',', '.');
     const parsed = Number(normalized);
@@ -52,7 +55,7 @@ export function Profile() {
     if (profile) {
       reset({
         fullName: profile.fullName ?? '',
-        birthDate: profile.birthDate ?? '',
+        birthDate: profile.birthDate ? toDisplayDate(profile.birthDate) : '',
         heightCm: profile.heightCm != null ? String(profile.heightCm) : '',
       });
     }
@@ -64,10 +67,35 @@ export function Profile() {
     // Validação client-side reusando o schema compartilhado (fonte única de verdade).
     const result = profileInputSchema.safeParse(input);
     if (!result.success) {
+      // Agrupa mensagens por campo
+      const fieldIssues: { [key: string]: string[] } = {};
       for (const issue of result.error.errors) {
-        const field = issue.path[0] as keyof ProfileFormValues | undefined;
-        if (field) setError(field, { message: issue.message });
+        const field = issue.path[0] as string;
+        if (field) {
+          if (!fieldIssues[field]) fieldIssues[field] = [];
+          fieldIssues[field].push(issue.message);
+        }
       }
+
+      // Define o erro para cada campo
+      Object.keys(fieldIssues).forEach((field) => {
+        const messages = fieldIssues[field] || [];
+        let message = messages[0] || '';
+
+        if (field === 'birthDate') {
+          const hasFormatError = messages.some(
+            (msg) => msg.includes('AAAA-MM-DD') || msg.includes('inválida')
+          );
+          if (hasFormatError) {
+            message = 'Data de nascimento inválida. Use o formato DD/MM/AAAA.';
+          } else {
+            message = messages[0] || '';
+          }
+        }
+
+        setError(field as keyof ProfileFormValues, { message });
+      });
+
       toastError('Verifique os campos destacados.');
       return;
     }
@@ -85,7 +113,8 @@ export function Profile() {
           <h1>Perfil</h1>
           <div className="flex items-center gap-1">
             <ThemeToggle />
-            <Button variant="ghost" size="sm" onClick={() => void logout()}>
+            <Button variant="ghost" size="sm" onClick={() => void logout()} className="gap-2">
+              <LogOut className="h-4 w-4" />
               Sair
             </Button>
           </div>
@@ -132,9 +161,22 @@ export function Profile() {
                 <Label htmlFor="birthDate">Data de nascimento</Label>
                 <Input
                   id="birthDate"
-                  type="date"
+                  type="text"
+                  placeholder="DD/MM/AAAA"
                   aria-invalid={!!errors.birthDate}
-                  {...register('birthDate')}
+                  {...register('birthDate', {
+                    onChange: (e) => {
+                      let val = e.target.value.replace(/\D/g, '');
+                      if (val.length > 8) val = val.slice(0, 8);
+                      if (val.length > 4) {
+                        e.target.value = `${val.slice(0, 2)}/${val.slice(2, 4)}/${val.slice(4)}`;
+                      } else if (val.length > 2) {
+                        e.target.value = `${val.slice(0, 2)}/${val.slice(2)}`;
+                      } else {
+                        e.target.value = val;
+                      }
+                    }
+                  })}
                 />
                 {errors.birthDate && (
                   <p className="text-sm text-destructive" role="alert">
