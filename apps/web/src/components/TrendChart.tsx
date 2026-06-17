@@ -49,45 +49,101 @@ export function formatMetricValue(type: 'weight' | 'bp', val1: number, val2?: nu
 export function TrendChart({ data, type, timeframe = 'all' }: TrendChartProps) {
   const [isFullscreen, setIsFullscreen] = React.useState(false);
 
-  // Trava orientação para landscape ao entrar em tela cheia (se compatível)
+  // Escuta mudanças no fullscreen nativo do navegador
   React.useEffect(() => {
-    if (isFullscreen) {
-      if (typeof screen !== 'undefined' && screen.orientation) {
-        const orientation = screen.orientation as unknown as {
-          lock?: (orientation: 'landscape') => Promise<void>;
-        };
-        if (typeof orientation.lock === 'function') {
-          orientation.lock('landscape').catch((err: unknown) => {
-            console.warn('Screen orientation lock is not supported or was rejected:', err);
-          });
-        }
-      }
-    } else {
-      if (typeof screen !== 'undefined' && screen.orientation) {
-        const orientation = screen.orientation as unknown as {
-          unlock?: () => void;
-        };
-        if (typeof orientation.unlock === 'function') {
-          try {
-            orientation.unlock();
-          } catch {
-            // ignore error if not locked
+    const handleFullscreenChange = () => {
+      const isCurrentlyFullscreen = !!document.fullscreenElement;
+      if (!isCurrentlyFullscreen && isFullscreen) {
+        setIsFullscreen(false);
+        // Destrava orientação ao sair do fullscreen
+        if (typeof screen !== 'undefined' && screen.orientation) {
+          const orientation = screen.orientation as unknown as {
+            unlock?: () => void;
+          };
+          if (typeof orientation.unlock === 'function') {
+            try {
+              orientation.unlock();
+            } catch {
+              // ignore
+            }
           }
         }
       }
-    }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
   }, [isFullscreen]);
 
-  // Captura tecla Escape para fechar tela cheia
+  // Fallback para fechar tela cheia com a tecla Escape
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isFullscreen) {
         setIsFullscreen(false);
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        }
+        if (typeof screen !== 'undefined' && screen.orientation) {
+          const orientation = screen.orientation as unknown as {
+            unlock?: () => void;
+          };
+          if (typeof orientation.unlock === 'function') {
+            try {
+              orientation.unlock();
+            } catch {
+              // ignore
+            }
+          }
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isFullscreen]);
+
+  const handleEnterFullscreen = async () => {
+    setIsFullscreen(true);
+    try {
+      if (document.documentElement.requestFullscreen) {
+        await document.documentElement.requestFullscreen();
+      }
+      if (typeof screen !== 'undefined' && screen.orientation) {
+        const orientation = screen.orientation as unknown as {
+          lock?: (orientation: 'landscape') => Promise<void>;
+        };
+        if (typeof orientation.lock === 'function') {
+          await orientation.lock('landscape');
+        }
+      }
+    } catch (err) {
+      console.warn('Failed to enter fullscreen or lock orientation:', err);
+    }
+  };
+
+  const handleExitFullscreen = async () => {
+    setIsFullscreen(false);
+    try {
+      if (document.fullscreenElement && document.exitFullscreen) {
+        await document.exitFullscreen();
+      }
+    } catch (err) {
+      console.warn('Failed to exit fullscreen:', err);
+    }
+    try {
+      if (typeof screen !== 'undefined' && screen.orientation) {
+        const orientation = screen.orientation as unknown as {
+          unlock?: () => void;
+        };
+        if (typeof orientation.unlock === 'function') {
+          orientation.unlock();
+        }
+      }
+    } catch {
+      // ignore
+    }
+  };
 
   if (!data || !Array.isArray(data) || data.length === 0) {
     return (
@@ -335,7 +391,7 @@ export function TrendChart({ data, type, timeframe = 'all' }: TrendChartProps) {
           variant="outline"
           size="icon"
           className="h-8 w-8 opacity-70 hover:opacity-100 transition-opacity bg-background/50 backdrop-blur-sm"
-          onClick={() => setIsFullscreen(true)}
+          onClick={handleEnterFullscreen}
           aria-label="Visualizar gráfico em tela cheia"
         >
           <Maximize2 className="h-4 w-4" />
@@ -385,7 +441,7 @@ export function TrendChart({ data, type, timeframe = 'all' }: TrendChartProps) {
               variant="outline"
               size="icon"
               className="h-10 w-10"
-              onClick={() => setIsFullscreen(false)}
+              onClick={handleExitFullscreen}
               aria-label="Fechar tela cheia"
             >
               <X className="h-5 w-5" />
