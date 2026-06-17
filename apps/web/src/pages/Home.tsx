@@ -31,7 +31,14 @@ export function Home() {
   const { data: allWeightData, isLoading: isAllWeightLoading } = useWeightHistory('all');
   const { data: allBPData, isLoading: isAllBPLoading } = useBPHistory('all');
 
-  const isLoadingMetrics = isWeightLoading || isBPLoading || isAllWeightLoading || isAllBPLoading;
+  // Pre-carrega todos os outros filtros em segundo plano para evitar "piscadas" (skeletons) ao trocar de período
+  useWeightHistory('7d');
+  useWeightHistory('30d');
+  useBPHistory('7d');
+  useBPHistory('30d');
+
+  const isLoadingAll = isAllWeightLoading || isAllBPLoading;
+  const isChartLoading = metric === 'weight' ? isWeightLoading : isBPLoading;
   const activeData = metric === 'weight' ? weightData : bpData;
 
   const calculatedWeightMetrics = React.useMemo(() => {
@@ -189,14 +196,14 @@ export function Home() {
 
         {/* Trend line chart and Summary Card */}
         <div className="mt-4 space-y-4">
-          {isLoadingMetrics ? (
+          {isChartLoading ? (
             <Skeleton className="h-[250px] w-full rounded-lg" />
           ) : (
             <TrendChart data={activeData || []} type={metric} timeframe={timeframe} />
           )}
 
           {/* Health Metrics & Indicators */}
-          {!isLoadingMetrics && metric === 'weight' && calculatedWeightMetrics && (
+          {!isLoadingAll && metric === 'weight' && calculatedWeightMetrics && (
             <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
               <Card className="border bg-card/50">
                 <CardContent className="p-3">
@@ -300,7 +307,7 @@ export function Home() {
             </div>
           )}
 
-          {!isLoadingMetrics && metric === 'bp' && calculatedBPMetrics && (
+          {!isLoadingAll && metric === 'bp' && calculatedBPMetrics && (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               <Card className="border bg-card/50">
                 <CardContent className="p-3">
