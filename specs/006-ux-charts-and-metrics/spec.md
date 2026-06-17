@@ -73,7 +73,8 @@ As a health-conscious user, I want to view calculated metrics (such as weekly we
 1. **Given** the weight dashboard is open, **When** metrics are calculated, **Then** the weight metrics cards display:
    - Last measurement (with date/time)
    - Current weight (lowest weight of the last day with records)
-   - Weekly Average Loss (Total, Last 30 Days, Last 7 Days) following the fallback logic for Start Weight and End Weight.
+   - Weekly Average Loss/Gain (Total, Last 30 Days, Last 7 Days) following the daily weight linear interpolation logic.
+   - The weekly average rate is displayed with a minus (`-`) sign for weight loss (e.g., `-0.6 kg/sem`) and a plus (`+`) sign for weight gain (e.g., `+0.3 kg/sem`).
 2. **Given** the blood pressure dashboard is open, **When** metrics are calculated, **Then** the pressure metrics cards display:
    - Last measurement (systolic / diastolic, with date/time)
    - Arithmetic averages of all available systolic and diastolic measurements within the periods (Total, Last 30 Days, Last 7 Days).
@@ -90,8 +91,10 @@ As a user who records multiple measurements on the same day, I want the charts t
 
 **Acceptance Scenarios**:
 
-1. **Given** multiple measurements recorded on the same day, **When** viewing the chart (even in 7D view), **Then** the X-axis labels include time information (e.g. "DD/MM HH:MM" or "HH:MM") to resolve daily collisions.
-2. **Given** either light or dark theme active, **When** viewing any chart, **Then** the values on the Y-axis have sufficient visual contrast to be easily readable.
+1. **Given** weight measurements are displayed on the chart, **When** the active timeframe is `Tudo` or `30D`, **Then** the X-axis displays daily dates only (no times), and any duplicate same-day logs are aggregated by displaying only the lowest weight of that day.
+2. **Given** weight measurements are displayed on the chart, **When** the active timeframe is `7D`, **Then** the X-axis displays date and time (e.g., "DD/MM HH:MM") for all logged points.
+3. **Given** blood pressure measurements are displayed on the chart, **When** the chart is rendered in any timeframe (`7D`, `30D`, or `Tudo`), **Then** the chart displays all recorded measurements, and the X-axis labels always display date and time (e.g., "DD/MM HH:MM").
+4. **Given** either light or dark theme active, **When** viewing any chart, **Then** the values on the Y-axis have sufficient visual contrast to be easily readable.
 
 ---
 
@@ -123,25 +126,31 @@ As a user navigating the interface, I want the modal transitions to feel premium
 
 - **FR-001 (Centered Modal Animation)**: The modal component for adding weight and blood pressure measurements MUST fade/scale in from the center of the viewport instead of sliding up from the bottom.
 - **FR-002 (Keyboard Date Birth Input)**: The birthdate field in the user profile MUST be a keyboard-based text input using a format mask (DD/MM/YYYY), eliminating the calendar datepicker.
-- **FR-003 (Chart X-Axis Granularity)**: The X-axis of both Weight and Blood Pressure charts MUST display time indicators (e.g. HH:MM) when multiple measurements occur on the same day, preventing overlap or single-point aggregation.
+- **FR-003 (Chart X-Axis Granularity & Aggregation)**: 
+  - For the **Weight chart**, the X-axis MUST show only daily dates (no times) when viewing the `Tudo` (ALL) or `30D` timeframes. If multiple records exist on a single day, the chart MUST show only a single point representing the lowest weight of that day. When viewing the `7D` timeframe, it MUST show date and time (`DD/MM HH:MM`) for all points.
+  - For the **Blood Pressure chart**, the chart MUST always display all recorded measurements (no aggregation or skipping) across all timeframes (`7D`, `30D`, and `Tudo`), and X-axis ticks MUST always display date and time (`DD/MM HH:MM`).
 - **FR-004 (Chart Y-Axis Contrast)**: Chart Y-axis labels and scales MUST use high-contrast color values in both light and dark modes to ensure readability.
 - **FR-005 (Logout Button Exit Icon)**: The logout button ("Sair") MUST display a standard exit/sign-out icon next to the label.
 - **FR-006 (Weight Analytics Metrics)**: The weight details section MUST display:
   - **Last Measurement**: Date, time, and weight of the latest entry.
   - **Current Weight**: The lowest weight recorded on the most recent day containing data.
-  - **Weekly Average Loss (Total, 30d, 7d)**: Calculated according to the specific start/end weight retrieval rules.
-- **FR-007 (Weight Loss Start/End Weight Selection Logic)**:
-  - **Start Date** is defined as today minus N days (where N is 7 or 30), or the date of the first record for "Total".
-  - **End Date** is defined as the date of the latest weight record in the database.
-  - **Start Weight** is retrieved using the following ordered priority:
-    1. The lowest weight recorded on the exact Start Date.
-    2. If no record exists on the Start Date, search backwards to find the closest calendar date before the Start Date that has records, and use the lowest weight of that day.
-    3. If no record exists on or before the Start Date, search forwards to find the closest calendar date after the Start Date that has records, and use the lowest weight of that day.
-  - **End Weight** is defined as the lowest weight recorded on the End Date.
+  - **Weekly Average Loss/Gain (Total, 30d, 7d)**: Calculated according to the weight daily timeline linear interpolation logic. Values representing weight loss MUST be displayed with a minus (`-`) sign, and values representing weight gain MUST be displayed with a plus (`+`) sign.
+- **FR-007 (Weight Daily Interpolation Logic)**:
+  - The calculation timeline is constructed by keeping only the lowest weight recorded per calendar day (local timezone) for each day containing logs.
+  - Let $D_{min}$ be the first calendar day with weight logs and $D_{max}$ be the last calendar day with weight logs in the database.
+  - For each calendar day $D$ from $D_{min}$ to $D_{max}$ inclusive:
+    - If logs exist on day $D$, use the lowest logged weight.
+    - Otherwise, linearly interpolate the weight between the closest preceding logged day $D_{prev}$ and closest succeeding logged day $D_{next}$ using:
+      $$W(D) = W(D_{prev}) + (W(D_{next}) - W(D_{prev})) \times \frac{\text{Days}(D - D_{prev})}{\text{Days}(D_{next} - D_{prev})}$$
 - **FR-008 (Weight Loss Calculation Formula)**:
-  - `Daily Loss Rate = (Start Weight - End Weight) / (End Date - Start Date in days)`
-  - If `End Date - Start Date` is 0 or negative, `Daily Loss Rate` MUST be 0.
-  - `Weekly Loss Rate = Daily Loss Rate * 7`.
+  - For a query interval $[D_{start}, D_{end}]$ (where $D_{start}$ is today minus 7 or 30 days, or $D_{min}$ for Total, and $D_{end}$ is today):
+    - Let $[D'_1, D'_2] = [D_{start}, D_{end}] \cap [D_{min}, D_{max}]$.
+    - If the intersection $[D'_1, D'_2]$ is empty or has fewer than 2 days ($D'_2 - D'_1 < 1$ day), the rate is `0.0 kg/sem`.
+    - Otherwise, the weekly weight rate is:
+      $$\text{WeeklyRate} = \frac{W(D'_2) - W(D'_1)}{\text{Days}(D'_2 - D'_1)} \times 7$$
+    - If `WeeklyRate` is negative, display as negative (e.g., `-0.6 kg/sem` for a loss of 0.6 kg/week).
+    - If `WeeklyRate` is positive, display with a plus sign (e.g., `+0.4 kg/sem` for a gain of 0.4 kg/week).
+    - If `WeeklyRate` is zero, display as `0.0 kg/sem`.
 - **FR-009 (Blood Pressure Analytics Averages)**: The blood pressure details section MUST display:
   - **Last Measurement**: Systolic, diastolic, date, and time of the latest entry.
   - **Arithmetic Averages (Total, 30d, 7d)**: The standard arithmetic mean of all systolic and diastolic measurements recorded strictly within each period. No closest-date fallbacks are applied.

@@ -160,7 +160,7 @@ export function Home() {
           {isLoadingMetrics ? (
             <Skeleton className="h-[250px] w-full rounded-lg" />
           ) : (
-            <TrendChart data={activeData || []} type={metric} />
+            <TrendChart data={activeData || []} type={metric} timeframe={timeframe} />
           )}
 
           {/* Health Metrics & Indicators */}
@@ -196,7 +196,7 @@ export function Home() {
               <Card className="border bg-card/50">
                 <CardContent className="p-3">
                   <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Perda Semanal (7d)</p>
-                  <p className={`text-lg font-bold mt-1 tracking-tight ${calculatedWeightMetrics.weeklyLoss7d !== null && calculatedWeightMetrics.weeklyLoss7d > 0 ? 'text-success' : ''}`}>
+                  <p className={`text-lg font-bold mt-1 tracking-tight ${calculatedWeightMetrics.weeklyLoss7d !== null && calculatedWeightMetrics.weeklyLoss7d < 0 ? 'text-success' : ''}`}>
                     {formatWeightValue(calculatedWeightMetrics.weeklyLoss7d)}
                   </p>
                   <p className="text-[10px] text-muted-foreground font-medium mt-1">Últimos 7 dias</p>
@@ -206,7 +206,7 @@ export function Home() {
               <Card className="border bg-card/50">
                 <CardContent className="p-3">
                   <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Perda Semanal (30d)</p>
-                  <p className={`text-lg font-bold mt-1 tracking-tight ${calculatedWeightMetrics.weeklyLoss30d !== null && calculatedWeightMetrics.weeklyLoss30d > 0 ? 'text-success' : ''}`}>
+                  <p className={`text-lg font-bold mt-1 tracking-tight ${calculatedWeightMetrics.weeklyLoss30d !== null && calculatedWeightMetrics.weeklyLoss30d < 0 ? 'text-success' : ''}`}>
                     {formatWeightValue(calculatedWeightMetrics.weeklyLoss30d)}
                   </p>
                   <p className="text-[10px] text-muted-foreground font-medium mt-1">Últimos 30 dias</p>
@@ -216,7 +216,7 @@ export function Home() {
               <Card className="border bg-card/50 col-span-2 sm:col-span-1">
                 <CardContent className="p-3">
                   <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Perda Semanal (Total)</p>
-                  <p className={`text-lg font-bold mt-1 tracking-tight ${calculatedWeightMetrics.weeklyLossTotal !== null && calculatedWeightMetrics.weeklyLossTotal > 0 ? 'text-success' : ''}`}>
+                  <p className={`text-lg font-bold mt-1 tracking-tight ${calculatedWeightMetrics.weeklyLossTotal !== null && calculatedWeightMetrics.weeklyLossTotal < 0 ? 'text-success' : ''}`}>
                     {formatWeightValue(calculatedWeightMetrics.weeklyLossTotal)}
                   </p>
                   <p className="text-[10px] text-muted-foreground font-medium mt-1">Todo o período</p>
