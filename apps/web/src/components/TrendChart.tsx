@@ -292,11 +292,14 @@ export function TrendChart({ data, type, timeframe = 'all' }: TrendChartProps) {
           <CartesianGrid
             strokeDasharray="4 4"
             stroke="hsl(var(--border))"
-            opacity={0.4}
+            opacity={0.7}
             vertical={false}
           />
           <XAxis
+            type="number"
             dataKey="timestamp"
+            scale="time"
+            domain={['dataMin', 'dataMax']}
             tickFormatter={formatXTick}
             tickLine={false}
             axisLine={false}
@@ -332,11 +335,14 @@ export function TrendChart({ data, type, timeframe = 'all' }: TrendChartProps) {
           <CartesianGrid
             strokeDasharray="4 4"
             stroke="hsl(var(--border))"
-            opacity={0.4}
+            opacity={0.7}
             vertical={false}
           />
           <XAxis
+            type="number"
             dataKey="timestamp"
+            scale="time"
+            domain={['dataMin', 'dataMax']}
             tickFormatter={formatXTick}
             tickLine={false}
             axisLine={false}
