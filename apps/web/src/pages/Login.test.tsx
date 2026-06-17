@@ -35,7 +35,11 @@ describe('Login (accessibility)', () => {
     );
     vi.stubGlobal(
       'fetch',
-      vi.fn(async () => ({ ok: false, status: 401, json: async () => null })) as unknown as typeof fetch
+      vi.fn(async () => ({
+        ok: false,
+        status: 401,
+        json: async () => null,
+      })) as unknown as typeof fetch
     );
   });
 

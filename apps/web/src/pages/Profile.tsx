@@ -102,7 +102,8 @@ export function Profile() {
 
     updateProfile(result.data, {
       onSuccess: () => toastSuccess('Perfil salvo com sucesso.'),
-      onError: (error: { message?: string }) => toastError(error.message || 'Falha ao salvar o perfil.'),
+      onError: (error: { message?: string }) =>
+        toastError(error.message || 'Falha ao salvar o perfil.'),
     });
   };
 
@@ -121,7 +122,8 @@ export function Profile() {
         </div>
 
         <p className="mt-2 text-sm text-muted-foreground">
-          Dados pessoais para uso futuro (ex.: cálculo de IMC e estimativas). Todos os campos são opcionais.
+          Dados pessoais para uso futuro (ex.: cálculo de IMC e estimativas). Todos os campos são
+          opcionais.
         </p>
 
         <div className="mt-6 max-w-md">
@@ -132,7 +134,10 @@ export function Profile() {
               <Skeleton className="h-10 w-full" />
             </div>
           ) : isError ? (
-            <ErrorState message="Não foi possível carregar o perfil." retry={() => void refetch()} />
+            <ErrorState
+              message="Não foi possível carregar o perfil."
+              retry={() => void refetch()}
+            />
           ) : (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
               <div className="flex items-center gap-2 text-muted-foreground">
@@ -175,7 +180,7 @@ export function Profile() {
                       } else {
                         e.target.value = val;
                       }
-                    }
+                    },
                   })}
                 />
                 {errors.birthDate && (

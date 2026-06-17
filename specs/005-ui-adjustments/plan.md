@@ -40,6 +40,7 @@ sobre o SVG atual (alinhado ao Princípio V — Simplicidade Deliberada).
 **Language/Version**: TypeScript 5.7 (strict) no frontend e backend.
 
 **Primary Dependencies**:
+
 - Web: React 18, React Router 6, TailwindCSS 3, Radix UI (`dialog`, `dropdown-menu`, `sheet`,
   `tooltip` já instalados), TanStack Query 5, React Hook Form 7 + Zod, `vite-plugin-pwa`,
   `lucide-react` (ícones), `sonner` (toasts).
@@ -68,17 +69,17 @@ exige rebuild+commit do bundle `apps/api/api/index.js`.
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-| Princípio | Conformidade | Observação |
-|-----------|--------------|------------|
-| I. Observabilidade, não aconselhamento médico | ✅ | Perfil apenas captura nome/nascimento/altura; **nenhum** cálculo de IMC/calorias nesta feature. Eixos do gráfico são visualização de dados próprios. |
-| II. Privacidade e segurança por padrão | ✅ | Perfil exige autenticação; dados acessados só pelo dono (filtro por `userEmail`). Sem novos segredos. Não logar valores de perfil. |
-| III. Acesso restrito + Google/allowlist | ✅ | Sem mudança de auth. Novo endpoint sob `requireAuth`. "Admin" no menu mantém gating existente. |
-| IV. Stack/arquitetura PWA online-first | ✅ | React/TS/Tailwind + Express/TS. PWA reforçada (ícone). Sem recursos offline novos. |
-| V. Simplicidade deliberada (anti-overengineering) | ✅ | Sem nova lib de gráfico; reutiliza SVG e componentes Radix existentes. Módulo de Perfil espelha padrão já adotado. |
-| VI. Dependências e infra sustentáveis | ✅ | Nenhuma dependência nova significativa; ícone é asset estático. |
-| VII. Testes orientados a risco | ✅ | Testes para validação/serviço de Perfil e para a lógica de geração de ticks/tooltip do gráfico (transformação de dados). |
+| Princípio                                         | Conformidade | Observação                                                                                                                                           |
+| ------------------------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| I. Observabilidade, não aconselhamento médico     | ✅           | Perfil apenas captura nome/nascimento/altura; **nenhum** cálculo de IMC/calorias nesta feature. Eixos do gráfico são visualização de dados próprios. |
+| II. Privacidade e segurança por padrão            | ✅           | Perfil exige autenticação; dados acessados só pelo dono (filtro por `userEmail`). Sem novos segredos. Não logar valores de perfil.                   |
+| III. Acesso restrito + Google/allowlist           | ✅           | Sem mudança de auth. Novo endpoint sob `requireAuth`. "Admin" no menu mantém gating existente.                                                       |
+| IV. Stack/arquitetura PWA online-first            | ✅           | React/TS/Tailwind + Express/TS. PWA reforçada (ícone). Sem recursos offline novos.                                                                   |
+| V. Simplicidade deliberada (anti-overengineering) | ✅           | Sem nova lib de gráfico; reutiliza SVG e componentes Radix existentes. Módulo de Perfil espelha padrão já adotado.                                   |
+| VI. Dependências e infra sustentáveis             | ✅           | Nenhuma dependência nova significativa; ícone é asset estático.                                                                                      |
+| VII. Testes orientados a risco                    | ✅           | Testes para validação/serviço de Perfil e para a lógica de geração de ticks/tooltip do gráfico (transformação de dados).                             |
 
 **Resultado**: PASS (sem violações). Nenhuma entrada necessária em Complexity Tracking.
 

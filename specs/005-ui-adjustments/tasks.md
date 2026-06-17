@@ -1,5 +1,5 @@
 ---
-description: "Task list for feature 005 — Ajustes de UI"
+description: 'Task list for feature 005 — Ajustes de UI'
 ---
 
 # Tasks: Ajustes de UI — Navegação, Perfil, Gráfico e Ícone PWA
@@ -30,9 +30,9 @@ Monorepo web: `apps/web/` (SPA React), `apps/api/` (Express), `packages/shared/`
 
 **Purpose**: Preparação mínima compartilhada.
 
-- [X] T001 Confirmar que `vite-plugin-pwa`, Radix (`dialog`/`dropdown-menu`/`sheet`/`tooltip`),
-  React Hook Form, Zod e `@vita/shared` estão instalados (sem reinstalar/regenerar lockfile no
-  Windows) — verificar `apps/web/package.json` e `apps/api/package.json`.
+- [x] T001 Confirmar que `vite-plugin-pwa`, Radix (`dialog`/`dropdown-menu`/`sheet`/`tooltip`),
+      React Hook Form, Zod e `@vita/shared` estão instalados (sem reinstalar/regenerar lockfile no
+      Windows) — verificar `apps/web/package.json` e `apps/api/package.json`.
 
 ---
 
@@ -43,12 +43,12 @@ entre as barras desktop/tablet/mobile).
 
 **⚠️ CRITICAL**: Concluir antes de US2 e US5.
 
-- [X] T002 Criar definição compartilhada de itens de navegação em
-  `apps/web/src/components/layout/navItems.ts` (lista tipada: Início, Histórico, Admin
-  [`adminOnly: true`], Perfil — com `to`, `icon`, `label` e flag `adminOnly`), preparada para
-  acomodar novas telas futuras. A flag `adminOnly` MUST ser respeitada por **todas** as barras
-  (desktop, tablet e mobile): itens `adminOnly` só aparecem para usuários com papel `admin`
-  (FR-023).
+- [x] T002 Criar definição compartilhada de itens de navegação em
+      `apps/web/src/components/layout/navItems.ts` (lista tipada: Início, Histórico, Admin
+      [`adminOnly: true`], Perfil — com `to`, `icon`, `label` e flag `adminOnly`), preparada para
+      acomodar novas telas futuras. A flag `adminOnly` MUST ser respeitada por **todas** as barras
+      (desktop, tablet e mobile): itens `adminOnly` só aparecem para usuários com papel `admin`
+      (FR-023).
 
 **Checkpoint**: Base de navegação pronta — user stories podem começar.
 
@@ -63,14 +63,14 @@ Application → Manifest) exibe o ícone personalizado nos tamanhos requeridos.
 
 ### Implementation for User Story 1
 
-- [X] T003 [P] [US1] Criar assets de ícone em `apps/web/public/`: `favicon.ico`, `icon-192.png`,
-  `icon-512.png`, `icon-512-maskable.png` e `apple-touch-icon.png` (180×180). Fixar no momento da
-  criação o símbolo (ex.: coração/pulso ou balança estilizada) e a cor (primária do design system
-  sobre `background_color` do manifesto), para um critério de aprovação objetivo da arte.
-- [X] T004 [US1] Declarar `manifest.icons` (192/512 + 512 maskable, com `purpose`) no `VitePWA`
-  em `apps/web/vite.config.ts`.
-- [X] T005 [US1] Adicionar `<link rel="icon">` e `<link rel="apple-touch-icon">` (e revisar
-  `theme-color`) em `apps/web/index.html`.
+- [x] T003 [P] [US1] Criar assets de ícone em `apps/web/public/`: `favicon.ico`, `icon-192.png`,
+      `icon-512.png`, `icon-512-maskable.png` e `apple-touch-icon.png` (180×180). Fixar no momento da
+      criação o símbolo (ex.: coração/pulso ou balança estilizada) e a cor (primária do design system
+      sobre `background_color` do manifesto), para um critério de aprovação objetivo da arte.
+- [x] T004 [US1] Declarar `manifest.icons` (192/512 + 512 maskable, com `purpose`) no `VitePWA`
+      em `apps/web/vite.config.ts`.
+- [x] T005 [US1] Adicionar `<link rel="icon">` e `<link rel="apple-touch-icon">` (e revisar
+      `theme-color`) em `apps/web/index.html`.
 
 **Checkpoint**: Ícone PWA funcional e instalável.
 
@@ -86,16 +86,16 @@ pela navegação (não como botão no topo).
 
 ### Implementation for User Story 2
 
-- [X] T006 [US2] Em `apps/web/src/pages/Home.tsx`: remover o subtítulo "Plataforma pessoal…",
-  a linha de e-mail/badge de papel/link "Administrar allowlist", o card "Status do backend"
-  (e a query `useQuery(['health'])` agora sem uso) e o botão "Histórico" do topo; manter no
-  cabeçalho apenas `ThemeToggle` + botão "Sair".
-- [X] T007 [P] [US2] Refatorar `apps/web/src/components/layout/SidebarNav.tsx` e
-  `apps/web/src/components/layout/NavRail.tsx` para consumir `navItems`, incluindo "Histórico" e
-  aplicando o gating `adminOnly` (o item "Admin" só é renderizado para usuários `admin`, lendo o
-  papel via `useAuth`) — alinhando o desktop/tablet ao comportamento do menu mobile (FR-023).
-- [X] T008 [US2] Atualizar `apps/web/src/pages/Home.test.tsx` para assertar ausência dos
-  elementos removidos e o conteúdo do cabeçalho (tema + Sair), e presença de Histórico no menu.
+- [x] T006 [US2] Em `apps/web/src/pages/Home.tsx`: remover o subtítulo "Plataforma pessoal…",
+      a linha de e-mail/badge de papel/link "Administrar allowlist", o card "Status do backend"
+      (e a query `useQuery(['health'])` agora sem uso) e o botão "Histórico" do topo; manter no
+      cabeçalho apenas `ThemeToggle` + botão "Sair".
+- [x] T007 [P] [US2] Refatorar `apps/web/src/components/layout/SidebarNav.tsx` e
+      `apps/web/src/components/layout/NavRail.tsx` para consumir `navItems`, incluindo "Histórico" e
+      aplicando o gating `adminOnly` (o item "Admin" só é renderizado para usuários `admin`, lendo o
+      papel via `useAuth`) — alinhando o desktop/tablet ao comportamento do menu mobile (FR-023).
+- [x] T008 [US2] Atualizar `apps/web/src/pages/Home.test.tsx` para assertar ausência dos
+      elementos removidos e o conteúdo do cabeçalho (tema + Sair), e presença de Histórico no menu.
 
 **Checkpoint**: Cabeçalho limpo e Histórico no menu, em ambos os breakpoints.
 
@@ -113,38 +113,38 @@ valores preenchidos; validações (data futura/inválida, altura fora de faixa) 
 
 > Escrever antes da implementação correspondente e garantir que falhem primeiro.
 
-- [X] T009 [P] [US3] Testes de validação/serviço de Perfil em
-  `apps/api/src/profile/profile.test.ts` cobrindo os casos do contrato (vazio→200, data futura→400,
-  ano<1900→400, altura 10/300→400, fullName>120→400, válido→200, isolamento por `userEmail`).
+- [x] T009 [P] [US3] Testes de validação/serviço de Perfil em
+      `apps/api/src/profile/profile.test.ts` cobrindo os casos do contrato (vazio→200, data futura→400,
+      ano<1900→400, altura 10/300→400, fullName>120→400, válido→200, isolamento por `userEmail`).
 
 ### Implementation for User Story 3
 
-- [X] T010 [P] [US3] Criar `profileInputSchema` (Zod) e tipos `ProfileInput`/`UserProfile` em
-  `packages/shared/src/profile.ts` e exportar em `packages/shared/src/index.ts`.
-- [X] T011 [P] [US3] Adicionar tabela `userProfiles` (id, userEmail único case-insensitive,
-  fullName, birthDate, heightCm, createdAt, updatedAt) em `apps/api/src/db/schema.ts`.
-  Acrescentar o import `date` de `drizzle-orm/pg-core` (hoje o arquivo importa apenas
-  `text/timestamp/uuid/real/integer`); `birthDate` usa o tipo `date` (retorna string `YYYY-MM-DD`).
-- [X] T012 [US3] Gerar a migração Drizzle (`npm run db:generate`) em
-  `apps/api/src/db/migrations/` (depende de T011).
-- [X] T013 [US3] Implementar `getProfile`/`upsertProfile` (filtro por `userEmail`, validação via
-  `profileInputSchema`) em `apps/api/src/profile/profile.service.ts` (depende de T010, T011).
-- [X] T014 [US3] Implementar rotas `GET /api/profile` e `PUT /api/profile` em
-  `apps/api/src/profile/profile.route.ts` (depende de T013).
-- [X] T015 [US3] Montar `profileRouter` sob `requireAuth` em `apps/api/src/app.ts`
-  (`app.use('/api/profile', requireAuth, profileRouter)`).
-- [X] T016 [P] [US3] Adicionar hooks `useProfile` (GET) e `useUpdateProfile` (PUT, invalidando o
-  cache) em `apps/web/src/services/api.ts`.
-- [X] T017 [US3] Criar a página `apps/web/src/pages/Profile.tsx` (React Hook Form + Zod, dentro
-  do `AppShell`) com campos nome completo, data de nascimento e altura (cm), estados de
-  loading/erro/sucesso, pré-carregando valores salvos e permitindo salvar parcial (depende de
-  T016, T010).
-- [X] T018 [US3] Adicionar a rota `/profile` (ProtectedRoute) em `apps/web/src/App.tsx`
-  (depende de T017).
-- [X] T019 [P] [US3] Teste de UI do formulário de Perfil em `apps/web/src/pages/Profile.test.tsx`
-  (validações client-side, pré-carregamento, salvar parcial).
-- [X] T020 [US3] Rebuildar e commitar o bundle serverless `apps/api/api/index.js`
-  (`cd apps/api && npm run build`) após as mudanças de backend (depende de T012–T015).
+- [x] T010 [P] [US3] Criar `profileInputSchema` (Zod) e tipos `ProfileInput`/`UserProfile` em
+      `packages/shared/src/profile.ts` e exportar em `packages/shared/src/index.ts`.
+- [x] T011 [P] [US3] Adicionar tabela `userProfiles` (id, userEmail único case-insensitive,
+      fullName, birthDate, heightCm, createdAt, updatedAt) em `apps/api/src/db/schema.ts`.
+      Acrescentar o import `date` de `drizzle-orm/pg-core` (hoje o arquivo importa apenas
+      `text/timestamp/uuid/real/integer`); `birthDate` usa o tipo `date` (retorna string `YYYY-MM-DD`).
+- [x] T012 [US3] Gerar a migração Drizzle (`npm run db:generate`) em
+      `apps/api/src/db/migrations/` (depende de T011).
+- [x] T013 [US3] Implementar `getProfile`/`upsertProfile` (filtro por `userEmail`, validação via
+      `profileInputSchema`) em `apps/api/src/profile/profile.service.ts` (depende de T010, T011).
+- [x] T014 [US3] Implementar rotas `GET /api/profile` e `PUT /api/profile` em
+      `apps/api/src/profile/profile.route.ts` (depende de T013).
+- [x] T015 [US3] Montar `profileRouter` sob `requireAuth` em `apps/api/src/app.ts`
+      (`app.use('/api/profile', requireAuth, profileRouter)`).
+- [x] T016 [P] [US3] Adicionar hooks `useProfile` (GET) e `useUpdateProfile` (PUT, invalidando o
+      cache) em `apps/web/src/services/api.ts`.
+- [x] T017 [US3] Criar a página `apps/web/src/pages/Profile.tsx` (React Hook Form + Zod, dentro
+      do `AppShell`) com campos nome completo, data de nascimento e altura (cm), estados de
+      loading/erro/sucesso, pré-carregando valores salvos e permitindo salvar parcial (depende de
+      T016, T010).
+- [x] T018 [US3] Adicionar a rota `/profile` (ProtectedRoute) em `apps/web/src/App.tsx`
+      (depende de T017).
+- [x] T019 [P] [US3] Teste de UI do formulário de Perfil em `apps/web/src/pages/Profile.test.tsx`
+      (validações client-side, pré-carregamento, salvar parcial).
+- [x] T020 [US3] Rebuildar e commitar o bundle serverless `apps/api/api/index.js`
+      (`cd apps/api && npm run build`) após as mudanças de backend (depende de T012–T015).
 
 **Checkpoint**: Perfil persistente e funcional ponta a ponta; item "Perfil" não é mais link quebrado.
 
@@ -160,19 +160,19 @@ sobreposição nos três períodos; eixo Y com unidade; no mobile, toque exibe v
 
 ### Tests for User Story 4 ⚠️ (área de risco — Princípio VII)
 
-- [X] T021 [P] [US4] Teste unitário da lógica de geração de marcas do eixo X (3–6, distribuídas,
-  formato por período) e do mapeamento de ponto→valor do tooltip em
-  `apps/web/src/components/TrendChart.test.tsx` (incluir 0/1/muitos pontos).
+- [x] T021 [P] [US4] Teste unitário da lógica de geração de marcas do eixo X (3–6, distribuídas,
+      formato por período) e do mapeamento de ponto→valor do tooltip em
+      `apps/web/src/components/TrendChart.test.tsx` (incluir 0/1/muitos pontos).
 
 ### Implementation for User Story 4
 
-- [X] T022 [US4] Em `apps/web/src/components/TrendChart.tsx`: substituir os rótulos fixos do
-  eixo X por 3–6 marcas adaptativas distribuídas uniformemente, com formato de data por período
-  (dia/mês em 7D/30D; mês/ano em "Tudo" longo) e `textAnchor` ajustado nas bordas; acrescentar a
-  unidade (kg/mmHg) ao eixo Y.
-- [X] T023 [US4] Em `apps/web/src/components/TrendChart.tsx`: adicionar estado de "ponto ativo" e
-  tooltip com valor + data, acionado por `mouseenter/leave` (desktop) e `click/touch` (mobile),
-  com clamp para permanecer dentro da área visível.
+- [x] T022 [US4] Em `apps/web/src/components/TrendChart.tsx`: substituir os rótulos fixos do
+      eixo X por 3–6 marcas adaptativas distribuídas uniformemente, com formato de data por período
+      (dia/mês em 7D/30D; mês/ano em "Tudo" longo) e `textAnchor` ajustado nas bordas; acrescentar a
+      unidade (kg/mmHg) ao eixo Y.
+- [x] T023 [US4] Em `apps/web/src/components/TrendChart.tsx`: adicionar estado de "ponto ativo" e
+      tooltip com valor + data, acionado por `mouseenter/leave` (desktop) e `click/touch` (mobile),
+      com clamp para permanecer dentro da área visível.
 
 **Checkpoint**: Gráfico legível e interativo em desktop e mobile.
 
@@ -188,16 +188,16 @@ botões Adicionar Peso/Pressão totalmente visíveis e clicáveis.
 
 ### Implementation for User Story 5
 
-- [X] T024 [US5] Refatorar `apps/web/src/components/layout/BottomNav.tsx` para exibir "Início" +
-  botão "Menu" (ícone `Menu`) que abre um `Sheet` (Radix) ancorado na base, listando os itens
-  secundários a partir de `navItems` (Admin condicional ao papel; Histórico; Perfil); selecionar
-  navega e fecha o sheet (depende de T002).
-- [X] T025 [US5] Corrigir a sobreposição entre a `BottomNav` e os FABs de Adicionar em
-  `apps/web/src/pages/Home.tsx` (e padding inferior do conteúdo em
-  `apps/web/src/components/layout/AppShell.tsx`/`PageContainer.tsx`): ajustar `z-index` e
-  espaçamento para os FABs ficarem acima da barra e totalmente clicáveis.
-- [X] T026 [P] [US5] Atualizar `apps/web/src/components/layout/AppShell.test.tsx` se a estrutura
-  de navegação testada mudar (presença do botão de menu mobile).
+- [x] T024 [US5] Refatorar `apps/web/src/components/layout/BottomNav.tsx` para exibir "Início" +
+      botão "Menu" (ícone `Menu`) que abre um `Sheet` (Radix) ancorado na base, listando os itens
+      secundários a partir de `navItems` (Admin condicional ao papel; Histórico; Perfil); selecionar
+      navega e fecha o sheet (depende de T002).
+- [x] T025 [US5] Corrigir a sobreposição entre a `BottomNav` e os FABs de Adicionar em
+      `apps/web/src/pages/Home.tsx` (e padding inferior do conteúdo em
+      `apps/web/src/components/layout/AppShell.tsx`/`PageContainer.tsx`): ajustar `z-index` e
+      espaçamento para os FABs ficarem acima da barra e totalmente clicáveis.
+- [x] T026 [P] [US5] Atualizar `apps/web/src/components/layout/AppShell.test.tsx` se a estrutura
+      de navegação testada mudar (presença do botão de menu mobile).
 
 **Checkpoint**: Navegação mobile ergonômica e extensível, sem colisão de toque.
 
@@ -213,12 +213,12 @@ controles sem fechar o teclado; no desktop, modal permanece centralizado.
 
 ### Implementation for User Story 6
 
-- [X] T027 [US6] Ajustar `apps/web/src/components/ui/dialog.tsx` (DialogContent) para ancorar ao
-  topo no mobile via classes responsivas (ex.: `top-4`/alinhamento ao topo) e centralizar a
-  partir de `sm:`; garantir scroll interno sem cortar os botões de ação.
-- [X] T028 [P] [US6] Confirmar/aplicar o posicionamento ao topo em
-  `apps/web/src/components/WeightCaptureModal.tsx` e `apps/web/src/components/BPCaptureModal.tsx`
-  (className quando necessário), preservando a abertura automática do teclado numérico.
+- [x] T027 [US6] Ajustar `apps/web/src/components/ui/dialog.tsx` (DialogContent) para ancorar ao
+      topo no mobile via classes responsivas (ex.: `top-4`/alinhamento ao topo) e centralizar a
+      partir de `sm:`; garantir scroll interno sem cortar os botões de ação.
+- [x] T028 [P] [US6] Confirmar/aplicar o posicionamento ao topo em
+      `apps/web/src/components/WeightCaptureModal.tsx` e `apps/web/src/components/BPCaptureModal.tsx`
+      (className quando necessário), preservando a abertura automática do teclado numérico.
 
 **Checkpoint**: Modais legíveis com o teclado aberto no mobile.
 
@@ -228,20 +228,20 @@ controles sem fechar o teclado; no desktop, modal permanece centralizado.
 
 **Purpose**: Acessibilidade básica (FR-027–031, SC-008) e validação final, transversais às stories.
 
-- [X] T029 [P] Adicionar nomes acessíveis (`aria-label`) ao botão de menu mobile (três tracinhos)
-  em `apps/web/src/components/layout/BottomNav.tsx` e aos controles de interação do gráfico em
-  `apps/web/src/components/TrendChart.tsx` (FR-027).
-- [X] T030 [P] Garantir alvo de toque ≥44×44px na `BottomNav` e nos FABs de Adicionar
-  (`apps/web/src/pages/Home.tsx`, `apps/web/src/components/layout/BottomNav.tsx`) (FR-029).
-- [X] T031 Verificar operação por teclado e gestão de foco (foco inicial, `Esc`, retorno) no menu
-  mobile (`Sheet`), modais de captura e tela de Perfil — ajustar onde os primitivos Radix não
-  cobrirem (FR-028).
-- [X] T032 [P] Garantir que o gráfico não dependa só de cor (legenda/rótulo sistólica×diastólica)
-  nem só de hover para comunicar o valor, em `apps/web/src/components/TrendChart.tsx` (FR-030).
-- [X] T033 Rodar lint, typecheck e a suíte de testes (`apps/web` e `apps/api`):
-  `npm run lint`/`typecheck` e `npm test` em cada app.
-- [X] T034 Executar a validação manual do `specs/005-ui-adjustments/quickstart.md` (cenários 1–7,
-  incluindo a11y) em desktop e mobile.
+- [x] T029 [P] Adicionar nomes acessíveis (`aria-label`) ao botão de menu mobile (três tracinhos)
+      em `apps/web/src/components/layout/BottomNav.tsx` e aos controles de interação do gráfico em
+      `apps/web/src/components/TrendChart.tsx` (FR-027).
+- [x] T030 [P] Garantir alvo de toque ≥44×44px na `BottomNav` e nos FABs de Adicionar
+      (`apps/web/src/pages/Home.tsx`, `apps/web/src/components/layout/BottomNav.tsx`) (FR-029).
+- [x] T031 Verificar operação por teclado e gestão de foco (foco inicial, `Esc`, retorno) no menu
+      mobile (`Sheet`), modais de captura e tela de Perfil — ajustar onde os primitivos Radix não
+      cobrirem (FR-028).
+- [x] T032 [P] Garantir que o gráfico não dependa só de cor (legenda/rótulo sistólica×diastólica)
+      nem só de hover para comunicar o valor, em `apps/web/src/components/TrendChart.tsx` (FR-030).
+- [x] T033 Rodar lint, typecheck e a suíte de testes (`apps/web` e `apps/api`):
+      `npm run lint`/`typecheck` e `npm test` em cada app.
+- [x] T034 Executar a validação manual do `specs/005-ui-adjustments/quickstart.md` (cenários 1–7,
+      incluindo a11y) em desktop e mobile.
 
 ---
 

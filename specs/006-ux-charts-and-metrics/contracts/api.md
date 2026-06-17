@@ -9,8 +9,11 @@ No new REST API endpoints are introduced by this feature. This document outlines
 The birthdate text-mask on the frontend maps to the existing `/api/profile` endpoints.
 
 ### `GET /api/profile`
+
 Retrieve the authenticated user's profile info.
-* **Response Payload (JSON)**: `200 OK`
+
+- **Response Payload (JSON)**: `200 OK`
+
 ```json
 {
   "id": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
@@ -23,8 +26,11 @@ Retrieve the authenticated user's profile info.
 ```
 
 ### `PUT /api/profile`
+
 Update profile fields. All fields are optional.
-* **Request Payload (JSON)**:
+
+- **Request Payload (JSON)**:
+
 ```json
 {
   "fullName": "Rafael Cruz",
@@ -32,7 +38,9 @@ Update profile fields. All fields are optional.
   "heightCm": 180
 }
 ```
-* **Response Payload (JSON)**: `200 OK`
+
+- **Response Payload (JSON)**: `200 OK`
+
 ```json
 {
   "id": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
@@ -49,5 +57,6 @@ Update profile fields. All fields are optional.
 ## 2. Metrics History API Contract (Frontend Consumer Interface)
 
 To calculate weekly loss rates and blood pressure averages on the frontend, the client always requests the complete historical log dataset from:
-* `GET /api/metrics/weight?timeframe=all`
-* `GET /api/metrics/blood-pressure?timeframe=all`
+
+- `GET /api/metrics/weight?timeframe=all`
+- `GET /api/metrics/blood-pressure?timeframe=all`

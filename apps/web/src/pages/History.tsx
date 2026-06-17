@@ -20,6 +20,8 @@ import {
 } from '../services/api';
 import { toastSuccess, toastError } from '../lib/toast';
 import { Scale, Heart, Calendar, Edit2, Trash2, ArrowLeft, Loader2 } from 'lucide-react';
+import { DateTimeInput } from '../components/DateTimeInput';
+import { formatISOToDateTimeMask, parseDateTimeToISO } from '../lib/date';
 
 export function History() {
   const [activeTab, setActiveTab] = React.useState<'weight' | 'bp'>('weight');
@@ -41,20 +43,19 @@ export function History() {
   // Edit form states
   const [editWeightValue, setEditWeightValue] = React.useState('');
   const [editWeightDate, setEditWeightDate] = React.useState('');
+  const [isWeightDateValid, setIsWeightDateValid] = React.useState(true);
 
   const [editBPSystolic, setEditBPSystolic] = React.useState('');
   const [editBPDiastolic, setEditBPDiastolic] = React.useState('');
   const [editBPDate, setEditBPDate] = React.useState('');
+  const [isBPDateValid, setIsBPDateValid] = React.useState(true);
 
   // Setup form when opening edit weight modal
   React.useEffect(() => {
     if (editingWeight) {
       setEditWeightValue(editingWeight.weight.toString());
-      // Convert to datetime-local local timezone format
-      const date = new Date(editingWeight.loggedAt);
-      const offsetMs = date.getTimezoneOffset() * 60 * 1000;
-      const localISOTime = new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
-      setEditWeightDate(localISOTime);
+      setEditWeightDate(formatISOToDateTimeMask(editingWeight.loggedAt));
+      setIsWeightDateValid(true);
     }
   }, [editingWeight]);
 
@@ -63,10 +64,8 @@ export function History() {
     if (editingBP) {
       setEditBPSystolic(editingBP.systolic.toString());
       setEditBPDiastolic(editingBP.diastolic.toString());
-      const date = new Date(editingBP.loggedAt);
-      const offsetMs = date.getTimezoneOffset() * 60 * 1000;
-      const localISOTime = new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
-      setEditBPDate(localISOTime);
+      setEditBPDate(formatISOToDateTimeMask(editingBP.loggedAt));
+      setIsBPDateValid(true);
     }
   }, [editingBP]);
 
@@ -85,7 +84,8 @@ export function History() {
     if (confirm(`Excluir a medição de pressão de ${systolic}x${diastolic} mmHg?`)) {
       deleteBP(id, {
         onSuccess: () => toastSuccess('Registro de pressão excluído.'),
-        onError: (err: { message?: string }) => toastError(err.message || 'Erro ao excluir pressão.'),
+        onError: (err: { message?: string }) =>
+          toastError(err.message || 'Erro ao excluir pressão.'),
       });
     }
   };
@@ -103,12 +103,17 @@ export function History() {
       return;
     }
 
+    if (!isWeightDateValid) {
+      toastError('Por favor, insira uma data e hora válidas (e não-futura).');
+      return;
+    }
+
     updateWeight(
       {
         id: editingWeight.id,
         data: {
           weight: parsedWeight,
-          loggedAt: new Date(editWeightDate).toISOString(),
+          loggedAt: parseDateTimeToISO(editWeightDate),
         },
       },
       {
@@ -116,7 +121,8 @@ export function History() {
           toastSuccess('Registro de peso atualizado!');
           setEditingWeight(null);
         },
-        onError: (err: { message?: string }) => toastError(err.message || 'Erro ao atualizar peso.'),
+        onError: (err: { message?: string }) =>
+          toastError(err.message || 'Erro ao atualizar peso.'),
       }
     );
   };
@@ -139,13 +145,18 @@ export function History() {
       return;
     }
 
+    if (!isBPDateValid) {
+      toastError('Por favor, insira uma data e hora válidas (e não-futura).');
+      return;
+    }
+
     updateBP(
       {
         id: editingBP.id,
         data: {
           systolic: sysNum,
           diastolic: diaNum,
-          loggedAt: new Date(editBPDate).toISOString(),
+          loggedAt: parseDateTimeToISO(editBPDate),
         },
       },
       {
@@ -153,7 +164,8 @@ export function History() {
           toastSuccess('Registro de pressão atualizado!');
           setEditingBP(null);
         },
-        onError: (err: { message?: string }) => toastError(err.message || 'Erro ao atualizar pressão.'),
+        onError: (err: { message?: string }) =>
+          toastError(err.message || 'Erro ao atualizar pressão.'),
       }
     );
   };
@@ -161,12 +173,16 @@ export function History() {
   // Sort logs descending (newest first) for history listing
   const sortedWeights = React.useMemo(() => {
     if (!weightData) return [];
-    return [...weightData].sort((a, b) => new Date(b.loggedAt).getTime() - new Date(a.loggedAt).getTime());
+    return [...weightData].sort(
+      (a, b) => new Date(b.loggedAt).getTime() - new Date(a.loggedAt).getTime()
+    );
   }, [weightData]);
 
   const sortedBPs = React.useMemo(() => {
     if (!bpData) return [];
-    return [...bpData].sort((a, b) => new Date(b.loggedAt).getTime() - new Date(a.loggedAt).getTime());
+    return [...bpData].sort(
+      (a, b) => new Date(b.loggedAt).getTime() - new Date(a.loggedAt).getTime()
+    );
   }, [bpData]);
 
   const isLoading = activeTab === 'weight' ? isWeightLoading : isBPLoading;
@@ -176,7 +192,11 @@ export function History() {
       <div className="py-6">
         {/* Header navigation */}
         <div className="flex items-center gap-3 mb-6">
-          <Link to="/" aria-label="Voltar" className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+          <Link
+            to="/"
+            aria-label="Voltar"
+            className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
@@ -186,7 +206,11 @@ export function History() {
         </div>
 
         {/* Tab selector */}
-        <div className="mb-6 flex w-full rounded-lg bg-muted p-1" role="tablist" aria-label="Selecionar métrica">
+        <div
+          className="mb-6 flex w-full rounded-lg bg-muted p-1"
+          role="tablist"
+          aria-label="Selecionar métrica"
+        >
           <button
             type="button"
             role="tab"
@@ -225,7 +249,10 @@ export function History() {
             ))
           ) : activeTab === 'weight' ? (
             sortedWeights.length === 0 ? (
-              <EmptyState icon={<Scale className="h-12 w-12" />} title="Nenhum registro de peso encontrado." />
+              <EmptyState
+                icon={<Scale className="h-12 w-12" />}
+                title="Nenhum registro de peso encontrado."
+              />
             ) : (
               sortedWeights.map((log) => (
                 <Card key={log.id} className="transition-colors hover:bg-muted/50">
@@ -271,7 +298,10 @@ export function History() {
               ))
             )
           ) : sortedBPs.length === 0 ? (
-            <EmptyState icon={<Heart className="h-12 w-12" />} title="Nenhum registro de pressão encontrado." />
+            <EmptyState
+              icon={<Heart className="h-12 w-12" />}
+              title="Nenhum registro de pressão encontrado."
+            />
           ) : (
             sortedBPs.map((log) => (
               <Card key={log.id} className="transition-colors hover:bg-muted/50">
@@ -282,7 +312,8 @@ export function History() {
                     </div>
                     <div>
                       <p className="text-lg font-bold tracking-tight">
-                        {log.systolic}x{log.diastolic} <span className="text-xs font-semibold text-muted-foreground">mmHg</span>
+                        {log.systolic}x{log.diastolic}{' '}
+                        <span className="text-xs font-semibold text-muted-foreground">mmHg</span>
                       </p>
                       <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
                         <Calendar className="h-3 w-3" />
@@ -342,20 +373,36 @@ export function History() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="weight-date-edit">Data e Hora</Label>
-              <Input
+              <DateTimeInput
                 id="weight-date-edit"
-                type="datetime-local"
                 value={editWeightDate}
-                onChange={(e) => setEditWeightDate(e.target.value)}
+                onChange={(val, isValid) => {
+                  setEditWeightDate(val);
+                  setIsWeightDateValid(isValid);
+                }}
                 required
+                className={
+                  !isWeightDateValid && editWeightDate.length === 16
+                    ? 'border-destructive focus-visible:ring-destructive'
+                    : ''
+                }
               />
             </div>
             <div className="flex gap-3 pt-2">
-              <Button type="button" variant="outline" onClick={() => setEditingWeight(null)} className="flex-1">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setEditingWeight(null)}
+                className="flex-1"
+              >
                 Cancelar
               </Button>
               <Button type="submit" disabled={isUpdatingWeight} className="flex-1">
-                {isUpdatingWeight ? <Loader2 className="h-4 w-4 animate-spin mr-1 inline" /> : 'Salvar'}
+                {isUpdatingWeight ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-1 inline" />
+                ) : (
+                  'Salvar'
+                )}
               </Button>
             </div>
           </form>
@@ -397,16 +444,28 @@ export function History() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="bp-date-edit">Data e Hora</Label>
-              <Input
+              <DateTimeInput
                 id="bp-date-edit"
-                type="datetime-local"
                 value={editBPDate}
-                onChange={(e) => setEditBPDate(e.target.value)}
+                onChange={(val, isValid) => {
+                  setEditBPDate(val);
+                  setIsBPDateValid(isValid);
+                }}
                 required
+                className={
+                  !isBPDateValid && editBPDate.length === 16
+                    ? 'border-destructive focus-visible:ring-destructive'
+                    : ''
+                }
               />
             </div>
             <div className="flex gap-3 pt-2">
-              <Button type="button" variant="outline" onClick={() => setEditingBP(null)} className="flex-1">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setEditingBP(null)}
+                className="flex-1"
+              >
                 Cancelar
               </Button>
               <Button type="submit" disabled={isUpdatingBP} className="flex-1">

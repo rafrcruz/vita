@@ -25,24 +25,24 @@ Média de Perda Semanal (7d): média da perda de peso semanal, considerando os u
 
 para calcular a media de perda semanal, penso em ser dessa forma:
 pego a data inicio e a data fim do intervalo.
-pego o peso na data inicio e o peso na data fim. 
+pego o peso na data inicio e o peso na data fim.
 para encontrar o peso na data inicio, eu olharia:
+
 1. se tem registro de peso na data inicio, pegar o menor peso daquele dia;
 2. se não tem registro naquele dia, mas tem registro anterior, pegar da data anterior mais proxima, o menor valor daquele dia.
 3. se nao tem registro de peso na data inicio, nem anterior a data inicio, pegar o dia mais proximo posterior a data inicio, e pegar o menor peso do dia.
 
 para o peso na data final, eu pego o ultimo dia que teve registro, e pego o menor peso daquele dia.
 
-com os pesos na data inicio e na data fim, eu calculo a média de perda de peso diária. 
+com os pesos na data inicio e na data fim, eu calculo a média de perda de peso diária.
 para transformar em semanal, eu multiplico a perda de peso diaria por 7.
 
-
-Para pressão, nós vamos mostrar a ultima mediçaõ, e  a média para o periodo completo, para 30 dias e para 7 dias, da sistolica e da diastolica.
+Para pressão, nós vamos mostrar a ultima mediçaõ, e a média para o periodo completo, para 30 dias e para 7 dias, da sistolica e da diastolica.
 diferente do peso, aqui nao tera uma regra especial, nos vamos fazer uma media considerando todas as medições disponiveis no intervalo.
 
 O botão de Sair também poderia ter um iconezinho de saida."
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Birthdate Input Usability (Priority: P1)
 
@@ -118,15 +118,15 @@ As a user navigating the interface, I want the modal transitions to feel premium
 - **Zero records in interval**: When calculating weight loss or pressure averages for a period (e.g., last 7 days) and there are no records at all in the system, how does it render? (Should display "N/A" or "0.0 kg" with a safe fallback).
 - **Single record in system**: When only one weight record exists, the Start Weight and End Weight will resolve to the same record. The daily weight loss should calculate to 0.0 kg/week without throwing division-by-zero or negative interval errors.
 - **Interval has 0 days difference**: If Start Date matches End Date, the difference in days is 0. Division by zero must be prevented.
-- **Incomplete date typing**: If the user leaves the birthdate field half-filled (e.g., "13/02/19__"), saving should be blocked by validation.
+- **Incomplete date typing**: If the user leaves the birthdate field half-filled (e.g., "13/02/19\_\_"), saving should be blocked by validation.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
 - **FR-001 (Centered Modal Animation)**: The modal component for adding weight and blood pressure measurements MUST fade/scale in from the center of the viewport instead of sliding up from the bottom.
 - **FR-002 (Keyboard Date Birth Input)**: The birthdate field in the user profile MUST be a keyboard-based text input using a format mask (DD/MM/YYYY), eliminating the calendar datepicker.
-- **FR-003 (Chart X-Axis Granularity & Aggregation)**: 
+- **FR-003 (Chart X-Axis Granularity & Aggregation)**:
   - For the **Weight chart**, the X-axis MUST show only daily dates (no times) when viewing the `Tudo` (ALL) or `30D` timeframes. If multiple records exist on a single day, the chart MUST show only a single point representing the lowest weight of that day. When viewing the `7D` timeframe, it MUST show date and time (`DD/MM HH:MM`) for all points.
   - For the **Blood Pressure chart**, the chart MUST always display all recorded measurements (no aggregation or skipping) across all timeframes (`7D`, `30D`, and `Tudo`), and X-axis ticks MUST always display date and time (`DD/MM HH:MM`).
 - **FR-004 (Chart Y-Axis Contrast)**: Chart Y-axis labels and scales MUST use high-contrast color values in both light and dark modes to ensure readability.
@@ -156,13 +156,13 @@ As a user navigating the interface, I want the modal transitions to feel premium
   - **Arithmetic Averages (Total, 30d, 7d)**: The standard arithmetic mean of all systolic and diastolic measurements recorded strictly within each period. No closest-date fallbacks are applied.
 - **FR-010 (Test Coverage for Calculations)**: The calculation logic for weight loss and blood pressure averages MUST be covered by unit tests (as per Principle VII - Testes Orientados a Risco) to guarantee correct behavior under all boundary conditions.
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **UserProfile**: Represents user preferences, including the `birthdate` attribute.
 - **WeightRecord**: Represents a single weight measurement, containing `weight` (numeric value), `date` (date/time of recording).
 - **BloodPressureRecord**: Represents a blood pressure measurement, containing `systolic` (numeric), `diastolic` (numeric), `date` (date/time of recording).
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

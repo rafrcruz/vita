@@ -52,7 +52,7 @@ Decisões de pesquisa para resolver pontos técnicos da feature. Nenhum item fic
   (sem API padrão estável; `visualViewport` ajuda mas varia). Ancorar ao topo no mobile
   resolve o problema de visibilidade de "Alterar data"/Cancelar/Salvar de forma simples e
   determinística, já que o teclado ocupa a parte inferior. Opcionalmente, `interactive-widget=
-  resizes-content` no viewport e/ou ajuste com `visualViewport` podem refinar, mas não são
+resizes-content` no viewport e/ou ajuste com `visualViewport` podem refinar, mas não são
   obrigatórios.
 - **Alternatives considered**:
   - Detectar altura do teclado via `visualViewport` e reposicionar dinamicamente — mais
@@ -100,8 +100,8 @@ Decisões de pesquisa para resolver pontos técnicos da feature. Nenhum item fic
 
 - **Decision**: No `profileInputSchema` (Zod): `fullName` string opcional (trim, máx. ~120),
   `birthDate` opcional como `YYYY-MM-DD`, não no futuro e dentro de faixa plausível (ex.: ano
-  >= 1900); `heightCm` opcional, número plausível (ex.: 50–250 cm). Todos opcionais (FR-014).
-  Mensagens em português, no padrão dos schemas existentes.
+  > = 1900); `heightCm` opcional, número plausível (ex.: 50–250 cm). Todos opcionais (FR-014).
+  > Mensagens em português, no padrão dos schemas existentes.
 - **Rationale**: Reflete FR-012/FR-014; reaproveita o estilo de validação de `health.ts`.
 - **Alternatives considered**: tornar campos obrigatórios — contraria a decisão de permitir
   salvamento parcial no primeiro acesso. Rejeitado.

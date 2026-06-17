@@ -1,5 +1,5 @@
 ---
-description: "Task list — Polimento Visual da Aplicação (UI/UX)"
+description: 'Task list — Polimento Visual da Aplicação (UI/UX)'
 ---
 
 # Tasks: Polimento Visual da Aplicação (UI/UX)
@@ -31,8 +31,8 @@ tarefas no **mesmo arquivo em fases diferentes** são sequenciais (não marcar `
 
 **Purpose**: fixar a linha de base funcional/visual antes de qualquer mudança.
 
-- [X] T001 Rodar baseline funcional: `npm run -w @vita/web typecheck` e `npm run -w @vita/web test` e registrar que estão verdes (estado de partida para SC-001)
-- [X] T002 [P] Registrar baseline de auditoria de tokens com ripgrep (`text-red-|bg-red-|border-gray-|#[0-9a-fA-F]{3,6}|rgb\(|font-black|text-5xl|shadow-2xl|shadow-none`) sobre `apps/web/src`, anotando as ocorrências atuais
+- [x] T001 Rodar baseline funcional: `npm run -w @vita/web typecheck` e `npm run -w @vita/web test` e registrar que estão verdes (estado de partida para SC-001)
+- [x] T002 [P] Registrar baseline de auditoria de tokens com ripgrep (`text-red-|bg-red-|border-gray-|#[0-9a-fA-F]{3,6}|rgb\(|font-black|text-5xl|shadow-2xl|shadow-none`) sobre `apps/web/src`, anotando as ocorrências atuais
 - [ ] T003 [P] Capturar screenshots de referência (antes) de Login, Home, History, AdminAllowlist, StyleGuide e modais de captura, em tema claro e escuro, nas larguras ~390/768/1920/3440 (base para comparação de SC-010) — **manual (sem navegador neste ambiente); pendente**
 
 ---
@@ -43,10 +43,10 @@ tarefas no **mesmo arquivo em fases diferentes** são sequenciais (não marcar `
 
 **⚠️ CRITICAL**: nenhuma story pode começar antes desta fase.
 
-- [X] T004 Adicionar escala de elevação nomeada (níveis 0–4: superfície→cartão→cartão elevado→popover/menu→modal) em `theme.extend.boxShadow` de `apps/web/tailwind.config.ts` (ver data-model.md §3)
-- [X] T005 Formalizar tokens de raio (`sm/md/lg/full`) e tokens tipográficos auxiliares (line-height/letter-spacing) em `apps/web/tailwind.config.ts` (mesmo arquivo de T004 → sequencial)
-- [X] T006 Adicionar tokens de movimento — `transitionDuration` (rápida ~120 ms, padrão ~160 ms, máx ~200 ms) e `transitionTimingFunction` (easing padrão único) — em `apps/web/tailwind.config.ts`, para padronizar microinterações (resolve FR-017/SC-008; ver data-model.md §7.1) (mesmo arquivo de T004/T005 → sequencial)
-- [X] T007 Definir papéis tipográficos explícitos, estilo global de foco (`ring`) e de seleção, e aplicar ajustes finos de HSL para qualquer lacuna de contraste WCAG AA nos dois temas em `apps/web/src/index.css` (ver data-model.md §1, §4; contracts/design-tokens.md)
+- [x] T004 Adicionar escala de elevação nomeada (níveis 0–4: superfície→cartão→cartão elevado→popover/menu→modal) em `theme.extend.boxShadow` de `apps/web/tailwind.config.ts` (ver data-model.md §3)
+- [x] T005 Formalizar tokens de raio (`sm/md/lg/full`) e tokens tipográficos auxiliares (line-height/letter-spacing) em `apps/web/tailwind.config.ts` (mesmo arquivo de T004 → sequencial)
+- [x] T006 Adicionar tokens de movimento — `transitionDuration` (rápida ~120 ms, padrão ~160 ms, máx ~200 ms) e `transitionTimingFunction` (easing padrão único) — em `apps/web/tailwind.config.ts`, para padronizar microinterações (resolve FR-017/SC-008; ver data-model.md §7.1) (mesmo arquivo de T004/T005 → sequencial)
+- [x] T007 Definir papéis tipográficos explícitos, estilo global de foco (`ring`) e de seleção, e aplicar ajustes finos de HSL para qualquer lacuna de contraste WCAG AA nos dois temas em `apps/web/src/index.css` (ver data-model.md §1, §4; contracts/design-tokens.md)
 
 **Checkpoint**: tokens prontos (cor, raio, elevação, tipografia, movimento) — stories podem iniciar.
 
@@ -61,21 +61,21 @@ mesmo tipo ficam idênticos entre telas.
 cravados divergentes e que cartões/badges/inputs/tabelas/modais/alerts/toasts são idênticos entre
 telas (SC-002, SC-003).
 
-- [X] T008 [P] [US1] Substituir cor cravada `text-red-500` por `text-destructive` e harmonizar realces de ícone via tokens em `apps/web/src/pages/History.tsx`
-- [X] T009 [P] [US1] Trocar `<input type="checkbox">` nativo (com `border-gray-300`) pelo componente `Checkbox` em `apps/web/src/components/WeightCaptureModal.tsx`
-- [X] T010 [P] [US1] Aplicar o mesmo ajuste de checkbox/tokens em `apps/web/src/components/BPCaptureModal.tsx`
-- [X] T011 [P] [US1] Aplicar escala de elevação (nível 1), raio `lg` e padding consistente em `apps/web/src/components/ui/card.tsx`
-- [X] T012 [P] [US1] Aplicar elevação nível 3 + raio/borda por token em `apps/web/src/components/ui/dropdown-menu.tsx`
-- [X] T013 [P] [US1] Aplicar elevação nível 3 + raio/borda por token em `apps/web/src/components/ui/select.tsx`
-- [X] T014 [P] [US1] Aplicar elevação nível 3 + raio/borda por token em `apps/web/src/components/ui/tooltip.tsx`
-- [X] T015 [P] [US1] Aplicar elevação nível 4 + raio por token em `apps/web/src/components/ui/dialog.tsx`
-- [X] T016 [P] [US1] Aplicar elevação nível 4 + raio por token em `apps/web/src/components/ui/sheet.tsx`
-- [X] T017 [P] [US1] Usar tokens `chart-*`/semânticos (remover quaisquer cores literais) em `apps/web/src/components/TrendChart.tsx`
-- [X] T018 [P] [US1] Polir `apps/web/src/components/feedback/Alert.tsx` para usar cores semânticas via token, ícone e tipografia consistentes (corrige G2; usado em Login/Admin/StyleGuide)
-- [X] T019 [P] [US1] Alinhar os toasts às cores semânticas dos tokens: reavaliar `richColors` do `<Toaster>` em `apps/web/src/App.tsx` (e helpers em `apps/web/src/lib/toast.ts`) para que sucesso/erro/info usem a paleta do design system, não a do `sonner` (corrige G1; FR-008/US2 AS6)
-- [X] T020 [US1] Varredura de tokens nos demais componentes de UI (`badge`, `skeleton`, `spinner`, `label`, `form`, `table`, `input`, `textarea`, `switch`, `radio-group`) garantindo cor/raio/borda apenas via token em `apps/web/src/components/ui/`
-- [X] T021 [US1] Remover sombras/cores ad hoc (`shadow-2xl`, realces avulsos) em favor de tokens/elevação em `apps/web/src/pages/Home.tsx` (estados e espaçamento ficam para US2/US3)
-- [X] T022 [US1] Re-rodar a auditoria ripgrep (T002) e confirmar 0 valores cravados divergentes (SC-002) sobre `apps/web/src`
+- [x] T008 [P] [US1] Substituir cor cravada `text-red-500` por `text-destructive` e harmonizar realces de ícone via tokens em `apps/web/src/pages/History.tsx`
+- [x] T009 [P] [US1] Trocar `<input type="checkbox">` nativo (com `border-gray-300`) pelo componente `Checkbox` em `apps/web/src/components/WeightCaptureModal.tsx`
+- [x] T010 [P] [US1] Aplicar o mesmo ajuste de checkbox/tokens em `apps/web/src/components/BPCaptureModal.tsx`
+- [x] T011 [P] [US1] Aplicar escala de elevação (nível 1), raio `lg` e padding consistente em `apps/web/src/components/ui/card.tsx`
+- [x] T012 [P] [US1] Aplicar elevação nível 3 + raio/borda por token em `apps/web/src/components/ui/dropdown-menu.tsx`
+- [x] T013 [P] [US1] Aplicar elevação nível 3 + raio/borda por token em `apps/web/src/components/ui/select.tsx`
+- [x] T014 [P] [US1] Aplicar elevação nível 3 + raio/borda por token em `apps/web/src/components/ui/tooltip.tsx`
+- [x] T015 [P] [US1] Aplicar elevação nível 4 + raio por token em `apps/web/src/components/ui/dialog.tsx`
+- [x] T016 [P] [US1] Aplicar elevação nível 4 + raio por token em `apps/web/src/components/ui/sheet.tsx`
+- [x] T017 [P] [US1] Usar tokens `chart-*`/semânticos (remover quaisquer cores literais) em `apps/web/src/components/TrendChart.tsx`
+- [x] T018 [P] [US1] Polir `apps/web/src/components/feedback/Alert.tsx` para usar cores semânticas via token, ícone e tipografia consistentes (corrige G2; usado em Login/Admin/StyleGuide)
+- [x] T019 [P] [US1] Alinhar os toasts às cores semânticas dos tokens: reavaliar `richColors` do `<Toaster>` em `apps/web/src/App.tsx` (e helpers em `apps/web/src/lib/toast.ts`) para que sucesso/erro/info usem a paleta do design system, não a do `sonner` (corrige G1; FR-008/US2 AS6)
+- [x] T020 [US1] Varredura de tokens nos demais componentes de UI (`badge`, `skeleton`, `spinner`, `label`, `form`, `table`, `input`, `textarea`, `switch`, `radio-group`) garantindo cor/raio/borda apenas via token em `apps/web/src/components/ui/`
+- [x] T021 [US1] Remover sombras/cores ad hoc (`shadow-2xl`, realces avulsos) em favor de tokens/elevação em `apps/web/src/pages/Home.tsx` (estados e espaçamento ficam para US2/US3)
+- [x] T022 [US1] Re-rodar a auditoria ripgrep (T002) e confirmar 0 valores cravados divergentes (SC-002) sobre `apps/web/src`
 
 **Checkpoint**: coesão de tokens entregue — aplicação já parece consistente.
 
@@ -91,19 +91,19 @@ respeitado.
 confirmar foco visível consistente e feedback discreto igual entre equivalentes, com transições
 dentro do intervalo de duração tokenizado (SC-004, SC-005, SC-008; contracts/visual-states.md).
 
-- [X] T023 [P] [US2] Padronizar hover/focus-visible/active/disabled (sem `scale` exagerado, usando tokens de duração/easing) em `apps/web/src/components/ui/button.tsx`
-- [X] T024 [P] [US2] Padronizar foco/disabled e contraste de placeholder em `apps/web/src/components/ui/input.tsx`
-- [X] T025 [P] [US2] Padronizar foco/disabled em `apps/web/src/components/ui/textarea.tsx`
-- [X] T026 [P] [US2] Padronizar checked/focus/disabled em `apps/web/src/components/ui/checkbox.tsx`
-- [X] T027 [P] [US2] Padronizar checked/focus/disabled em `apps/web/src/components/ui/radio-group.tsx`
-- [X] T028 [P] [US2] Padronizar checked/focus/disabled em `apps/web/src/components/ui/switch.tsx`
-- [X] T029 [P] [US2] Padronizar hover/selected de linhas em `apps/web/src/components/ui/table.tsx`
-- [X] T030 [P] [US2] Padronizar estados selected/hover/focus em `apps/web/src/components/layout/SidebarNav.tsx`
-- [X] T031 [P] [US2] Padronizar estados selected/hover/focus em `apps/web/src/components/layout/NavRail.tsx`
-- [X] T032 [P] [US2] Padronizar estados selected/hover/focus em `apps/web/src/components/layout/BottomNav.tsx`
-- [X] T033 [US2] Substituir o FAB manual e os `<button>` crus por `Button`/`IconButton`; padronizar estados do seletor de métrica e do filtro de tempo (selected/hover/focus) usando os tokens de movimento em `apps/web/src/pages/Home.tsx`
-- [X] T034 [US2] Padronizar estados do seletor de abas, dos icon-buttons de ação e do hover de item de lista em `apps/web/src/pages/History.tsx`
-- [ ] T035 [US2] Verificar foco por teclado em todos os interativos (incl. nav, FAB, seletores, checkbox), transições dentro do intervalo tokenizado (~120–200 ms) e redução de movimento sob `prefers-reduced-motion` (SC-005, SC-008) em `apps/web`  — **verificação visual em navegador: pendente neste ambiente (partes automatizadas concluídas)**
+- [x] T023 [P] [US2] Padronizar hover/focus-visible/active/disabled (sem `scale` exagerado, usando tokens de duração/easing) em `apps/web/src/components/ui/button.tsx`
+- [x] T024 [P] [US2] Padronizar foco/disabled e contraste de placeholder em `apps/web/src/components/ui/input.tsx`
+- [x] T025 [P] [US2] Padronizar foco/disabled em `apps/web/src/components/ui/textarea.tsx`
+- [x] T026 [P] [US2] Padronizar checked/focus/disabled em `apps/web/src/components/ui/checkbox.tsx`
+- [x] T027 [P] [US2] Padronizar checked/focus/disabled em `apps/web/src/components/ui/radio-group.tsx`
+- [x] T028 [P] [US2] Padronizar checked/focus/disabled em `apps/web/src/components/ui/switch.tsx`
+- [x] T029 [P] [US2] Padronizar hover/selected de linhas em `apps/web/src/components/ui/table.tsx`
+- [x] T030 [P] [US2] Padronizar estados selected/hover/focus em `apps/web/src/components/layout/SidebarNav.tsx`
+- [x] T031 [P] [US2] Padronizar estados selected/hover/focus em `apps/web/src/components/layout/NavRail.tsx`
+- [x] T032 [P] [US2] Padronizar estados selected/hover/focus em `apps/web/src/components/layout/BottomNav.tsx`
+- [x] T033 [US2] Substituir o FAB manual e os `<button>` crus por `Button`/`IconButton`; padronizar estados do seletor de métrica e do filtro de tempo (selected/hover/focus) usando os tokens de movimento em `apps/web/src/pages/Home.tsx`
+- [x] T034 [US2] Padronizar estados do seletor de abas, dos icon-buttons de ação e do hover de item de lista em `apps/web/src/pages/History.tsx`
+- [ ] T035 [US2] Verificar foco por teclado em todos os interativos (incl. nav, FAB, seletores, checkbox), transições dentro do intervalo tokenizado (~120–200 ms) e redução de movimento sob `prefers-reduced-motion` (SC-005, SC-008) em `apps/web` — **verificação visual em navegador: pendente neste ambiente (partes automatizadas concluídas)**
 
 **Checkpoint**: estados e microinterações consistentes em toda a aplicação.
 
@@ -118,13 +118,13 @@ adequado a cada formato (mobile→ultrawide), sem quebras nem rolagem horizontal
 conteúdo extremo; confirmar ausência de quebras/rolagem horizontal, navegação por formato preservada
 e bom uso do espaço em ultrawide (SC-007; data-model.md §5–§6).
 
-- [X] T036 [US3] Ajustar largura/aproveitamento por formato (incl. `3xl`/`4xl` para ultrawide) preservando largura de leitura confortável em `apps/web/src/components/layout/PageContainer.tsx`
-- [X] T037 [US3] Ajustar ritmo de espaçamento e reconciliar o `pb` com o FAB revisado em `apps/web/src/components/layout/AppShell.tsx`
-- [X] T038 [US3] Substituir espaçamentos ad hoc (`mt-2/4/6`, `pb-24`) por ritmo consistente e layout responsivo para telas largas em `apps/web/src/pages/Home.tsx`
-- [X] T039 [P] [US3] Padronizar espaçamento/ritmo e layout responsivo da lista em `apps/web/src/pages/History.tsx`
-- [X] T040 [P] [US3] Padronizar espaçamento e responsividade de tabela/formulário em `apps/web/src/pages/AdminAllowlist.tsx`
-- [X] T041 [P] [US3] Polir espaçamento/centralização do cartão de login em `apps/web/src/pages/Login.tsx`
-- [ ] T042 [US3] Verificar 4 larguras de referência + 320px + zoom 200% **e conteúdo extremo** (textos/rótulos longos, números grandes, listas vazias e muito grandes): 0 quebras, 0 vazamentos e 0 rolagem horizontal indevida (SC-007, FR-022, Edge Cases) em `apps/web`  — **verificação visual em navegador: pendente neste ambiente (partes automatizadas concluídas)**
+- [x] T036 [US3] Ajustar largura/aproveitamento por formato (incl. `3xl`/`4xl` para ultrawide) preservando largura de leitura confortável em `apps/web/src/components/layout/PageContainer.tsx`
+- [x] T037 [US3] Ajustar ritmo de espaçamento e reconciliar o `pb` com o FAB revisado em `apps/web/src/components/layout/AppShell.tsx`
+- [x] T038 [US3] Substituir espaçamentos ad hoc (`mt-2/4/6`, `pb-24`) por ritmo consistente e layout responsivo para telas largas em `apps/web/src/pages/Home.tsx`
+- [x] T039 [P] [US3] Padronizar espaçamento/ritmo e layout responsivo da lista em `apps/web/src/pages/History.tsx`
+- [x] T040 [P] [US3] Padronizar espaçamento e responsividade de tabela/formulário em `apps/web/src/pages/AdminAllowlist.tsx`
+- [x] T041 [P] [US3] Polir espaçamento/centralização do cartão de login em `apps/web/src/pages/Login.tsx`
+- [ ] T042 [US3] Verificar 4 larguras de referência + 320px + zoom 200% **e conteúdo extremo** (textos/rótulos longos, números grandes, listas vazias e muito grandes): 0 quebras, 0 vazamentos e 0 rolagem horizontal indevida (SC-007, FR-022, Edge Cases) em `apps/web` — **verificação visual em navegador: pendente neste ambiente (partes automatizadas concluídas)**
 
 **Checkpoint**: layout e responsividade refinados em todos os formatos, inclusive sob conteúdo extremo.
 
@@ -140,15 +140,15 @@ tratamento visual uniforme de label/placeholder/ajuda/erro (sem mudar validaçõ
 e StyleGuide refletindo tudo, incluindo alerts, toasts e tokens de movimento (SC-009, SC-010;
 contracts/component-polish.md).
 
-- [X] T043 [US4] Aplicar o papel tipográfico "display" ao número de destaque (remover `font-black`) em `apps/web/src/pages/Home.tsx`
-- [X] T044 [P] [US4] Aplicar o papel "display" e tipografia consistente nos itens de lista em `apps/web/src/pages/History.tsx`
-- [X] T045 [P] [US4] Tornar o `CardTitle` flexível ao contexto (não fixo em `text-2xl`) em `apps/web/src/components/ui/card.tsx`
-- [X] T046 [P] [US4] Padronizar tratamento visual de label/placeholder/ajuda/erro (sem mudar validações/parse/foco) em `apps/web/src/components/WeightCaptureModal.tsx`
-- [X] T047 [P] [US4] Idem em `apps/web/src/components/BPCaptureModal.tsx`
-- [X] T048 [P] [US4] Confirmar contraste/consistência de placeholder (`placeholder:text-muted-foreground` em AA) em `apps/web/src/components/ui/input.tsx`
-- [X] T049 [US4] Substituir o estado vazio em `<div>` solto pelo componente `EmptyState` e harmonizar `ErrorState`/`LoadingState` em `apps/web/src/pages/History.tsx`
-- [X] T050 [P] [US4] Passada de consistência de ícones (tamanho/peso/alinhamento lucide) nas telas e no shell em `apps/web/src/pages/` e `apps/web/src/components/layout/`
-- [X] T051 [US4] Atualizar o guia visual para refletir tokens/escalas/estados refinados nos dois temas — incluindo elevação, movimento, `Alert` e toasts — em `apps/web/src/pages/StyleGuide.tsx` (SC-009, SC-010)
+- [x] T043 [US4] Aplicar o papel tipográfico "display" ao número de destaque (remover `font-black`) em `apps/web/src/pages/Home.tsx`
+- [x] T044 [P] [US4] Aplicar o papel "display" e tipografia consistente nos itens de lista em `apps/web/src/pages/History.tsx`
+- [x] T045 [P] [US4] Tornar o `CardTitle` flexível ao contexto (não fixo em `text-2xl`) em `apps/web/src/components/ui/card.tsx`
+- [x] T046 [P] [US4] Padronizar tratamento visual de label/placeholder/ajuda/erro (sem mudar validações/parse/foco) em `apps/web/src/components/WeightCaptureModal.tsx`
+- [x] T047 [P] [US4] Idem em `apps/web/src/components/BPCaptureModal.tsx`
+- [x] T048 [P] [US4] Confirmar contraste/consistência de placeholder (`placeholder:text-muted-foreground` em AA) em `apps/web/src/components/ui/input.tsx`
+- [x] T049 [US4] Substituir o estado vazio em `<div>` solto pelo componente `EmptyState` e harmonizar `ErrorState`/`LoadingState` em `apps/web/src/pages/History.tsx`
+- [x] T050 [P] [US4] Passada de consistência de ícones (tamanho/peso/alinhamento lucide) nas telas e no shell em `apps/web/src/pages/` e `apps/web/src/components/layout/`
+- [x] T051 [US4] Atualizar o guia visual para refletir tokens/escalas/estados refinados nos dois temas — incluindo elevação, movimento, `Alert` e toasts — em `apps/web/src/pages/StyleGuide.tsx` (SC-009, SC-010)
 
 **Checkpoint**: acabamento de conteúdo concluído; StyleGuide atualizado.
 
@@ -158,11 +158,11 @@ contracts/component-polish.md).
 
 **Purpose**: confirmar zero regressão funcional/visual e fechar os critérios de sucesso.
 
-- [X] T052 Rodar `npm run -w @vita/web typecheck` e `npm run -w @vita/web test` — suíte verde sem alterar lógica de teste por motivo funcional (SC-001)
-- [X] T053 Rodar `vitest-axe`: 0 novas violações A/AA e contraste AA preservado nos dois temas (SC-005, SC-006)
-- [X] T054 [P] Re-rodar a auditoria ripgrep de tokens: 0 valores cravados divergentes em `apps/web/src` (SC-002)
-- [ ] T055 [P] Comparação visual antes/depois (T003) preenchendo um checklist objetivo por área (cores, tipografia, bordas, raios, sombras, espaçamento, responsividade, componentes, estados, microinterações, formulários, placeholders, textos, ícones) — cada área marcada "igual ou superior", sem regressão (SC-010; torna SC-010 verificável via checklist)  — **verificação visual em navegador: pendente neste ambiente (partes automatizadas concluídas)**
-- [ ] T056 Executar o roteiro completo de `specs/004-ui-visual-polish/quickstart.md` ponta a ponta  — **verificação visual em navegador: pendente neste ambiente (partes automatizadas concluídas)**
+- [x] T052 Rodar `npm run -w @vita/web typecheck` e `npm run -w @vita/web test` — suíte verde sem alterar lógica de teste por motivo funcional (SC-001)
+- [x] T053 Rodar `vitest-axe`: 0 novas violações A/AA e contraste AA preservado nos dois temas (SC-005, SC-006)
+- [x] T054 [P] Re-rodar a auditoria ripgrep de tokens: 0 valores cravados divergentes em `apps/web/src` (SC-002)
+- [ ] T055 [P] Comparação visual antes/depois (T003) preenchendo um checklist objetivo por área (cores, tipografia, bordas, raios, sombras, espaçamento, responsividade, componentes, estados, microinterações, formulários, placeholders, textos, ícones) — cada área marcada "igual ou superior", sem regressão (SC-010; torna SC-010 verificável via checklist) — **verificação visual em navegador: pendente neste ambiente (partes automatizadas concluídas)**
+- [ ] T056 Executar o roteiro completo de `specs/004-ui-visual-polish/quickstart.md` ponta a ponta — **verificação visual em navegador: pendente neste ambiente (partes automatizadas concluídas)**
 
 ---
 
@@ -219,8 +219,8 @@ Task T019: toasts → tokens semânticos em App.tsx / lib/toast.ts
 ### MVP First (User Story 1)
 
 1. Phase 1 (Setup/baseline) → 2. Phase 2 (Foundational/tokens) → 3. Phase 3 (US1).
-4. **PARAR e VALIDAR**: coesão de tokens nas telas/StyleGuide nos dois temas (SC-002/SC-003) e suíte verde.
-5. Esse incremento já entrega o maior salto de qualidade percebida.
+2. **PARAR e VALIDAR**: coesão de tokens nas telas/StyleGuide nos dois temas (SC-002/SC-003) e suíte verde.
+3. Esse incremento já entrega o maior salto de qualidade percebida.
 
 ### Incremental Delivery
 

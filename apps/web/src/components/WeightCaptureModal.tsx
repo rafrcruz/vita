@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Checkbox } from './ui/checkbox';
 import { useLogWeight } from '../services/api';
 import { toastSuccess, toastError } from '../lib/toast';
+import { DateTimeInput } from './DateTimeInput';
+import { formatISOToDateTimeMask, parseDateTimeToISO } from '../lib/date';
 
 interface WeightCaptureModalProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export function WeightCaptureModal({ isOpen, onClose }: WeightCaptureModalProps)
   const [weightValue, setWeightValue] = React.useState('');
   const [customDate, setCustomDate] = React.useState(false);
   const [dateTime, setDateTime] = React.useState('');
+  const [isDateValid, setIsDateValid] = React.useState(true);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const { mutate: logWeight, isPending } = useLogWeight();
@@ -25,11 +27,10 @@ export function WeightCaptureModal({ isOpen, onClose }: WeightCaptureModalProps)
     if (isOpen) {
       setWeightValue('');
       setCustomDate(false);
-      // Format current local time for datetime-local input: YYYY-MM-DDTHH:MM
+
       const now = new Date();
-      const offsetMs = now.getTimezoneOffset() * 60 * 1000;
-      const localISOTime = new Date(now.getTime() - offsetMs).toISOString().slice(0, 16);
-      setDateTime(localISOTime);
+      setDateTime(formatISOToDateTimeMask(now.toISOString()));
+      setIsDateValid(true);
 
       // Delay focus slightly to allow Radix transition to complete
       setTimeout(() => {
@@ -54,10 +55,15 @@ export function WeightCaptureModal({ isOpen, onClose }: WeightCaptureModalProps)
       return;
     }
 
+    if (customDate && !isDateValid) {
+      toastError('Por favor, insira uma data e hora válidas (e não-futura).');
+      return;
+    }
+
     logWeight(
       {
         weight: parsedWeight,
-        loggedAt: customDate ? new Date(dateTime).toISOString() : undefined,
+        loggedAt: customDate ? parseDateTimeToISO(dateTime) : undefined,
       },
       {
         onSuccess: () => {
@@ -109,20 +115,25 @@ export function WeightCaptureModal({ isOpen, onClose }: WeightCaptureModalProps)
                 onCheckedChange={(checked) => setCustomDate(checked === true)}
                 disabled={isPending}
               />
-              <Label htmlFor="custom-date-weight" className="text-sm font-medium cursor-pointer select-none">
+              <Label
+                htmlFor="custom-date-weight"
+                className="text-sm font-medium cursor-pointer select-none"
+              >
                 Alterar data/hora (registro retroativo)
               </Label>
             </div>
 
             {customDate && (
               <div className="animate-in fade-in slide-in-from-top-1 duration-150">
-                <Input
-                  type="datetime-local"
+                <DateTimeInput
                   value={dateTime}
-                  onChange={(e) => setDateTime(e.target.value)}
+                  onChange={(val, isValid) => {
+                    setDateTime(val);
+                    setIsDateValid(isValid);
+                  }}
                   disabled={isPending}
                   required
-                  className="w-full"
+                  className={`w-full ${!isDateValid && dateTime.length === 16 ? 'border-destructive focus-visible:ring-destructive' : ''}`}
                 />
               </div>
             )}

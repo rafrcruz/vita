@@ -33,7 +33,7 @@ VITA, além do **proprietário-administrador** que controla quem tem acesso à a
   completa (UI)** para gerir a allowlist, além dos endpoints de API admin-only que a suportam; admin
   inicial semeado por variável de ambiente/migration. (Opção C)
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Esqueleto executável da aplicação (Priority: P1)
 
@@ -183,7 +183,7 @@ a nova versão.
 - Como segredos são tratados em ambientes de preview/CI? (Injetados via cofre da plataforma, nunca
   versionados.)
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -272,7 +272,7 @@ a nova versão.
 - **Configuração de Ambiente**: conjunto nomeado de variáveis necessárias para operar a aplicação em
   cada ambiente (local, preview, produção).
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

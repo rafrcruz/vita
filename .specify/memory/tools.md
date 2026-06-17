@@ -1,6 +1,7 @@
 # Environment and Tools Memory
 
 ## GitHub CLI (gh)
+
 The portable version of GitHub CLI is installed at:
 `C:\Users\rafael.cruz\AppData\Local\gh-portable\bin\gh.exe`
 

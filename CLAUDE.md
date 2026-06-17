@@ -1,4 +1,5 @@
 <!-- SPECKIT START -->
+
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
 `specs/005-ui-adjustments/plan.md` (Ajustes de UI — Navegação, Perfil, Gráfico e Ícone PWA).
@@ -9,4 +10,5 @@ Previous features: `specs/004-ui-visual-polish/plan.md` (Polimento Visual da Apl
 UI/UX); `specs/003-weight-bp-tracking/plan.md` (Weight & Blood Pressure Tracking);
 `specs/002-design-system-foundation/plan.md` (Frontend Design System Foundation);
 `specs/001-foundation-setup/plan.md` (Foundation / Platform Setup).
+
 <!-- SPECKIT END -->

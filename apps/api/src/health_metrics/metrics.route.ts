@@ -1,5 +1,14 @@
 import { Router } from 'express';
-import { createWeightLog, createBPLog, getWeightHistory, getBPHistory, updateWeightLog, deleteWeightLog, updateBPLog, deleteBPLog } from './metrics.service';
+import {
+  createWeightLog,
+  createBPLog,
+  getWeightHistory,
+  getBPHistory,
+  updateWeightLog,
+  deleteWeightLog,
+  updateBPLog,
+  deleteBPLog,
+} from './metrics.service';
 
 const router = Router();
 
@@ -7,7 +16,9 @@ router.get('/weight', async (req, res, next) => {
   try {
     const userEmail = req.user?.email;
     if (!userEmail) {
-      res.status(401).json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
+      res
+        .status(401)
+        .json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
       return;
     }
     const timeframe = req.query.timeframe as string | undefined;
@@ -22,7 +33,9 @@ router.post('/weight', async (req, res, next) => {
   try {
     const userEmail = req.user?.email;
     if (!userEmail) {
-      res.status(401).json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
+      res
+        .status(401)
+        .json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
       return;
     }
     const log = await createWeightLog(userEmail, req.body);
@@ -36,7 +49,9 @@ router.put('/weight/:id', async (req, res, next) => {
   try {
     const userEmail = req.user?.email;
     if (!userEmail) {
-      res.status(401).json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
+      res
+        .status(401)
+        .json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
       return;
     }
     const log = await updateWeightLog(req.params.id, userEmail, req.body);
@@ -50,7 +65,9 @@ router.delete('/weight/:id', async (req, res, next) => {
   try {
     const userEmail = req.user?.email;
     if (!userEmail) {
-      res.status(401).json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
+      res
+        .status(401)
+        .json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
       return;
     }
     await deleteWeightLog(req.params.id, userEmail);
@@ -64,7 +81,9 @@ router.get('/blood-pressure', async (req, res, next) => {
   try {
     const userEmail = req.user?.email;
     if (!userEmail) {
-      res.status(401).json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
+      res
+        .status(401)
+        .json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
       return;
     }
     const timeframe = req.query.timeframe as string | undefined;
@@ -79,7 +98,9 @@ router.post('/blood-pressure', async (req, res, next) => {
   try {
     const userEmail = req.user?.email;
     if (!userEmail) {
-      res.status(401).json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
+      res
+        .status(401)
+        .json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
       return;
     }
     const log = await createBPLog(userEmail, req.body);
@@ -93,7 +114,9 @@ router.put('/blood-pressure/:id', async (req, res, next) => {
   try {
     const userEmail = req.user?.email;
     if (!userEmail) {
-      res.status(401).json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
+      res
+        .status(401)
+        .json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
       return;
     }
     const log = await updateBPLog(req.params.id, userEmail, req.body);
@@ -107,7 +130,9 @@ router.delete('/blood-pressure/:id', async (req, res, next) => {
   try {
     const userEmail = req.user?.email;
     if (!userEmail) {
-      res.status(401).json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
+      res
+        .status(401)
+        .json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
       return;
     }
     await deleteBPLog(req.params.id, userEmail);

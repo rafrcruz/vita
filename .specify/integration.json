@@ -1,12 +1,7 @@
 {
   "version": "0.10.2",
   "integration_state_schema": 1,
-  "installed_integrations": [
-    "claude",
-    "codex",
-    "opencode",
-    "agy"
-  ],
+  "installed_integrations": ["claude", "codex", "opencode", "agy"],
   "integration_settings": {
     "claude": {
       "script": "ps",

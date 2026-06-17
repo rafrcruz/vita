@@ -32,7 +32,9 @@ export function BottomNav() {
             aria-current={location.pathname === primary.to ? 'page' : undefined}
             className={cn(
               'flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-1 px-4 py-2 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
-              location.pathname === primary.to ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+              location.pathname === primary.to
+                ? 'text-primary'
+                : 'text-muted-foreground hover:text-foreground'
             )}
           >
             <primary.icon className="h-5 w-5" />

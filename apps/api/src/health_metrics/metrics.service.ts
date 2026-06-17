@@ -15,7 +15,10 @@ export function parseDecimalInput(value: string | number): number | null {
   return isNaN(parsed) ? null : parsed;
 }
 
-export async function createWeightLog(userEmail: string, data: { weight?: unknown; loggedAt?: unknown }) {
+export async function createWeightLog(
+  userEmail: string,
+  data: { weight?: unknown; loggedAt?: unknown }
+) {
   // Handle string input parsing before schema validation
   if (typeof data.weight === 'string') {
     const parsed = parseDecimalInput(data.weight);
@@ -27,30 +30,47 @@ export async function createWeightLog(userEmail: string, data: { weight?: unknow
 
   const result = weightLogInputSchema.safeParse(data);
   if (!result.success) {
-    throw new AppError(400, 'validation_error', result.error.errors[0]?.message || 'Dados de peso inválidos.');
+    throw new AppError(
+      400,
+      'validation_error',
+      result.error.errors[0]?.message || 'Dados de peso inválidos.'
+    );
   }
 
-  const [inserted] = await db.insert(weightLogs).values({
-    userEmail,
-    weight: result.data.weight,
-    loggedAt: result.data.loggedAt ? new Date(result.data.loggedAt) : new Date(),
-  }).returning();
+  const [inserted] = await db
+    .insert(weightLogs)
+    .values({
+      userEmail,
+      weight: result.data.weight,
+      loggedAt: result.data.loggedAt ? new Date(result.data.loggedAt) : new Date(),
+    })
+    .returning();
 
   return inserted;
 }
 
-export async function createBPLog(userEmail: string, data: { systolic?: unknown; diastolic?: unknown; loggedAt?: unknown }) {
+export async function createBPLog(
+  userEmail: string,
+  data: { systolic?: unknown; diastolic?: unknown; loggedAt?: unknown }
+) {
   const result = bpLogInputSchema.safeParse(data);
   if (!result.success) {
-    throw new AppError(400, 'validation_error', result.error.errors[0]?.message || 'Dados de pressão inválidos.');
+    throw new AppError(
+      400,
+      'validation_error',
+      result.error.errors[0]?.message || 'Dados de pressão inválidos.'
+    );
   }
 
-  const [inserted] = await db.insert(bloodPressureLogs).values({
-    userEmail,
-    systolic: result.data.systolic,
-    diastolic: result.data.diastolic,
-    loggedAt: result.data.loggedAt ? new Date(result.data.loggedAt) : new Date(),
-  }).returning();
+  const [inserted] = await db
+    .insert(bloodPressureLogs)
+    .values({
+      userEmail,
+      systolic: result.data.systolic,
+      diastolic: result.data.diastolic,
+      loggedAt: result.data.loggedAt ? new Date(result.data.loggedAt) : new Date(),
+    })
+    .returning();
 
   return inserted;
 }
@@ -100,7 +120,11 @@ export async function getBPHistory(userEmail: string, timeframe = 'all') {
     .orderBy(asc(bloodPressureLogs.loggedAt));
 }
 
-export async function updateWeightLog(id: string, userEmail: string, data: { weight?: unknown; loggedAt?: unknown }) {
+export async function updateWeightLog(
+  id: string,
+  userEmail: string,
+  data: { weight?: unknown; loggedAt?: unknown }
+) {
   if (typeof data.weight === 'string') {
     const parsed = parseDecimalInput(data.weight);
     if (parsed === null) {
@@ -111,7 +135,11 @@ export async function updateWeightLog(id: string, userEmail: string, data: { wei
 
   const result = weightLogInputSchema.safeParse(data);
   if (!result.success) {
-    throw new AppError(400, 'validation_error', result.error.errors[0]?.message || 'Dados inválidos.');
+    throw new AppError(
+      400,
+      'validation_error',
+      result.error.errors[0]?.message || 'Dados inválidos.'
+    );
   }
 
   const [updated] = await db
@@ -143,10 +171,18 @@ export async function deleteWeightLog(id: string, userEmail: string) {
   return deleted;
 }
 
-export async function updateBPLog(id: string, userEmail: string, data: { systolic?: unknown; diastolic?: unknown; loggedAt?: unknown }) {
+export async function updateBPLog(
+  id: string,
+  userEmail: string,
+  data: { systolic?: unknown; diastolic?: unknown; loggedAt?: unknown }
+) {
   const result = bpLogInputSchema.safeParse(data);
   if (!result.success) {
-    throw new AppError(400, 'validation_error', result.error.errors[0]?.message || 'Dados inválidos.');
+    throw new AppError(
+      400,
+      'validation_error',
+      result.error.errors[0]?.message || 'Dados inválidos.'
+    );
   }
 
   const [updated] = await db

@@ -14,11 +14,11 @@ simples, segura e sustentável no longo prazo. A captura de dados é otimizada p
 
 ## Stack
 
-| Camada    | Tecnologias                                  |
-| --------- | -------------------------------------------- |
-| Frontend  | React · TypeScript · Tailwind CSS · PWA      |
-| Backend   | Node.js · Express · TypeScript               |
-| Auth      | Login com Google (OAuth) + allowlist de e-mails |
+| Camada   | Tecnologias                                     |
+| -------- | ----------------------------------------------- |
+| Frontend | React · TypeScript · Tailwind CSS · PWA         |
+| Backend  | Node.js · Express · TypeScript                  |
+| Auth     | Login com Google (OAuth) + allowlist de e-mails |
 
 A aplicação opera **prioritariamente online**. Recursos offline são desejáveis, porém
 opcionais, e não devem introduzir complexidade significativa.
@@ -78,19 +78,18 @@ Para rodar o projeto localmente, siga os passos abaixo:
 
 ### Scripts Disponíveis (raiz)
 
-| Script | Descrição |
-|--------|-----------|
-| `npm run dev` | Inicia o frontend (Vite) e backend (Express) localmente com hot-reload |
-| `npm run build` | Compila o frontend e backend para produção |
-| `npm run lint` | Executa o ESLint em todo o monorepo |
-| `npm run typecheck` | Executa a checagem de tipos do TypeScript |
-| `npm run test` | Executa a suíte de testes com Vitest |
-| `npm run db:generate` | Gera novas migrations a partir do schema Drizzle |
-| `npm run db:migrate` | Executa as migrations pendentes no banco Neon |
+| Script                | Descrição                                                              |
+| --------------------- | ---------------------------------------------------------------------- |
+| `npm run dev`         | Inicia o frontend (Vite) e backend (Express) localmente com hot-reload |
+| `npm run build`       | Compila o frontend e backend para produção                             |
+| `npm run lint`        | Executa o ESLint em todo o monorepo                                    |
+| `npm run typecheck`   | Executa a checagem de tipos do TypeScript                              |
+| `npm run test`        | Executa a suíte de testes com Vitest                                   |
+| `npm run db:generate` | Gera novas migrations a partir do schema Drizzle                       |
+| `npm run db:migrate`  | Executa as migrations pendentes no banco Neon                          |
 
 Para mais detalhes sobre a validação ponta a ponta e a arquitetura técnica da fundação, consulte o [quickstart.md](file:///c:/projects/vita/specs/001-foundation-setup/quickstart.md).
 
 ## Licença
 
 Ver [LICENSE](LICENSE).
-

@@ -16,7 +16,7 @@ todas avaliadas contra a Constituição (Princípios IV, V, VI).
   sustentabilidade (Princípio VI).
 - **Alternatives considered**: MUI/Mantine/Chakra (mais peso, mais opinião visual, menos controle —
   rejeitado pelo Princípio V); construir tudo do zero (risco alto de acessibilidade e retrabalho —
-  rejeitado). *(Confirmado na clarificação Q1.)*
+  rejeitado). _(Confirmado na clarificação Q1.)_
 
 ## D2. Estratégia de tokens e temas
 
@@ -103,16 +103,16 @@ todas avaliadas contra a Constituição (Princípios IV, V, VI).
 
 ## Dependências a adicionar (resumo)
 
-| Pacote | Tipo | Uso |
-|--------|------|-----|
-| `@radix-ui/react-*` (por componente) | prod | Primitivos acessíveis |
-| `class-variance-authority` | prod | Variantes de componente |
-| `tailwind-merge`, `clsx` | prod | Helper `cn()` |
-| `tailwindcss-animate` | dev (plugin Tailwind) | Animações utilitárias |
-| `lucide-react` | prod | Ícones |
-| `sonner` | prod | Toasts |
-| `react-hook-form`, `@hookform/resolvers` | prod | Formulários (zod já presente) |
-| `vitest-axe` | dev | Asserções de acessibilidade |
+| Pacote                                   | Tipo                  | Uso                           |
+| ---------------------------------------- | --------------------- | ----------------------------- |
+| `@radix-ui/react-*` (por componente)     | prod                  | Primitivos acessíveis         |
+| `class-variance-authority`               | prod                  | Variantes de componente       |
+| `tailwind-merge`, `clsx`                 | prod                  | Helper `cn()`                 |
+| `tailwindcss-animate`                    | dev (plugin Tailwind) | Animações utilitárias         |
+| `lucide-react`                           | prod                  | Ícones                        |
+| `sonner`                                 | prod                  | Toasts                        |
+| `react-hook-form`, `@hookform/resolvers` | prod                  | Formulários (zod já presente) |
+| `vitest-axe`                             | dev                   | Asserções de acessibilidade   |
 
 Todas avaliadas como modernas, amplamente adotadas e ativamente mantidas (Princípio VI). Os bumps
 entram pelo fluxo de PR + CI já estabelecido (validação de lockfile cross-platform conforme a nota

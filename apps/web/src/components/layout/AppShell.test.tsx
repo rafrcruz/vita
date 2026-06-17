@@ -36,7 +36,11 @@ describe('AppShell', () => {
     );
     vi.stubGlobal(
       'fetch',
-      vi.fn(async () => ({ ok: true, status: 200, json: async () => ({ email: 'a@b.com', role: 'admin' }) })) as unknown as typeof fetch
+      vi.fn(async () => ({
+        ok: true,
+        status: 200,
+        json: async () => ({ email: 'a@b.com', role: 'admin' }),
+      })) as unknown as typeof fetch
     );
   });
 
@@ -56,7 +60,9 @@ describe('AppShell', () => {
     renderShell(768);
     expect(screen.getByTestId('content')).toBeInTheDocument();
     const navs = screen.getAllByRole('navigation');
-    const navRail = navs.find((nav) => nav.className.includes('md:flex') && nav.className.includes('lg:hidden'));
+    const navRail = navs.find(
+      (nav) => nav.className.includes('md:flex') && nav.className.includes('lg:hidden')
+    );
     expect(navRail).toBeDefined();
   });
 

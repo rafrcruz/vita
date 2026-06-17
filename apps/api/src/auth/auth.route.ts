@@ -7,11 +7,7 @@ import { isProduction } from '../config/env';
 import { getRole } from '../allowlist/allowlist.service';
 import { buildAuthUrl, exchangeCodeForEmail } from './google';
 import { requireAuth } from './middleware';
-import {
-  SESSION_COOKIE_NAME,
-  issueSessionToken,
-  sessionCookieOptions,
-} from './session';
+import { SESSION_COOKIE_NAME, issueSessionToken, sessionCookieOptions } from './session';
 
 export const authRouter: Router = Router();
 

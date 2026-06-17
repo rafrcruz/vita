@@ -14,7 +14,6 @@ import metricsRouter from './health_metrics/metrics.route';
 import profileRouter from './profile/profile.route';
 import { csrfProtection, rateLimiter } from './middleware/security';
 
-
 /** Cria e configura a instância do Express (usada por dev local e serverless). */
 export function createApp(): Express {
   const app = express();
@@ -71,7 +70,6 @@ export function createApp(): Express {
   app.use('/api/docs', docsRouter);
   app.use('/api/metrics', requireAuth, metricsRouter);
   app.use('/api/profile', requireAuth, profileRouter);
-
 
   // 404 e tratador de erros central por último.
   app.use(notFoundHandler);

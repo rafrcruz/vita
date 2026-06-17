@@ -160,7 +160,16 @@ __export(schema_exports, {
   weightLogs: () => weightLogs
 });
 import { sql } from "drizzle-orm";
-import { pgTable, text, timestamp, uniqueIndex, uuid, real, integer, date } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+  real,
+  integer,
+  date
+} from "drizzle-orm/pg-core";
 var allowlist = pgTable(
   "allowlist",
   {
@@ -677,7 +686,11 @@ async function createWeightLog(userEmail, data) {
   }
   const result = weightLogInputSchema.safeParse(data);
   if (!result.success) {
-    throw new AppError(400, "validation_error", result.error.errors[0]?.message || "Dados de peso inv\xE1lidos.");
+    throw new AppError(
+      400,
+      "validation_error",
+      result.error.errors[0]?.message || "Dados de peso inv\xE1lidos."
+    );
   }
   const [inserted] = await db.insert(weightLogs).values({
     userEmail,
@@ -689,7 +702,11 @@ async function createWeightLog(userEmail, data) {
 async function createBPLog(userEmail, data) {
   const result = bpLogInputSchema.safeParse(data);
   if (!result.success) {
-    throw new AppError(400, "validation_error", result.error.errors[0]?.message || "Dados de press\xE3o inv\xE1lidos.");
+    throw new AppError(
+      400,
+      "validation_error",
+      result.error.errors[0]?.message || "Dados de press\xE3o inv\xE1lidos."
+    );
   }
   const [inserted] = await db.insert(bloodPressureLogs).values({
     userEmail,
@@ -743,7 +760,11 @@ async function updateWeightLog(id, userEmail, data) {
   }
   const result = weightLogInputSchema.safeParse(data);
   if (!result.success) {
-    throw new AppError(400, "validation_error", result.error.errors[0]?.message || "Dados inv\xE1lidos.");
+    throw new AppError(
+      400,
+      "validation_error",
+      result.error.errors[0]?.message || "Dados inv\xE1lidos."
+    );
   }
   const [updated] = await db.update(weightLogs).set({
     weight: result.data.weight,
@@ -764,7 +785,11 @@ async function deleteWeightLog(id, userEmail) {
 async function updateBPLog(id, userEmail, data) {
   const result = bpLogInputSchema.safeParse(data);
   if (!result.success) {
-    throw new AppError(400, "validation_error", result.error.errors[0]?.message || "Dados inv\xE1lidos.");
+    throw new AppError(
+      400,
+      "validation_error",
+      result.error.errors[0]?.message || "Dados inv\xE1lidos."
+    );
   }
   const [updated] = await db.update(bloodPressureLogs).set({
     systolic: result.data.systolic,
@@ -916,7 +941,11 @@ async function getProfile(userEmail) {
 async function upsertProfile(userEmail, data) {
   const result = profileInputSchema.safeParse(data);
   if (!result.success) {
-    throw new AppError(400, "validation_error", result.error.errors[0]?.message || "Dados de perfil inv\xE1lidos.");
+    throw new AppError(
+      400,
+      "validation_error",
+      result.error.errors[0]?.message || "Dados de perfil inv\xE1lidos."
+    );
   }
   const { fullName, birthDate, heightCm } = result.data;
   const now = /* @__PURE__ */ new Date();

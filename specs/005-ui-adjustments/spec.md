@@ -15,7 +15,7 @@
 - Q: Acessibilidade — escopo e nível para esta feature? → A: A11y básica obrigatória (nomes acessíveis nos novos controles; navegação por teclado e gestão de foco em menu/modais/Perfil; alvo de toque mínimo ≥44px na nav e FABs; gráfico não depende só de cor + alternativa textual ao tooltip por hover). Conformidade formal WCAG AA completa fica fora de escopo.
 - Q: Gráfico — regra de densidade de rótulos no eixo X? → A: 3–6 marcas adaptativas distribuídas uniformemente no intervalo, com formato de data conforme o período (dia/mês em 7D/30D; incluir mês/ano quando "Tudo" cobrir intervalos longos).
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Ícone da aplicação ao instalar no celular (Priority: P1)
 
@@ -131,7 +131,7 @@ Como usuário registrando peso ou pressão no celular, quero que o modal de capt
 - **Admin × usuário comum**: a opção "Admin" no menu deve respeitar a permissão atual (visível/acessível apenas a quem é admin), mantendo o comportamento de autorização existente.
 - **Teclado em telas pequenas**: o reposicionamento do modal não deve cortar os botões de ação em aparelhos de tela muito baixa.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -156,7 +156,7 @@ Como usuário registrando peso ou pressão no celular, quero que o modal de capt
 - **FR-011**: O sistema MUST persistir os dados de perfil de forma que permaneçam disponíveis entre sessões e recarregamentos do app.
 - **FR-012**: O sistema MUST validar os dados de perfil (data de nascimento válida e não futura; altura dentro de faixa plausível) e impedir salvamento inválido com mensagem clara.
 - **FR-013**: A tela de Perfil MUST pré-carregar os valores já salvos quando reaberta.
-- **FR-014**: O sistema SHOULD permitir salvar o perfil mesmo com parte dos campos ainda não preenchidos, sem bloquear a navegação no primeiro acesso. *(Assumption: os três campos são opcionais nesta etapa, pois servem a usos futuros.)*
+- **FR-014**: O sistema SHOULD permitir salvar o perfil mesmo com parte dos campos ainda não preenchidos, sem bloquear a navegação no primeiro acesso. _(Assumption: os três campos são opcionais nesta etapa, pois servem a usos futuros.)_
 
 #### Gráfico (série temporal)
 
@@ -187,11 +187,11 @@ Como usuário registrando peso ou pressão no celular, quero que o modal de capt
 - **FR-030**: O gráfico MUST NOT transmitir informação apenas por cor (ex.: distinção sistólica/diastólica deve ter outro indicador além da cor, como rótulo/legenda) e MUST oferecer uma alternativa de leitura do valor que não dependa exclusivamente de hover (ex.: acessível por toque/teclado ou texto associado).
 - **FR-031**: Conformidade formal WCAG 2.1 AA completa (auditoria de contraste, testes com leitores de tela) está FORA do escopo desta feature; apenas a a11y básica acima é obrigatória.
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Perfil do Usuário**: representa dados pessoais do único usuário-proprietário associados à sua conta. Atributos: nome completo (texto), data de nascimento (data), altura (medida de comprimento, ex.: cm ou m). Relaciona-se 1:1 com o usuário autenticado. Destinado a fundamentar cálculos futuros (ex.: IMC, estimativa calórica), sem realizar tais cálculos nesta feature.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

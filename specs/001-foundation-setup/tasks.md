@@ -1,5 +1,5 @@
 ---
-description: "Task list for Foundation / Platform Setup"
+description: 'Task list for Foundation / Platform Setup'
 ---
 
 # Tasks: Foundation / Platform Setup
@@ -224,7 +224,7 @@ Monorepo npm workspaces: `apps/web/`, `apps/api/`, `packages/shared/`, `.github/
 ### MVP First (US1)
 
 1. Phase 1 (Setup) → 2. Phase 2 (Foundational) → 3. Phase 3 (US1).
-4. **PARAR e VALIDAR**: testar US1 isoladamente (dev local + health). 5. Deploy/demo se desejado.
+2. **PARAR e VALIDAR**: testar US1 isoladamente (dev local + health). 5. Deploy/demo se desejado.
 
 ### Incremental Delivery
 
