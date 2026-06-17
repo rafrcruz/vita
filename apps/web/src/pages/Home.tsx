@@ -11,7 +11,7 @@ import { BPCaptureModal } from '../components/BPCaptureModal';
 import { TrendChart } from '../components/TrendChart';
 import { useWeightHistory, useBPHistory } from '../services/api';
 import { useState } from 'react';
-import { calculateWeightLossWeekly, calculateBPAverage, getLocalDayString } from '../utils/metrics';
+import { calculateWeightLossWeekly, calculateBPAverage, getLocalDayString, calculateWeightTotalLoss } from '../utils/metrics';
 
 export function Home() {
   const { logout } = useAuth();
@@ -42,13 +42,15 @@ export function Home() {
     const weeklyLossTotal = calculateWeightLossWeekly(allWeightData, null);
     const weeklyLoss30d = calculateWeightLossWeekly(allWeightData, 30);
     const weeklyLoss7d = calculateWeightLossWeekly(allWeightData, 7);
+    const totalLoss = calculateWeightTotalLoss(allWeightData);
 
     return {
       lastEntry: last,
       currentWeight,
       weeklyLossTotal,
       weeklyLoss30d,
-      weeklyLoss7d
+      weeklyLoss7d,
+      totalLoss
     };
   }, [allWeightData]);
 
@@ -81,6 +83,12 @@ export function Home() {
     if (val === null || val === undefined) return 'N/A';
     const formatted = val.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     return `${val > 0 ? '+' : ''}${formatted} kg/sem`;
+  };
+
+  const formatTotalLoss = (val: number | null) => {
+    if (val === null || val === undefined) return 'N/A';
+    const formatted = val.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    return `${val > 0 ? '+' : ''}${formatted} kg`;
   };
 
   return (
@@ -165,7 +173,7 @@ export function Home() {
 
           {/* Health Metrics & Indicators */}
           {!isLoadingMetrics && metric === 'weight' && calculatedWeightMetrics && (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
               <Card className="border bg-card/50">
                 <CardContent className="p-3">
                   <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Última Medição</p>
@@ -195,6 +203,16 @@ export function Home() {
 
               <Card className="border bg-card/50">
                 <CardContent className="p-3">
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Perda Total</p>
+                  <p className={`text-lg font-bold mt-1 tracking-tight ${calculatedWeightMetrics.totalLoss !== null && calculatedWeightMetrics.totalLoss < 0 ? 'text-success' : ''}`}>
+                    {formatTotalLoss(calculatedWeightMetrics.totalLoss)}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-medium mt-1">Desde o primeiro registro</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border bg-card/50">
+                <CardContent className="p-3">
                   <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Perda Semanal (7d)</p>
                   <p className={`text-lg font-bold mt-1 tracking-tight ${calculatedWeightMetrics.weeklyLoss7d !== null && calculatedWeightMetrics.weeklyLoss7d < 0 ? 'text-success' : ''}`}>
                     {formatWeightValue(calculatedWeightMetrics.weeklyLoss7d)}
@@ -213,7 +231,7 @@ export function Home() {
                 </CardContent>
               </Card>
 
-              <Card className="border bg-card/50 col-span-2 sm:col-span-1">
+              <Card className="border bg-card/50">
                 <CardContent className="p-3">
                   <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Perda Semanal (Total)</p>
                   <p className={`text-lg font-bold mt-1 tracking-tight ${calculatedWeightMetrics.weeklyLossTotal !== null && calculatedWeightMetrics.weeklyLossTotal < 0 ? 'text-success' : ''}`}>

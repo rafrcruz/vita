@@ -73,4 +73,45 @@ describe('Home (app shell)', () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
+
+  it('exibe os indicadores de peso na ordem correta com Perda Total', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (String(url).includes('/auth/me')) {
+          return { ok: true, status: 200, json: async () => ({ email: 'a@b.com', role: 'admin' }) };
+        }
+        if (String(url).includes('/metrics/weight')) {
+          return {
+            ok: true,
+            status: 200,
+            json: async () => [
+              { id: '1', weight: 80.0, loggedAt: '2026-06-10T12:00:00Z' },
+              { id: '2', weight: 75.0, loggedAt: '2026-06-17T12:00:00Z' }
+            ]
+          };
+        }
+        if (String(url).includes('/metrics/bp')) {
+          return { ok: true, status: 200, json: async () => [] };
+        }
+        return { ok: true, status: 200, json: async () => ({}) };
+      }) as unknown as typeof fetch
+    );
+
+    renderHome();
+
+    await waitFor(() => {
+      expect(screen.getByText('Última Medição')).toBeInTheDocument();
+    });
+
+    expect(screen.getByText('Peso Atual')).toBeInTheDocument();
+    expect(screen.getByText('Perda Total')).toBeInTheDocument();
+    expect(screen.getByText('Perda Semanal (7d)')).toBeInTheDocument();
+    expect(screen.getByText('Perda Semanal (30d)')).toBeInTheDocument();
+    expect(screen.getByText('Perda Semanal (Total)')).toBeInTheDocument();
+
+    // -5.0 kg (locale formatted)
+    expect(screen.getByText(/-5[.,]0 kg$/)).toBeInTheDocument();
+  });
 });
+
