@@ -1,0 +1,5 @@
+<svg width="64" height="64" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="VITA">
+  <rect width="512" height="512" rx="112" fill="#0f172a"/>
+  <path d="M256 432C256 432 96 336 96 216C96 160 140 120 192 120C224 120 250 136 256 160C262 136 288 120 320 120C372 120 416 160 416 216C416 336 256 432 256 432Z" fill="#22c55e"/>
+  <path d="M128 268H196L222 212L262 320L296 252L316 268H384" stroke="#0f172a" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

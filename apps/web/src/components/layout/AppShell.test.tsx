@@ -1,18 +1,25 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { AppShell } from './AppShell';
+import { AuthProvider } from '../../lib/auth';
 
 function renderShell(width: number) {
   Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: width });
   window.dispatchEvent(new Event('resize'));
 
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
-    <MemoryRouter>
-      <AppShell>
-        <div data-testid="content">Content</div>
-      </AppShell>
-    </MemoryRouter>
+    <QueryClientProvider client={client}>
+      <MemoryRouter>
+        <AuthProvider>
+          <AppShell>
+            <div data-testid="content">Content</div>
+          </AppShell>
+        </AuthProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 }
 
@@ -26,6 +33,10 @@ describe('AppShell', () => {
         addEventListener: vi.fn(),
         removeEventListener: vi.fn(),
       }))
+    );
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({ ok: true, status: 200, json: async () => ({ email: 'a@b.com', role: 'admin' }) })) as unknown as typeof fetch
     );
   });
 

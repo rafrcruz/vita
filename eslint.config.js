@@ -15,6 +15,7 @@ export default tseslint.config(
       '**/.vercel/**',
       '**/*.config.js',
       '**/*.config.ts',
+      'apps/api/api/**',
     ],
   },
   js.configs.recommended,

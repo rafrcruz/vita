@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '../lib/api';
-import type { WeightLogInput, BPLogInput } from '@vita/shared';
+import type { WeightLogInput, BPLogInput, ProfileInput, UserProfile } from '@vita/shared';
 
 export interface WeightLog {
   id: string;
@@ -107,6 +107,28 @@ export function useDeleteBP() {
       }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['bp-history'] });
+    },
+  });
+}
+
+export function useProfile() {
+  return useQuery({
+    queryKey: ['profile'],
+    queryFn: () => apiFetch<UserProfile | null>('/profile'),
+  });
+}
+
+export function useUpdateProfile() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: ProfileInput) =>
+      apiFetch<UserProfile>('/profile', {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      }),
+    onSuccess: (data) => {
+      queryClient.setQueryData(['profile'], data);
+      void queryClient.invalidateQueries({ queryKey: ['profile'] });
     },
   });
 }
