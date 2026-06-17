@@ -74,4 +74,27 @@ describe('Profile', () => {
       expect(screen.getByText('A altura mínima é 50 cm.')).toBeInTheDocument();
     });
   });
+
+  it('aplica mascara no campo data de nascimento e valida formato incorreto', async () => {
+    const user = userEvent.setup();
+    renderProfile();
+    await waitFor(() => {
+      expect(screen.getByLabelText('Data de nascimento')).toBeInTheDocument();
+    });
+
+    const birthDateInput = screen.getByLabelText('Data de nascimento') as HTMLInputElement;
+    await user.type(birthDateInput, '13021988');
+    expect(birthDateInput.value).toBe('13/02/1988');
+
+    // Limpa e digita data incorreta
+    await user.clear(birthDateInput);
+    await user.type(birthDateInput, '1302198');
+    expect(birthDateInput.value).toBe('13/02/198');
+
+    await user.click(screen.getByRole('button', { name: 'Salvar' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Data de nascimento inválida. Use o formato DD/MM/AAAA.')).toBeInTheDocument();
+    });
+  });
 });

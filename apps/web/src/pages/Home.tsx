@@ -5,12 +5,13 @@ import { Button } from '../components/ui/button';
 import { useAuth } from '../lib/auth';
 import { Card, CardContent } from '../components/ui/card';
 import { Skeleton } from '../components/ui/skeleton';
-import { Plus, TrendingUp, Scale, Heart, Calendar } from 'lucide-react';
+import { Plus, TrendingUp, Scale, Heart, Calendar, LogOut } from 'lucide-react';
 import { WeightCaptureModal } from '../components/WeightCaptureModal';
 import { BPCaptureModal } from '../components/BPCaptureModal';
 import { TrendChart } from '../components/TrendChart';
 import { useWeightHistory, useBPHistory } from '../services/api';
 import { useState } from 'react';
+import { calculateWeightLossWeekly, calculateBPAverage, getLocalDayString } from '../utils/metrics';
 
 export function Home() {
   const { logout } = useAuth();
@@ -22,13 +23,67 @@ export function Home() {
   const { data: weightData, isLoading: isWeightLoading } = useWeightHistory(timeframe);
   const { data: bpData, isLoading: isBPLoading } = useBPHistory(timeframe);
 
-  const isLoadingMetrics = isWeightLoading || isBPLoading;
+  const { data: allWeightData, isLoading: isAllWeightLoading } = useWeightHistory('all');
+  const { data: allBPData, isLoading: isAllBPLoading } = useBPHistory('all');
+
+  const isLoadingMetrics = isWeightLoading || isBPLoading || isAllWeightLoading || isAllBPLoading;
   const activeData = metric === 'weight' ? weightData : bpData;
 
   const lastEntry = React.useMemo(() => {
     if (!activeData || activeData.length === 0) return null;
     return activeData[activeData.length - 1];
   }, [activeData]);
+
+  const calculatedWeightMetrics = React.useMemo(() => {
+    if (!allWeightData || allWeightData.length === 0) return null;
+    const last = allWeightData[allWeightData.length - 1];
+    
+    const lastDayStr = getLocalDayString(last.loggedAt);
+    const lastDayLogs = allWeightData.filter(log => getLocalDayString(log.loggedAt) === lastDayStr);
+    const currentWeight = Math.min(...lastDayLogs.map(log => log.weight));
+
+    const weeklyLossTotal = calculateWeightLossWeekly(allWeightData, null);
+    const weeklyLoss30d = calculateWeightLossWeekly(allWeightData, 30);
+    const weeklyLoss7d = calculateWeightLossWeekly(allWeightData, 7);
+
+    return {
+      lastEntry: last,
+      currentWeight,
+      weeklyLossTotal,
+      weeklyLoss30d,
+      weeklyLoss7d
+    };
+  }, [allWeightData]);
+
+  const calculatedBPMetrics = React.useMemo(() => {
+    if (!allBPData || allBPData.length === 0) return null;
+    const last = allBPData[allBPData.length - 1];
+
+    const { avgSystolic: avgSystolicTotal, avgDiastolic: avgDiastolicTotal } = calculateBPAverage(allBPData, null);
+    const { avgSystolic: avgSystolic30d, avgDiastolic: avgDiastolic30d } = calculateBPAverage(allBPData, 30);
+    const { avgSystolic: avgSystolic7d, avgDiastolic: avgDiastolic7d } = calculateBPAverage(allBPData, 7);
+
+    return {
+      lastEntry: last,
+      avgSystolicTotal,
+      avgDiastolicTotal,
+      avgSystolic30d,
+      avgDiastolic30d,
+      avgSystolic7d,
+      avgDiastolic7d
+    };
+  }, [allBPData]);
+
+  const formatWeightKg = (val: number | null) => {
+    if (val === null || val === undefined) return 'N/A';
+    return `${val.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} kg`;
+  };
+
+  const formatWeightValue = (val: number | null) => {
+    if (val === null || val === undefined) return 'N/A';
+    const formatted = val.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    return `${val > 0 ? '+' : ''}${formatted} kg/sem`;
+  };
 
   return (
     <AppShell>
@@ -38,7 +93,8 @@ export function Home() {
           <h1>VITA</h1>
           <div className="flex items-center gap-1">
             <ThemeToggle />
-            <Button variant="ghost" size="sm" onClick={() => void logout()}>
+            <Button variant="ghost" size="sm" onClick={() => void logout()} className="gap-2">
+              <LogOut className="h-4 w-4" />
               Sair
             </Button>
           </div>
@@ -109,34 +165,121 @@ export function Home() {
             <TrendChart data={activeData || []} type={metric} />
           )}
 
-          {/* Last Entry Summary Card */}
-          {!isLoadingMetrics && lastEntry && (
-            <Card className="border bg-card/50">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-full bg-primary/10 text-primary">
-                    {metric === 'weight' ? <Scale className="h-5 w-5" /> : <Heart className="h-5 w-5" />}
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground font-medium">Última medição</p>
-                    <p className="text-lg font-bold tracking-tight">
-                      {metric === 'weight'
-                        ? `${(lastEntry as { weight: number }).weight} kg`
-                        : `${(lastEntry as { systolic: number; diastolic: number }).systolic}x${(lastEntry as { systolic: number; diastolic: number }).diastolic} mmHg`}
-                    </p>
-                  </div>
-                </div>
-                <div className="text-right text-xs text-muted-foreground font-medium flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5" />
-                  {new Date(lastEntry.loggedAt).toLocaleDateString(undefined, {
-                    day: '2-digit',
-                    month: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </div>
-              </CardContent>
-            </Card>
+          {/* Health Metrics & Indicators */}
+          {!isLoadingMetrics && metric === 'weight' && calculatedWeightMetrics && (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <Card className="border bg-card/50">
+                <CardContent className="p-3">
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Última Medição</p>
+                  <p className="text-lg font-bold mt-1 tracking-tight">
+                    {formatWeightKg(calculatedWeightMetrics.lastEntry.weight)}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-medium mt-1">
+                    {new Date(calculatedWeightMetrics.lastEntry.loggedAt).toLocaleDateString(undefined, {
+                      day: '2-digit',
+                      month: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border bg-card/50">
+                <CardContent className="p-3">
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Peso Atual</p>
+                  <p className="text-lg font-bold mt-1 tracking-tight">
+                    {formatWeightKg(calculatedWeightMetrics.currentWeight)}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-medium mt-1">Menor do último dia</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border bg-card/50">
+                <CardContent className="p-3">
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Perda Semanal (7d)</p>
+                  <p className={`text-lg font-bold mt-1 tracking-tight ${calculatedWeightMetrics.weeklyLoss7d !== null && calculatedWeightMetrics.weeklyLoss7d > 0 ? 'text-success' : ''}`}>
+                    {formatWeightValue(calculatedWeightMetrics.weeklyLoss7d)}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-medium mt-1">Últimos 7 dias</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border bg-card/50">
+                <CardContent className="p-3">
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Perda Semanal (30d)</p>
+                  <p className={`text-lg font-bold mt-1 tracking-tight ${calculatedWeightMetrics.weeklyLoss30d !== null && calculatedWeightMetrics.weeklyLoss30d > 0 ? 'text-success' : ''}`}>
+                    {formatWeightValue(calculatedWeightMetrics.weeklyLoss30d)}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-medium mt-1">Últimos 30 dias</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border bg-card/50 col-span-2 sm:col-span-1">
+                <CardContent className="p-3">
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Perda Semanal (Total)</p>
+                  <p className={`text-lg font-bold mt-1 tracking-tight ${calculatedWeightMetrics.weeklyLossTotal !== null && calculatedWeightMetrics.weeklyLossTotal > 0 ? 'text-success' : ''}`}>
+                    {formatWeightValue(calculatedWeightMetrics.weeklyLossTotal)}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-medium mt-1">Todo o período</p>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {!isLoadingMetrics && metric === 'bp' && calculatedBPMetrics && (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <Card className="border bg-card/50">
+                <CardContent className="p-3">
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Última Medição</p>
+                  <p className="text-lg font-bold mt-1 tracking-tight">
+                    {calculatedBPMetrics.lastEntry.systolic}x{calculatedBPMetrics.lastEntry.diastolic}
+                    <span className="text-[10px] font-medium text-muted-foreground ml-1">mmHg</span>
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-medium mt-1">
+                    {new Date(calculatedBPMetrics.lastEntry.loggedAt).toLocaleDateString(undefined, {
+                      day: '2-digit',
+                      month: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border bg-card/50">
+                <CardContent className="p-3">
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Média (7d)</p>
+                  <p className="text-lg font-bold mt-1 tracking-tight">
+                    {calculatedBPMetrics.avgSystolic7d !== null ? `${calculatedBPMetrics.avgSystolic7d}x${calculatedBPMetrics.avgDiastolic7d}` : 'N/A'}
+                    {calculatedBPMetrics.avgSystolic7d !== null && <span className="text-[10px] font-medium text-muted-foreground ml-1">mmHg</span>}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-medium mt-1">Últimos 7 dias</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border bg-card/50">
+                <CardContent className="p-3">
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Média (30d)</p>
+                  <p className="text-lg font-bold mt-1 tracking-tight">
+                    {calculatedBPMetrics.avgSystolic30d !== null ? `${calculatedBPMetrics.avgSystolic30d}x${calculatedBPMetrics.avgDiastolic30d}` : 'N/A'}
+                    {calculatedBPMetrics.avgSystolic30d !== null && <span className="text-[10px] font-medium text-muted-foreground ml-1">mmHg</span>}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-medium mt-1">Últimos 30 dias</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border bg-card/50">
+                <CardContent className="p-3">
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Média (Total)</p>
+                  <p className="text-lg font-bold mt-1 tracking-tight">
+                    {calculatedBPMetrics.avgSystolicTotal !== null ? `${calculatedBPMetrics.avgSystolicTotal}x${calculatedBPMetrics.avgDiastolicTotal}` : 'N/A'}
+                    {calculatedBPMetrics.avgSystolicTotal !== null && <span className="text-[10px] font-medium text-muted-foreground ml-1">mmHg</span>}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-medium mt-1">Todo o período</p>
+                </CardContent>
+              </Card>
+            </div>
           )}
         </div>
       </div>
