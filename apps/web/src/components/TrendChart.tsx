@@ -52,18 +52,22 @@ export function TrendChart({ data, type, timeframe = 'all' }: TrendChartProps) {
   // Trava orientação para landscape ao entrar em tela cheia (se compatível)
   React.useEffect(() => {
     if (isFullscreen) {
-      if (typeof screen !== 'undefined') {
-        const orientation = screen.orientation;
-        if (orientation && typeof orientation.lock === 'function') {
+      if (typeof screen !== 'undefined' && screen.orientation) {
+        const orientation = screen.orientation as unknown as {
+          lock?: (orientation: 'landscape') => Promise<void>;
+        };
+        if (typeof orientation.lock === 'function') {
           orientation.lock('landscape').catch((err: unknown) => {
             console.warn('Screen orientation lock is not supported or was rejected:', err);
           });
         }
       }
     } else {
-      if (typeof screen !== 'undefined') {
-        const orientation = screen.orientation;
-        if (orientation && typeof orientation.unlock === 'function') {
+      if (typeof screen !== 'undefined' && screen.orientation) {
+        const orientation = screen.orientation as unknown as {
+          unlock?: () => void;
+        };
+        if (typeof orientation.unlock === 'function') {
           try {
             orientation.unlock();
           } catch {
