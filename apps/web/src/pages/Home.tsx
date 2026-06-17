@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button';
 import { useAuth } from '../lib/auth';
 import { Card, CardContent } from '../components/ui/card';
 import { Skeleton } from '../components/ui/skeleton';
-import { Plus, TrendingUp, Scale, Heart, Calendar, LogOut } from 'lucide-react';
+import { Plus, TrendingUp, Scale, Heart, LogOut } from 'lucide-react';
 import { WeightCaptureModal } from '../components/WeightCaptureModal';
 import { BPCaptureModal } from '../components/BPCaptureModal';
 import { TrendChart } from '../components/TrendChart';
@@ -29,10 +29,6 @@ export function Home() {
   const isLoadingMetrics = isWeightLoading || isBPLoading || isAllWeightLoading || isAllBPLoading;
   const activeData = metric === 'weight' ? weightData : bpData;
 
-  const lastEntry = React.useMemo(() => {
-    if (!activeData || activeData.length === 0) return null;
-    return activeData[activeData.length - 1];
-  }, [activeData]);
 
   const calculatedWeightMetrics = React.useMemo(() => {
     if (!allWeightData || allWeightData.length === 0) return null;
