@@ -3,10 +3,9 @@ import {
   toDisplayDate,
   toApiDate,
   calculateWeightLossWeekly,
-  calculateBPAverage,
-  WeightLog,
-  BPLog
+  calculateBPAverage
 } from './metrics';
+import type { WeightLog, BPLog } from './metrics';
 
 describe('Metrics date conversions', () => {
   it('should convert API date to display date', () => {

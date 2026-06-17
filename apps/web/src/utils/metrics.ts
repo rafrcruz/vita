@@ -80,17 +80,24 @@ export function calculateWeightLossWeekly(
   }
 
   const dailyMinLogs = Object.keys(dayGroups)
-    .map(dayStr => ({
-      dayStr,
-      date: dayGroups[dayStr].date,
-      minWeight: dayGroups[dayStr].minWeight
-    }))
+    .map(dayStr => {
+      const group = dayGroups[dayStr];
+      if (!group) {
+        throw new Error('Unreachable');
+      }
+      return {
+        dayStr,
+        date: group.date,
+        minWeight: group.minWeight
+      };
+    })
     .sort((a, b) => a.date.getTime() - b.date.getTime());
 
   if (dailyMinLogs.length === 0) return null;
 
   // 3. Peso final é o menor peso do último dia com dados
   const endRecord = dailyMinLogs[dailyMinLogs.length - 1];
+  if (!endRecord) return null;
   const endWeight = endRecord.minWeight;
   const endDate = endRecord.date;
 
@@ -101,11 +108,13 @@ export function calculateWeightLossWeekly(
     targetStartDateStr = getLocalDayString(startThreshold);
   } else {
     // Período total: usa o dia do primeiríssimo registro
-    targetStartDateStr = dailyMinLogs[0].dayStr;
+    const firstRecord = dailyMinLogs[0];
+    if (!firstRecord) return null;
+    targetStartDateStr = firstRecord.dayStr;
   }
 
   // 5. Encontrar registro de início usando as prioridades de fallback
-  let startRecord: typeof dailyMinLogs[0] | null = null;
+  let startRecord: { dayStr: string; date: Date; minWeight: number } | null = null;
 
   // Prioridade 1: correspondência exata do dia
   const exactMatch = dailyMinLogs.find(r => r.dayStr === targetStartDateStr);
@@ -115,12 +124,12 @@ export function calculateWeightLossWeekly(
     // Prioridade 2: dia anterior mais próximo
     const earlierRecords = dailyMinLogs.filter(r => r.dayStr < targetStartDateStr);
     if (earlierRecords.length > 0) {
-      startRecord = earlierRecords[earlierRecords.length - 1];
+      startRecord = earlierRecords[earlierRecords.length - 1] ?? null;
     } else {
       // Prioridade 3: dia posterior mais próximo
       const laterRecords = dailyMinLogs.filter(r => r.dayStr > targetStartDateStr);
       if (laterRecords.length > 0) {
-        startRecord = laterRecords[0];
+        startRecord = laterRecords[0] ?? null;
       }
     }
   }

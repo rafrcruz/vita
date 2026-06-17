@@ -37,6 +37,7 @@ export function Home() {
   const calculatedWeightMetrics = React.useMemo(() => {
     if (!allWeightData || allWeightData.length === 0) return null;
     const last = allWeightData[allWeightData.length - 1];
+    if (!last) return null;
     
     const lastDayStr = getLocalDayString(last.loggedAt);
     const lastDayLogs = allWeightData.filter(log => getLocalDayString(log.loggedAt) === lastDayStr);
@@ -58,6 +59,7 @@ export function Home() {
   const calculatedBPMetrics = React.useMemo(() => {
     if (!allBPData || allBPData.length === 0) return null;
     const last = allBPData[allBPData.length - 1];
+    if (!last) return null;
 
     const { avgSystolic: avgSystolicTotal, avgDiastolic: avgDiastolicTotal } = calculateBPAverage(allBPData, null);
     const { avgSystolic: avgSystolic30d, avgDiastolic: avgDiastolic30d } = calculateBPAverage(allBPData, 30);

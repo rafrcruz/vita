@@ -79,8 +79,8 @@ export function Profile() {
 
       // Define o erro para cada campo
       Object.keys(fieldIssues).forEach((field) => {
-        const messages = fieldIssues[field];
-        let message = messages[0];
+        const messages = fieldIssues[field] || [];
+        let message = messages[0] || '';
 
         if (field === 'birthDate') {
           const hasFormatError = messages.some(
@@ -89,7 +89,7 @@ export function Profile() {
           if (hasFormatError) {
             message = 'Data de nascimento inválida. Use o formato DD/MM/AAAA.';
           } else {
-            message = messages[0];
+            message = messages[0] || '';
           }
         }
 
