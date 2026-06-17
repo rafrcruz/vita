@@ -20,6 +20,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
+import { toastSuccess, toastError, toastInfo } from '../lib/toast';
 
 const colorTokens = [
   { name: 'background', class: 'bg-background' },
@@ -64,8 +65,8 @@ export function StyleGuide() {
           <h2>Tipografia</h2>
           <div className="space-y-4">
             <div>
-              <p className="text-xs text-muted-foreground mb-1">Display</p>
-              <p className="text-4xl font-bold">Título Display</p>
+              <p className="text-xs text-muted-foreground mb-1">Display (text-metric · números de destaque)</p>
+              <p className="text-metric">72,5</p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground mb-1">H1</p>
@@ -122,6 +123,35 @@ export function StyleGuide() {
               <p className="text-xs mt-1">full</p>
             </div>
           </div>
+        </section>
+
+        <section>
+          <h2>Elevação</h2>
+          <p className="mb-4 text-sm text-muted-foreground">
+            Escala de sombras (camadas): cartão → cartão elevado → popover/menu → modal/sheet.
+          </p>
+          <div className="flex flex-wrap gap-6">
+            {[
+              { level: 'sm', cls: 'shadow-sm' },
+              { level: 'md', cls: 'shadow-md' },
+              { level: 'lg', cls: 'shadow-lg' },
+              { level: 'xl', cls: 'shadow-xl' },
+            ].map(({ level, cls }) => (
+              <div key={level} className="text-center">
+                <div className={`h-16 w-16 rounded-lg border border-border bg-card ${cls}`} />
+                <p className="mt-2 text-xs font-mono">{level}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2>Movimento</h2>
+          <p className="text-sm text-muted-foreground">
+            Microinterações discretas com duração de 120–200&nbsp;ms (tokens <span className="font-mono">duration-fast</span>,{' '}
+            <span className="font-mono">duration-DEFAULT</span>, <span className="font-mono">duration-slow</span>) e easing
+            único. Tudo respeita <span className="font-mono">prefers-reduced-motion</span>.
+          </p>
         </section>
 
         <section>
@@ -252,6 +282,24 @@ export function StyleGuide() {
             description="Comece adicionando seu primeiro item."
             action={{ label: 'Adicionar item', onClick: () => {} }}
           />
+        </section>
+
+        <section>
+          <h2>Toasts</h2>
+          <p className="mb-4 text-sm text-muted-foreground">
+            Notificações alinhadas às cores semânticas do design system (não à paleta do sonner).
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <Button variant="outline" onClick={() => toastSuccess('Operação concluída com sucesso.')}>
+              Toast de sucesso
+            </Button>
+            <Button variant="outline" onClick={() => toastError('Não foi possível concluir a operação.')}>
+              Toast de erro
+            </Button>
+            <Button variant="outline" onClick={() => toastInfo('Mensagem informativa.')}>
+              Toast informativo
+            </Button>
+          </div>
         </section>
 
         <section>

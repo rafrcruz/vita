@@ -6,6 +6,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Skeleton } from '../components/ui/skeleton';
+import { EmptyState } from '../components/feedback/EmptyState';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import {
   useWeightHistory,
@@ -175,7 +176,7 @@ export function History() {
       <div className="py-6">
         {/* Header navigation */}
         <div className="flex items-center gap-3 mb-6">
-          <Link to="/" className="p-2 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
+          <Link to="/" aria-label="Voltar" className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
@@ -185,10 +186,13 @@ export function History() {
         </div>
 
         {/* Tab selector */}
-        <div className="flex bg-muted p-1 rounded-lg w-full mb-6">
+        <div className="mb-6 flex w-full rounded-lg bg-muted p-1" role="tablist" aria-label="Selecionar métrica">
           <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'weight'}
             onClick={() => setActiveTab('weight')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-semibold transition-all ${
+            className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
               activeTab === 'weight'
                 ? 'bg-background text-foreground shadow-sm'
                 : 'text-muted-foreground hover:text-foreground'
@@ -198,8 +202,11 @@ export function History() {
             Peso
           </button>
           <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'bp'}
             onClick={() => setActiveTab('bp')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-semibold transition-all ${
+            className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
               activeTab === 'bp'
                 ? 'bg-background text-foreground shadow-sm'
                 : 'text-muted-foreground hover:text-foreground'
@@ -218,17 +225,17 @@ export function History() {
             ))
           ) : activeTab === 'weight' ? (
             sortedWeights.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">Nenhum registro de peso encontrado.</div>
+              <EmptyState icon={<Scale className="h-12 w-12" />} title="Nenhum registro de peso encontrado." />
             ) : (
               sortedWeights.map((log) => (
-                <Card key={log.id} className="border shadow-none hover:bg-muted/10 transition-colors">
+                <Card key={log.id} className="transition-colors hover:bg-muted/50">
                   <CardContent className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="p-2 rounded-full bg-primary/10 text-primary">
                         <Scale className="h-5 w-5" />
                       </div>
                       <div>
-                        <p className="text-lg font-black tracking-tight">{log.weight} kg</p>
+                        <p className="text-lg font-bold tracking-tight">{log.weight} kg</p>
                         <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
                           <Calendar className="h-3 w-3" />
                           {new Date(log.loggedAt).toLocaleString(undefined, {
@@ -264,17 +271,17 @@ export function History() {
               ))
             )
           ) : sortedBPs.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">Nenhum registro de pressão encontrado.</div>
+            <EmptyState icon={<Heart className="h-12 w-12" />} title="Nenhum registro de pressão encontrado." />
           ) : (
             sortedBPs.map((log) => (
-              <Card key={log.id} className="border shadow-none hover:bg-muted/10 transition-colors">
+              <Card key={log.id} className="transition-colors hover:bg-muted/50">
                 <CardContent className="p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-secondary/10 text-secondary-foreground">
-                      <Heart className="h-5 w-5 text-red-500" />
+                    <div className="p-2 rounded-full bg-destructive/10 text-destructive">
+                      <Heart className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-lg font-black tracking-tight">
+                      <p className="text-lg font-bold tracking-tight">
                         {log.systolic}x{log.diastolic} <span className="text-xs font-semibold text-muted-foreground">mmHg</span>
                       </p>
                       <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">

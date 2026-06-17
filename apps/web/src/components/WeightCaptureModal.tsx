@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
+import { Checkbox } from './ui/checkbox';
 import { useLogWeight } from '../services/api';
 import { toastSuccess, toastError } from '../lib/toast';
 
@@ -93,7 +94,7 @@ export function WeightCaptureModal({ isOpen, onClose }: WeightCaptureModalProps)
                 onChange={(e) => setWeightValue(e.target.value)}
                 placeholder="00.0"
                 disabled={isPending}
-                className="text-5xl font-black text-center bg-transparent border-b-2 border-primary focus:outline-none focus:border-primary/80 w-36 px-2 tracking-tight transition-colors"
+                className="text-metric-lg text-center bg-transparent border-b-2 border-primary focus:outline-none focus:border-primary/80 w-36 px-2 transition-colors"
                 autoFocus
               />
               <span className="text-2xl font-bold text-muted-foreground">kg</span>
@@ -102,12 +103,11 @@ export function WeightCaptureModal({ isOpen, onClose }: WeightCaptureModalProps)
 
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
+              <Checkbox
                 id="custom-date-weight"
                 checked={customDate}
-                onChange={(e) => setCustomDate(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                onCheckedChange={(checked) => setCustomDate(checked === true)}
+                disabled={isPending}
               />
               <Label htmlFor="custom-date-weight" className="text-sm font-medium cursor-pointer select-none">
                 Alterar data/hora (registro retroativo)

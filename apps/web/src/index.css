@@ -95,6 +95,18 @@
     @apply text-xl font-semibold;
   }
 
+  /* Foco visível global consistente para controles que não definem o próprio anel
+     (componentes que usam `focus-visible:ring-*` aplicam `outline-none` e têm precedência). */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Seleção de texto coerente com a cor de destaque. */
+  ::selection {
+    background: hsl(var(--primary) / 0.2);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *, ::before, ::after {
       animation-delay: -1ms !important;

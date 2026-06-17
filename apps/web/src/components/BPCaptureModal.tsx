@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
+import { Checkbox } from './ui/checkbox';
 import { useLogBP } from '../services/api';
 import { toastSuccess, toastError } from '../lib/toast';
 
@@ -101,7 +102,7 @@ export function BPCaptureModal({ isOpen, onClose }: BPCaptureModalProps) {
                   onChange={(e) => setSystolic(e.target.value.replace(/\D/g, ''))}
                   placeholder="120"
                   disabled={isPending}
-                  className="text-4xl font-black text-center bg-transparent border-b-2 border-primary focus:outline-none focus:border-primary/80 w-20 px-1 transition-colors"
+                  className="text-metric text-center bg-transparent border-b-2 border-primary focus:outline-none focus:border-primary/80 w-20 px-1 transition-colors"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
@@ -128,7 +129,7 @@ export function BPCaptureModal({ isOpen, onClose }: BPCaptureModalProps) {
                   onChange={(e) => setDiastolic(e.target.value.replace(/\D/g, ''))}
                   placeholder="80"
                   disabled={isPending}
-                  className="text-4xl font-black text-center bg-transparent border-b-2 border-primary focus:outline-none focus:border-primary/80 w-20 px-1 transition-colors"
+                  className="text-metric text-center bg-transparent border-b-2 border-primary focus:outline-none focus:border-primary/80 w-20 px-1 transition-colors"
                 />
                 <span className="text-xs font-bold text-muted-foreground uppercase">DIA</span>
               </div>
@@ -137,12 +138,11 @@ export function BPCaptureModal({ isOpen, onClose }: BPCaptureModalProps) {
 
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
+              <Checkbox
                 id="custom-date-bp"
                 checked={customDate}
-                onChange={(e) => setCustomDate(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                onCheckedChange={(checked) => setCustomDate(checked === true)}
+                disabled={isPending}
               />
               <Label htmlFor="custom-date-bp" className="text-sm font-medium cursor-pointer select-none">
                 Alterar data/hora (registro retroativo)

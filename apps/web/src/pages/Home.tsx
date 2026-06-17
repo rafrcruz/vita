@@ -6,6 +6,8 @@ import { apiFetch } from '../lib/api';
 import { useAuth } from '../lib/auth';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { AppShell } from '../components/layout/AppShell';
+import { Button, buttonVariants } from '../components/ui/button';
+import { cn } from '../lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Skeleton } from '../components/ui/skeleton';
@@ -44,17 +46,17 @@ export function Home() {
   return (
     <AppShell>
 
-      <div className="py-6 pb-24">
+      <div className="py-6 pb-28">
         <div className="flex items-center justify-between">
           <h1>VITA</h1>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1">
             <ThemeToggle />
-            <Link to="/history" className="text-sm font-semibold text-muted-foreground hover:text-foreground">
+            <Link to="/history" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}>
               Histórico
             </Link>
-            <button onClick={() => void logout()} className="text-sm text-muted-foreground hover:text-foreground">
+            <Button variant="ghost" size="sm" onClick={() => void logout()}>
               Sair
-            </button>
+            </Button>
           </div>
         </div>
         <p className="mt-2 text-muted-foreground">Plataforma pessoal de observabilidade de saúde</p>
@@ -75,10 +77,13 @@ export function Home() {
         )}
 
         {/* Metric Selector segment tabs */}
-        <div className="mt-6 flex bg-muted p-1 rounded-lg w-full">
+        <div className="mt-6 flex w-full rounded-lg bg-muted p-1" role="tablist" aria-label="Selecionar métrica">
           <button
+            type="button"
+            role="tab"
+            aria-selected={metric === 'weight'}
             onClick={() => setMetric('weight')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-semibold transition-all ${
+            className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
               metric === 'weight'
                 ? 'bg-background text-foreground shadow-sm'
                 : 'text-muted-foreground hover:text-foreground'
@@ -88,8 +93,11 @@ export function Home() {
             Peso
           </button>
           <button
+            type="button"
+            role="tab"
+            aria-selected={metric === 'bp'}
             onClick={() => setMetric('bp')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-semibold transition-all ${
+            className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
               metric === 'bp'
                 ? 'bg-background text-foreground shadow-sm'
                 : 'text-muted-foreground hover:text-foreground'
@@ -106,12 +114,14 @@ export function Home() {
             <TrendingUp className="h-3.5 w-3.5" />
             Evolução Temporal
           </span>
-          <div className="flex bg-muted/50 p-0.5 rounded-md border">
+          <div className="flex rounded-md border bg-muted/50 p-0.5">
             {(['7d', '30d', 'all'] as const).map((tf) => (
               <button
                 key={tf}
+                type="button"
+                aria-pressed={timeframe === tf}
                 onClick={() => setTimeframe(tf)}
-                className={`py-1 px-2.5 rounded text-xs font-semibold uppercase transition-all ${
+                className={`rounded-sm px-2.5 py-1 text-xs font-semibold uppercase transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
                   timeframe === tf
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
@@ -141,7 +151,7 @@ export function Home() {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground font-medium">Última medição</p>
-                    <p className="text-lg font-black tracking-tight">
+                    <p className="text-lg font-bold tracking-tight">
                       {metric === 'weight'
                         ? `${(lastEntry as { weight: number }).weight} kg`
                         : `${(lastEntry as { systolic: number; diastolic: number }).systolic}x${(lastEntry as { systolic: number; diastolic: number }).diastolic} mmHg`}
@@ -192,22 +202,16 @@ export function Home() {
       </div>
 
       {/* Floating Action Buttons at the bottom of the viewport */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-full max-w-md px-4">
-        <div className="bg-background/80 backdrop-blur-md border rounded-full p-2 shadow-2xl flex items-center justify-around gap-2">
-          <button
-            onClick={() => setIsWeightOpen(true)}
-            className="flex-1 flex items-center justify-center gap-1.5 py-3 px-4 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 active:scale-95 transition-all"
-          >
-            <Plus className="h-4 w-4" />
+      <div className="fixed bottom-6 left-1/2 z-40 w-full max-w-md -translate-x-1/2 px-4">
+        <div className="flex items-center justify-around gap-2 rounded-full border bg-background/80 p-2 shadow-xl backdrop-blur-md">
+          <Button onClick={() => setIsWeightOpen(true)} className="flex-1 rounded-full">
+            <Plus className="mr-1.5 h-4 w-4" />
             Adicionar Peso
-          </button>
-          <button
-            onClick={() => setIsBPOpen(true)}
-            className="flex-1 flex items-center justify-center gap-1.5 py-3 px-4 rounded-full bg-secondary text-secondary-foreground font-semibold text-sm hover:bg-secondary/90 active:scale-95 transition-all"
-          >
-            <Plus className="h-4 w-4" />
+          </Button>
+          <Button variant="secondary" onClick={() => setIsBPOpen(true)} className="flex-1 rounded-full">
+            <Plus className="mr-1.5 h-4 w-4" />
             Adicionar Pressão
-          </button>
+          </Button>
         </div>
       </div>
 

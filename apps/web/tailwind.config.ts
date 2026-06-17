@@ -69,6 +69,29 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      // Papel tipográfico "display" para números de destaque (peso/pressão).
+      fontSize: {
+        metric: ['2.25rem', { lineHeight: '1', letterSpacing: '-0.02em', fontWeight: '700' }],
+        'metric-lg': ['3rem', { lineHeight: '1', letterSpacing: '-0.02em', fontWeight: '700' }],
+      },
+      // Escala de elevação nomeada (níveis 1–4: cartão → cartão elevado → popover/menu → modal/sheet).
+      // Sombra com tom frio (slate) em vez de preto puro, para estética premium.
+      boxShadow: {
+        sm: '0 1px 2px 0 hsl(220 43% 11% / 0.06)',
+        DEFAULT: '0 1px 3px 0 hsl(220 43% 11% / 0.08), 0 1px 2px -1px hsl(220 43% 11% / 0.06)',
+        md: '0 4px 12px -2px hsl(220 43% 11% / 0.10), 0 2px 6px -2px hsl(220 43% 11% / 0.06)',
+        lg: '0 10px 24px -4px hsl(220 43% 11% / 0.12), 0 4px 8px -4px hsl(220 43% 11% / 0.08)',
+        xl: '0 20px 40px -8px hsl(220 43% 11% / 0.18), 0 6px 14px -6px hsl(220 43% 11% / 0.10)',
+      },
+      // Tokens de movimento — microinterações discretas (120–200 ms) com easing único.
+      transitionDuration: {
+        fast: '120ms',
+        DEFAULT: '160ms',
+        slow: '200ms',
+      },
+      transitionTimingFunction: {
+        DEFAULT: 'cubic-bezier(0.2, 0, 0, 1)',
+      },
     },
   },
   plugins: [tailwindcssAnimate],

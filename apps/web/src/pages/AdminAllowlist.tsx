@@ -8,7 +8,8 @@ import type { AllowlistEntryDto } from '@vita/shared';
 import { apiFetch } from '../lib/api';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { AppShell } from '../components/layout/AppShell';
-import { Button } from '../components/ui/button';
+import { Button, buttonVariants } from '../components/ui/button';
+import { cn } from '../lib/utils';
 import { FormField } from '../components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
@@ -70,9 +71,9 @@ export function AdminAllowlist() {
       <div className="py-6">
         <div className="flex items-center justify-between">
           <h1>Allowlist</h1>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1">
             <ThemeToggle />
-            <Link to="/" className="text-muted-foreground hover:text-foreground">
+            <Link to="/" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}>
               ← Início
             </Link>
           </div>
