@@ -45,7 +45,20 @@ export function App() {
               />
               <Route path="/style-guide" element={<StyleGuide />} />
             </Routes>
-            <Toaster richColors position="top-right" />
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                classNames: {
+                  toast:
+                    '!rounded-lg !border !shadow-lg !bg-popover !text-popover-foreground !border-border',
+                  description: '!text-muted-foreground',
+                  success: '!bg-success !text-success-foreground !border-success',
+                  error: '!bg-destructive !text-destructive-foreground !border-destructive',
+                  warning: '!bg-warning !text-warning-foreground !border-warning',
+                  info: '!bg-info !text-info-foreground !border-info',
+                },
+              }}
+            />
           </AuthProvider>
         </BrowserRouter>
       </ThemeProvider>

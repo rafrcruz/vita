@@ -195,7 +195,7 @@ export function TrendChart({ data, type }: TrendChartProps) {
                 <path
                   d={path1}
                   fill="none"
-                  stroke="#ef4444"
+                  stroke="hsl(var(--destructive))"
                   strokeWidth="3"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -208,7 +208,7 @@ export function TrendChart({ data, type }: TrendChartProps) {
                       cx={x}
                       cy={y}
                       r="4"
-                      className="fill-background stroke-[#ef4444] stroke-[2.5]"
+                      className="fill-background stroke-destructive stroke-[2.5]"
                     />
                   );
                 })}
@@ -221,7 +221,7 @@ export function TrendChart({ data, type }: TrendChartProps) {
                 <path
                   d={path2}
                   fill="none"
-                  stroke="#3b82f6"
+                  stroke="hsl(var(--info))"
                   strokeWidth="3"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -234,7 +234,7 @@ export function TrendChart({ data, type }: TrendChartProps) {
                       cx={x}
                       cy={y}
                       r="4"
-                      className="fill-background stroke-[#3b82f6] stroke-[2.5]"
+                      className="fill-background stroke-info stroke-[2.5]"
                     />
                   );
                 })}
@@ -254,11 +254,11 @@ export function TrendChart({ data, type }: TrendChartProps) {
         ) : (
           <>
             <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-[#ef4444] inline-block" />
+              <span className="h-3 w-3 rounded-full bg-destructive inline-block" />
               <span>Sistólica (SYS)</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-3b82f6 bg-blue-500 inline-block" />
+              <span className="h-3 w-3 rounded-full bg-info inline-block" />
               <span>Diastólica (DIA)</span>
             </div>
           </>

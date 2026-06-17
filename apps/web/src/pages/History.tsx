@@ -270,8 +270,8 @@ export function History() {
               <Card key={log.id} className="border shadow-none hover:bg-muted/10 transition-colors">
                 <CardContent className="p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-secondary/10 text-secondary-foreground">
-                      <Heart className="h-5 w-5 text-red-500" />
+                    <div className="p-2 rounded-full bg-destructive/10 text-destructive">
+                      <Heart className="h-5 w-5" />
                     </div>
                     <div>
                       <p className="text-lg font-black tracking-tight">
