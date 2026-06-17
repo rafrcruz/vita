@@ -184,3 +184,38 @@ export function calculateBPAverage(
     avgDiastolic: Math.round(totalDiastolic / filtered.length)
   };
 }
+
+/**
+ * Calcula a perda total de peso (peso do primeiro registro - peso atual)
+ * onde:
+ * - peso do primeiro registro: primeiro registro chronologicamente.
+ * - peso atual: menor peso registrado no ultimo dia em que teve registro.
+ */
+export function calculateWeightTotalLoss(logs: WeightLog[]): number | null {
+  if (!logs || logs.length === 0) return null;
+
+  // 1. Ordenar por data crescente
+  const sortedLogs = [...logs].map(log => ({
+    ...log,
+    loggedAt: new Date(log.loggedAt)
+  })).sort((a, b) => a.loggedAt.getTime() - b.loggedAt.getTime());
+
+  if (sortedLogs.length === 0) return null;
+
+  // Primeiro registro chronologicamente
+  const firstLog = sortedLogs[0];
+  if (!firstLog) return null;
+  const firstWeight = firstLog.weight;
+
+  // Menor peso registrado no último dia em que teve registro
+  const lastLog = sortedLogs[sortedLogs.length - 1];
+  if (!lastLog) return null;
+
+  const lastDayStr = getLocalDayString(lastLog.loggedAt);
+  const lastDayLogs = sortedLogs.filter(log => getLocalDayString(log.loggedAt) === lastDayStr);
+  const currentWeight = Math.min(...lastDayLogs.map(log => log.weight));
+
+  // Retorna a diferença: peso atual - peso inicial (negativo para perda, positivo para ganho)
+  return currentWeight - firstWeight;
+}
+

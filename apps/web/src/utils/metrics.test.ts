@@ -3,7 +3,8 @@ import {
   toDisplayDate,
   toApiDate,
   calculateWeightLossWeekly,
-  calculateBPAverage
+  calculateBPAverage,
+  calculateWeightTotalLoss
 } from './metrics';
 import type { WeightLog, BPLog } from './metrics';
 
@@ -131,3 +132,47 @@ describe('calculateBPAverage', () => {
     expect(calculateBPAverage(logs, 7, refDate)).toEqual({ avgSystolic: null, avgDiastolic: null });
   });
 });
+
+describe('calculateWeightTotalLoss', () => {
+  it('should return null for empty logs', () => {
+    expect(calculateWeightTotalLoss([])).toBeNull();
+  });
+
+  it('should return 0.0 for a single log entry', () => {
+    const logs: WeightLog[] = [
+      { weight: 80.0, loggedAt: '2026-06-17T10:00:00Z' }
+    ];
+    expect(calculateWeightTotalLoss(logs)).toBe(0);
+  });
+
+  it('should compute total weight loss correctly (negative value)', () => {
+    const logs: WeightLog[] = [
+      { weight: 80.0, loggedAt: '2026-06-10T08:00:00Z' }, // first record
+      { weight: 78.0, loggedAt: '2026-06-12T10:00:00Z' },
+      { weight: 75.0, loggedAt: '2026-06-17T12:00:00Z' }  // last day
+    ];
+    // 75.0 (current) - 80.0 (first) = -5.0
+    expect(calculateWeightTotalLoss(logs)).toBe(-5.0);
+  });
+
+  it('should compute total weight gain correctly (positive value)', () => {
+    const logs: WeightLog[] = [
+      { weight: 80.0, loggedAt: '2026-06-10T08:00:00Z' }, // first record
+      { weight: 81.0, loggedAt: '2026-06-12T10:00:00Z' },
+      { weight: 83.0, loggedAt: '2026-06-17T12:00:00Z' }  // last day
+    ];
+    // 83.0 (current) - 80.0 (first) = +3.0
+    expect(calculateWeightTotalLoss(logs)).toBe(3.0);
+  });
+
+  it('should use the lowest weight of the last day for currentWeight', () => {
+    const logs: WeightLog[] = [
+      { weight: 80.0, loggedAt: '2026-06-10T08:00:00Z' }, // first record
+      { weight: 76.0, loggedAt: '2026-06-17T09:00:00Z' },
+      { weight: 75.0, loggedAt: '2026-06-17T15:00:00Z' }  // lowest of last day is 75.0
+    ];
+    // 75.0 (current) - 80.0 (first) = -5.0
+    expect(calculateWeightTotalLoss(logs)).toBe(-5.0);
+  });
+});
+
