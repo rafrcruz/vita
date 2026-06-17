@@ -969,6 +969,68 @@ router2.put("/", async (req, res, next) => {
 });
 var profile_route_default = router2;
 
+// src/middleware/security.ts
+var csrfProtection = (req, res, next) => {
+  if (env.NODE_ENV === "test") {
+    next();
+    return;
+  }
+  if (["GET", "HEAD", "OPTIONS", "TRACE"].includes(req.method)) {
+    next();
+    return;
+  }
+  const origin = req.headers.origin;
+  const referer = req.headers.referer;
+  const isValidOrigin = (originString) => {
+    return originString === env.WEB_ORIGIN || originString === "http://localhost:5173" || /^https:\/\/vita-web.*\.vercel\.app$/.test(originString);
+  };
+  if (origin) {
+    if (!isValidOrigin(origin)) {
+      next(new AppError(403, "forbidden", "CSRF validation failed: invalid origin."));
+      return;
+    }
+    next();
+    return;
+  }
+  if (referer) {
+    try {
+      const refererUrl = new URL(referer);
+      if (!isValidOrigin(refererUrl.origin)) {
+        next(new AppError(403, "forbidden", "CSRF validation failed: invalid referer."));
+        return;
+      }
+      next();
+      return;
+    } catch {
+      next(new AppError(403, "forbidden", "CSRF validation failed: malformed referer."));
+      return;
+    }
+  }
+  next(new AppError(403, "forbidden", "CSRF validation failed: missing origin/referer headers."));
+};
+var ipStore = /* @__PURE__ */ new Map();
+var rateLimiter = (req, res, next) => {
+  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "unknown";
+  const now = Date.now();
+  const windowMs = 60 * 1e3;
+  const maxRequests = 100;
+  const record = ipStore.get(ip);
+  if (!record || now > record.resetTime) {
+    ipStore.set(ip, {
+      count: 1,
+      resetTime: now + windowMs
+    });
+    next();
+    return;
+  }
+  record.count += 1;
+  if (record.count > maxRequests) {
+    next(new AppError(429, "too-many-requests", "Muitas requisi\xE7\xF5es. Tente novamente mais tarde."));
+    return;
+  }
+  next();
+};
+
 // src/app.ts
 function createApp() {
   const app = express();
@@ -1002,8 +1064,10 @@ function createApp() {
       credentials: true
     })
   );
+  app.use(rateLimiter);
   app.use(express.json());
   app.use(cookieParser());
+  app.use(csrfProtection);
   app.use(httpLogger);
   app.use("/api/health", healthRouter);
   app.use("/api/auth", authRouter);
