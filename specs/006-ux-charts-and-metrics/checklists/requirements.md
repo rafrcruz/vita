@@ -2,7 +2,7 @@
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
 **Created**: 2026-06-17
-**Feature**: [spec.md](file:///c:/projects/vita/specs/006-ux-charts-and-metrics/spec.md)
+**Feature**: [spec.md](file:///C:/projects/vita/specs/006-ux-charts-and-metrics/spec.md)
 
 ## Content Quality
 

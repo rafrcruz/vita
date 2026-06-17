@@ -9,6 +9,7 @@ interface ChartPoint {
 interface TrendChartProps {
   data: { loggedAt: string; weight?: number; systolic?: number; diastolic?: number }[];
   type: 'weight' | 'bp';
+  timeframe?: '7d' | '30d' | 'all';
 }
 
 /**
@@ -31,7 +32,7 @@ export function formatMetricValue(type: 'weight' | 'bp', val1: number, val2?: nu
   return type === 'weight' ? `${val1} kg` : `${val1}x${val2} mmHg`;
 }
 
-export function TrendChart({ data, type }: TrendChartProps) {
+export function TrendChart({ data, type, timeframe = 'all' }: TrendChartProps) {
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
 
   const width = 500;
@@ -60,14 +61,30 @@ export function TrendChart({ data, type }: TrendChartProps) {
   const unit = type === 'weight' ? 'kg' : 'mmHg';
 
   // Parse points
-  const points: ChartPoint[] = data.map((item) => ({
+  const rawPoints: ChartPoint[] = data.map((item) => ({
     date: new Date(item.loggedAt),
     val1: type === 'weight' ? item.weight! : item.systolic!,
     val2: type === 'bp' ? item.diastolic! : undefined,
   }));
 
   // Sort by date ascending
-  points.sort((a, b) => a.date.getTime() - b.date.getTime());
+  rawPoints.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  // Aggregate weight points for 30d/all timeframes
+  const points = React.useMemo(() => {
+    if (type === 'weight' && (timeframe === '30d' || timeframe === 'all')) {
+      const dayMap = new Map<string, ChartPoint>();
+      for (const p of rawPoints) {
+        const dayStr = p.date.toDateString();
+        const existing = dayMap.get(dayStr);
+        if (!existing || p.val1 < existing.val1) {
+          dayMap.set(dayStr, p);
+        }
+      }
+      return Array.from(dayMap.values()).sort((a, b) => a.date.getTime() - b.date.getTime());
+    }
+    return rawPoints;
+  }, [rawPoints, type, timeframe]);
 
   // Find min/max values
   const allYValues = points.flatMap((p) => (p.val2 !== undefined ? [p.val1, p.val2] : [p.val1]));
@@ -121,28 +138,24 @@ export function TrendChart({ data, type }: TrendChartProps) {
   // X-axis: 3–6 marcas adaptativas; formato de data conforme o período.
   const useMonthYear = xRange > 180 * 24 * 60 * 60 * 1000; // intervalos longos ("Tudo")
   
-  const hasMultipleMeasurementsSameDay = React.useMemo(() => {
-    const days = new Set<string>();
-    for (const p of points) {
-      const dayStr = p.date.toDateString();
-      if (days.has(dayStr)) {
-        return true;
-      }
-      days.add(dayStr);
-    }
-    return false;
-  }, [points]);
 
   const formatTick = (date: Date) => {
-    if (useMonthYear) {
-      return date.toLocaleDateString(undefined, { month: '2-digit', year: '2-digit' });
-    }
-    if (hasMultipleMeasurementsSameDay || xRange <= 7 * 24 * 60 * 60 * 1000) {
+    if (type === 'weight') {
+      if (timeframe === '7d') {
+        const dayMonth = date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' });
+        const time = date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+        return `${dayMonth} ${time}`;
+      }
+      if (useMonthYear) {
+        return date.toLocaleDateString(undefined, { month: '2-digit', year: '2-digit' });
+      }
+      return date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' });
+    } else {
+      // Blood Pressure: always display date and time
       const dayMonth = date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' });
       const time = date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
       return `${dayMonth} ${time}`;
     }
-    return date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' });
   };
 
   const formatFull = (date: Date) =>

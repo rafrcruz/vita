@@ -33,9 +33,30 @@ The current Profile date field uses a native browser date picker (`<Input type="
 
 ## 3. Chart Axis Polish
 ### Investigation
-1. **X-Axis**: The chart is an inline SVG, rendering X labels based on `formatTick`. Currently, `formatTick` only displays `day/month` for all views other than long-term "Tudo". For users registering multiple entries on the same day, this produces duplicate X-axis labels (e.g., multiple "17/06" labels), causing visual confusion.
-2. **Y-Axis**: The chart Y-axis labels are grouped with the horizontal dashed grid lines inside a `<g className="opacity-20">`. Because of this, the text labels inherit `opacity: 0.20`, making them extremely faint and illegible in both themes.
+1. **X-Axis**: The chart is an inline SVG, rendering X labels based on `formatTick`. For users registering multiple entries on the same day, this produces duplicate X-axis labels (e.g., multiple "17/06" labels), causing visual confusion.
+2. **Y-Axis**: The text labels were grouped with horizontal lines, inheriting `opacity-20` and reducing readability.
 
 ### Selected Solution
-* **X-Axis Time Display**: Format ticks to include time (e.g. `DD/MM HH:MM`) if there are duplicate calendar days in the dataset or if the active timeframe is 7 days or shorter.
-* **Y-Axis Contrast**: Remove the `<text>` elements from the `opacity-20` group, or apply opacity purely to the `<line>` elements, keeping the `<text>` values at full contrast using the text styling classes.
+* **X-Axis Representation**:
+  - **Weight Chart**: Displays daily dates (no times) on `Tudo`/`30D` views, showing only the lowest logged weight of the day for same-day duplicates. Displays date and time (`DD/MM HH:MM`) on `7D` view for all points.
+  - **Blood Pressure Chart**: Always displays all measurements across all timeframes (`7D`, `30D`, and `Tudo`) with date and time (`DD/MM HH:MM`).
+* **Y-Axis Contrast**: Position Y-axis `<text>` labels as sibling elements outside of the `opacity-20` `<line>` elements to ensure high contrast.
+
+---
+
+## 4. Revised Weight Loss Calculation
+### Investigation
+The old fallback date lookup logic was complex and didn't represent steady weight progression. A daily linear interpolation method creates a continuous timeline of daily weights between the first and last logged dates, permitting a mathematically robust average rate calculation for any query sub-interval.
+
+### Selected Solution
+* **Daily Timeline Construction**: For days containing weight records, select the lowest recorded weight of that day. For intermediate days with no logs, linearly interpolate their weight using the closest preceding and succeeding logged days.
+* **Period Averages**: For a query interval $[D_{start}, D_{end}]$, intersect it with the active bounds $[D_{min}, D_{max}]$. If the intersection span is at least 1 day, the weekly rate is $\frac{W(D'_2) - W(D'_1)}{\text{Days}(D'_2 - D'_1)} \times 7$. If there's no intersection or less than 1 day difference, the rate is `0.0 kg/sem`.
+
+---
+
+## 5. Weekly Weight Change Formatting Sign
+### Investigation
+Displaying weight loss rates as positive numbers prefixed with `+` (e.g., `+0.6 kg/sem`) is confusing because users interpret `+` as gaining weight.
+
+### Selected Solution
+* **Formatting Signs**: Display weight changes using standard arithmetic signs: a decrease in weight (negative difference) displays with a minus (`-`) sign (e.g., `-0.6 kg/sem`), and an increase in weight displays with a plus (`+`) sign (e.g., `+0.3 kg/sem`). A zero difference displays as `0.0 kg/sem`.

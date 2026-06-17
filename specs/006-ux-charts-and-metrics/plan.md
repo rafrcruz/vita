@@ -8,9 +8,9 @@
 Improve overall visual styling, input usability, and analytical capabilities of VITA. Specifically:
 1. Polish dialog overlay entry/exit visual transition on desktop to fade in centered.
 2. Upgrade birthdate field in user profile to a keyboard-based text input with an automatic date format mask (`DD/MM/YYYY`) that translates from/to the API `YYYY-MM-DD` format.
-3. Polish custom SVG X-axis ticks to print hours/minutes in case of multiple measurements on a single calendar day or short durations.
+3. Adjust Weight chart X-axis to display daily dates (with same-day minimum aggregation) on Tudo/30D, and date+time on 7D. Adjust Blood Pressure chart to always display all measurements with date+time across all timeframes.
 4. Improve Y-axis label contrast by moving the text labels outside of the low-opacity group.
-5. Create weight and blood pressure metric blocks underneath the charts displaying averages and weight loss rates (applying fallback date searches).
+5. Create weight and blood pressure metric blocks underneath the charts displaying averages and weight changes (calculating weight change using daily linear interpolation, and formatting weight loss with `-` sign and weight gain with `+` sign).
 6. Add an exit icon next to the logout button text.
 
 ---
