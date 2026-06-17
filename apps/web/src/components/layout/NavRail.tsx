@@ -23,7 +23,7 @@ export function NavRail() {
     >
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="flex h-12 items-center justify-center border-b border-border text-muted-foreground hover:text-foreground"
+        className="flex h-12 items-center justify-center border-b border-border text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
         aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
       >
         {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
@@ -37,7 +37,7 @@ export function NavRail() {
               to={to}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'flex min-h-[44px] items-center gap-3 rounded-lg px-3 transition-colors',
+                'flex min-h-[44px] items-center gap-3 rounded-lg px-3 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
                 isActive
                   ? 'bg-primary text-primary-foreground'
                   : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',

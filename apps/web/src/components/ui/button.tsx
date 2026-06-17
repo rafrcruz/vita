@@ -44,11 +44,18 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        disabled={disabled || loading}
+        disabled={asChild ? undefined : disabled || loading}
         {...props}
       >
-        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        {children}
+        {/* Quando asChild, o Slot exige um único filho — não injetamos o spinner. */}
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {children}
+          </>
+        )}
       </Comp>
     );
   }

@@ -91,19 +91,19 @@ respeitado.
 confirmar foco visível consistente e feedback discreto igual entre equivalentes, com transições
 dentro do intervalo de duração tokenizado (SC-004, SC-005, SC-008; contracts/visual-states.md).
 
-- [ ] T023 [P] [US2] Padronizar hover/focus-visible/active/disabled (sem `scale` exagerado, usando tokens de duração/easing) em `apps/web/src/components/ui/button.tsx`
-- [ ] T024 [P] [US2] Padronizar foco/disabled e contraste de placeholder em `apps/web/src/components/ui/input.tsx`
-- [ ] T025 [P] [US2] Padronizar foco/disabled em `apps/web/src/components/ui/textarea.tsx`
-- [ ] T026 [P] [US2] Padronizar checked/focus/disabled em `apps/web/src/components/ui/checkbox.tsx`
-- [ ] T027 [P] [US2] Padronizar checked/focus/disabled em `apps/web/src/components/ui/radio-group.tsx`
-- [ ] T028 [P] [US2] Padronizar checked/focus/disabled em `apps/web/src/components/ui/switch.tsx`
-- [ ] T029 [P] [US2] Padronizar hover/selected de linhas em `apps/web/src/components/ui/table.tsx`
-- [ ] T030 [P] [US2] Padronizar estados selected/hover/focus em `apps/web/src/components/layout/SidebarNav.tsx`
-- [ ] T031 [P] [US2] Padronizar estados selected/hover/focus em `apps/web/src/components/layout/NavRail.tsx`
-- [ ] T032 [P] [US2] Padronizar estados selected/hover/focus em `apps/web/src/components/layout/BottomNav.tsx`
-- [ ] T033 [US2] Substituir o FAB manual e os `<button>` crus por `Button`/`IconButton`; padronizar estados do seletor de métrica e do filtro de tempo (selected/hover/focus) usando os tokens de movimento em `apps/web/src/pages/Home.tsx`
-- [ ] T034 [US2] Padronizar estados do seletor de abas, dos icon-buttons de ação e do hover de item de lista em `apps/web/src/pages/History.tsx`
-- [ ] T035 [US2] Verificar foco por teclado em todos os interativos (incl. nav, FAB, seletores, checkbox), transições dentro do intervalo tokenizado (~120–200 ms) e redução de movimento sob `prefers-reduced-motion` (SC-005, SC-008) em `apps/web`
+- [X] T023 [P] [US2] Padronizar hover/focus-visible/active/disabled (sem `scale` exagerado, usando tokens de duração/easing) em `apps/web/src/components/ui/button.tsx`
+- [X] T024 [P] [US2] Padronizar foco/disabled e contraste de placeholder em `apps/web/src/components/ui/input.tsx`
+- [X] T025 [P] [US2] Padronizar foco/disabled em `apps/web/src/components/ui/textarea.tsx`
+- [X] T026 [P] [US2] Padronizar checked/focus/disabled em `apps/web/src/components/ui/checkbox.tsx`
+- [X] T027 [P] [US2] Padronizar checked/focus/disabled em `apps/web/src/components/ui/radio-group.tsx`
+- [X] T028 [P] [US2] Padronizar checked/focus/disabled em `apps/web/src/components/ui/switch.tsx`
+- [X] T029 [P] [US2] Padronizar hover/selected de linhas em `apps/web/src/components/ui/table.tsx`
+- [X] T030 [P] [US2] Padronizar estados selected/hover/focus em `apps/web/src/components/layout/SidebarNav.tsx`
+- [X] T031 [P] [US2] Padronizar estados selected/hover/focus em `apps/web/src/components/layout/NavRail.tsx`
+- [X] T032 [P] [US2] Padronizar estados selected/hover/focus em `apps/web/src/components/layout/BottomNav.tsx`
+- [X] T033 [US2] Substituir o FAB manual e os `<button>` crus por `Button`/`IconButton`; padronizar estados do seletor de métrica e do filtro de tempo (selected/hover/focus) usando os tokens de movimento em `apps/web/src/pages/Home.tsx`
+- [X] T034 [US2] Padronizar estados do seletor de abas, dos icon-buttons de ação e do hover de item de lista em `apps/web/src/pages/History.tsx`
+- [ ] T035 [US2] Verificar foco por teclado em todos os interativos (incl. nav, FAB, seletores, checkbox), transições dentro do intervalo tokenizado (~120–200 ms) e redução de movimento sob `prefers-reduced-motion` (SC-005, SC-008) em `apps/web`  — **verificação visual em navegador: pendente neste ambiente (partes automatizadas concluídas)**
 
 **Checkpoint**: estados e microinterações consistentes em toda a aplicação.
 
@@ -118,13 +118,13 @@ adequado a cada formato (mobile→ultrawide), sem quebras nem rolagem horizontal
 conteúdo extremo; confirmar ausência de quebras/rolagem horizontal, navegação por formato preservada
 e bom uso do espaço em ultrawide (SC-007; data-model.md §5–§6).
 
-- [ ] T036 [US3] Ajustar largura/aproveitamento por formato (incl. `3xl`/`4xl` para ultrawide) preservando largura de leitura confortável em `apps/web/src/components/layout/PageContainer.tsx`
-- [ ] T037 [US3] Ajustar ritmo de espaçamento e reconciliar o `pb` com o FAB revisado em `apps/web/src/components/layout/AppShell.tsx`
-- [ ] T038 [US3] Substituir espaçamentos ad hoc (`mt-2/4/6`, `pb-24`) por ritmo consistente e layout responsivo para telas largas em `apps/web/src/pages/Home.tsx`
-- [ ] T039 [P] [US3] Padronizar espaçamento/ritmo e layout responsivo da lista em `apps/web/src/pages/History.tsx`
-- [ ] T040 [P] [US3] Padronizar espaçamento e responsividade de tabela/formulário em `apps/web/src/pages/AdminAllowlist.tsx`
-- [ ] T041 [P] [US3] Polir espaçamento/centralização do cartão de login em `apps/web/src/pages/Login.tsx`
-- [ ] T042 [US3] Verificar 4 larguras de referência + 320px + zoom 200% **e conteúdo extremo** (textos/rótulos longos, números grandes, listas vazias e muito grandes): 0 quebras, 0 vazamentos e 0 rolagem horizontal indevida (SC-007, FR-022, Edge Cases) em `apps/web`
+- [X] T036 [US3] Ajustar largura/aproveitamento por formato (incl. `3xl`/`4xl` para ultrawide) preservando largura de leitura confortável em `apps/web/src/components/layout/PageContainer.tsx`
+- [X] T037 [US3] Ajustar ritmo de espaçamento e reconciliar o `pb` com o FAB revisado em `apps/web/src/components/layout/AppShell.tsx`
+- [X] T038 [US3] Substituir espaçamentos ad hoc (`mt-2/4/6`, `pb-24`) por ritmo consistente e layout responsivo para telas largas em `apps/web/src/pages/Home.tsx`
+- [X] T039 [P] [US3] Padronizar espaçamento/ritmo e layout responsivo da lista em `apps/web/src/pages/History.tsx`
+- [X] T040 [P] [US3] Padronizar espaçamento e responsividade de tabela/formulário em `apps/web/src/pages/AdminAllowlist.tsx`
+- [X] T041 [P] [US3] Polir espaçamento/centralização do cartão de login em `apps/web/src/pages/Login.tsx`
+- [ ] T042 [US3] Verificar 4 larguras de referência + 320px + zoom 200% **e conteúdo extremo** (textos/rótulos longos, números grandes, listas vazias e muito grandes): 0 quebras, 0 vazamentos e 0 rolagem horizontal indevida (SC-007, FR-022, Edge Cases) em `apps/web`  — **verificação visual em navegador: pendente neste ambiente (partes automatizadas concluídas)**
 
 **Checkpoint**: layout e responsividade refinados em todos os formatos, inclusive sob conteúdo extremo.
 
@@ -140,15 +140,15 @@ tratamento visual uniforme de label/placeholder/ajuda/erro (sem mudar validaçõ
 e StyleGuide refletindo tudo, incluindo alerts, toasts e tokens de movimento (SC-009, SC-010;
 contracts/component-polish.md).
 
-- [ ] T043 [US4] Aplicar o papel tipográfico "display" ao número de destaque (remover `font-black`) em `apps/web/src/pages/Home.tsx`
-- [ ] T044 [P] [US4] Aplicar o papel "display" e tipografia consistente nos itens de lista em `apps/web/src/pages/History.tsx`
-- [ ] T045 [P] [US4] Tornar o `CardTitle` flexível ao contexto (não fixo em `text-2xl`) em `apps/web/src/components/ui/card.tsx`
-- [ ] T046 [P] [US4] Padronizar tratamento visual de label/placeholder/ajuda/erro (sem mudar validações/parse/foco) em `apps/web/src/components/WeightCaptureModal.tsx`
-- [ ] T047 [P] [US4] Idem em `apps/web/src/components/BPCaptureModal.tsx`
-- [ ] T048 [P] [US4] Confirmar contraste/consistência de placeholder (`placeholder:text-muted-foreground` em AA) em `apps/web/src/components/ui/input.tsx`
-- [ ] T049 [US4] Substituir o estado vazio em `<div>` solto pelo componente `EmptyState` e harmonizar `ErrorState`/`LoadingState` em `apps/web/src/pages/History.tsx`
-- [ ] T050 [P] [US4] Passada de consistência de ícones (tamanho/peso/alinhamento lucide) nas telas e no shell em `apps/web/src/pages/` e `apps/web/src/components/layout/`
-- [ ] T051 [US4] Atualizar o guia visual para refletir tokens/escalas/estados refinados nos dois temas — incluindo elevação, movimento, `Alert` e toasts — em `apps/web/src/pages/StyleGuide.tsx` (SC-009, SC-010)
+- [X] T043 [US4] Aplicar o papel tipográfico "display" ao número de destaque (remover `font-black`) em `apps/web/src/pages/Home.tsx`
+- [X] T044 [P] [US4] Aplicar o papel "display" e tipografia consistente nos itens de lista em `apps/web/src/pages/History.tsx`
+- [X] T045 [P] [US4] Tornar o `CardTitle` flexível ao contexto (não fixo em `text-2xl`) em `apps/web/src/components/ui/card.tsx`
+- [X] T046 [P] [US4] Padronizar tratamento visual de label/placeholder/ajuda/erro (sem mudar validações/parse/foco) em `apps/web/src/components/WeightCaptureModal.tsx`
+- [X] T047 [P] [US4] Idem em `apps/web/src/components/BPCaptureModal.tsx`
+- [X] T048 [P] [US4] Confirmar contraste/consistência de placeholder (`placeholder:text-muted-foreground` em AA) em `apps/web/src/components/ui/input.tsx`
+- [X] T049 [US4] Substituir o estado vazio em `<div>` solto pelo componente `EmptyState` e harmonizar `ErrorState`/`LoadingState` em `apps/web/src/pages/History.tsx`
+- [X] T050 [P] [US4] Passada de consistência de ícones (tamanho/peso/alinhamento lucide) nas telas e no shell em `apps/web/src/pages/` e `apps/web/src/components/layout/`
+- [X] T051 [US4] Atualizar o guia visual para refletir tokens/escalas/estados refinados nos dois temas — incluindo elevação, movimento, `Alert` e toasts — em `apps/web/src/pages/StyleGuide.tsx` (SC-009, SC-010)
 
 **Checkpoint**: acabamento de conteúdo concluído; StyleGuide atualizado.
 
@@ -158,11 +158,11 @@ contracts/component-polish.md).
 
 **Purpose**: confirmar zero regressão funcional/visual e fechar os critérios de sucesso.
 
-- [ ] T052 Rodar `npm run -w @vita/web typecheck` e `npm run -w @vita/web test` — suíte verde sem alterar lógica de teste por motivo funcional (SC-001)
-- [ ] T053 Rodar `vitest-axe`: 0 novas violações A/AA e contraste AA preservado nos dois temas (SC-005, SC-006)
-- [ ] T054 [P] Re-rodar a auditoria ripgrep de tokens: 0 valores cravados divergentes em `apps/web/src` (SC-002)
-- [ ] T055 [P] Comparação visual antes/depois (T003) preenchendo um checklist objetivo por área (cores, tipografia, bordas, raios, sombras, espaçamento, responsividade, componentes, estados, microinterações, formulários, placeholders, textos, ícones) — cada área marcada "igual ou superior", sem regressão (SC-010; torna SC-010 verificável via checklist)
-- [ ] T056 Executar o roteiro completo de `specs/004-ui-visual-polish/quickstart.md` ponta a ponta
+- [X] T052 Rodar `npm run -w @vita/web typecheck` e `npm run -w @vita/web test` — suíte verde sem alterar lógica de teste por motivo funcional (SC-001)
+- [X] T053 Rodar `vitest-axe`: 0 novas violações A/AA e contraste AA preservado nos dois temas (SC-005, SC-006)
+- [X] T054 [P] Re-rodar a auditoria ripgrep de tokens: 0 valores cravados divergentes em `apps/web/src` (SC-002)
+- [ ] T055 [P] Comparação visual antes/depois (T003) preenchendo um checklist objetivo por área (cores, tipografia, bordas, raios, sombras, espaçamento, responsividade, componentes, estados, microinterações, formulários, placeholders, textos, ícones) — cada área marcada "igual ou superior", sem regressão (SC-010; torna SC-010 verificável via checklist)  — **verificação visual em navegador: pendente neste ambiente (partes automatizadas concluídas)**
+- [ ] T056 Executar o roteiro completo de `specs/004-ui-visual-polish/quickstart.md` ponta a ponta  — **verificação visual em navegador: pendente neste ambiente (partes automatizadas concluídas)**
 
 ---
 

@@ -28,7 +28,7 @@ export function SidebarNav() {
               to={to}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'flex min-h-[44px] items-center gap-3 rounded-lg px-3 transition-colors',
+                'flex min-h-[44px] items-center gap-3 rounded-lg px-3 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
                 isActive
                   ? 'bg-primary text-primary-foreground'
                   : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'

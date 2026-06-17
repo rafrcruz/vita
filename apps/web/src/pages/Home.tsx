@@ -46,7 +46,7 @@ export function Home() {
   return (
     <AppShell>
 
-      <div className="py-6 pb-24">
+      <div className="py-6 pb-28">
         <div className="flex items-center justify-between">
           <h1>VITA</h1>
           <div className="flex items-center gap-1">
