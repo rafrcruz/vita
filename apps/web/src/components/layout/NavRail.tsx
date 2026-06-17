@@ -1,17 +1,15 @@
 import { useState } from 'react';
-import { Home, Settings, User, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
-
-const items = [
-  { to: '/', icon: Home, label: 'Início' },
-  { to: '/admin', icon: Settings, label: 'Admin' },
-  { to: '/profile', icon: User, label: 'Perfil' },
-];
+import { useAuth } from '../../lib/auth';
+import { visibleNavItems } from './navItems';
 
 export function NavRail() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
+  const items = visibleNavItems(user?.role);
 
   return (
     <nav

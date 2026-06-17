@@ -1,15 +1,12 @@
-import { Home, Settings, User } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
-
-const items = [
-  { to: '/', icon: Home, label: 'Início' },
-  { to: '/admin', icon: Settings, label: 'Admin' },
-  { to: '/profile', icon: User, label: 'Perfil' },
-];
+import { useAuth } from '../../lib/auth';
+import { visibleNavItems } from './navItems';
 
 export function SidebarNav() {
   const location = useLocation();
+  const { user } = useAuth();
+  const items = visibleNavItems(user?.role);
 
   return (
     <nav

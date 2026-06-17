@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { axe } from 'vitest-axe';
 import { StyleGuide } from './StyleGuide';
 import { ThemeProvider } from '../theme/ThemeProvider';
+import { AuthProvider } from '../lib/auth';
 
 function renderStyleGuide() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -12,7 +13,9 @@ function renderStyleGuide() {
     <QueryClientProvider client={client}>
       <ThemeProvider>
         <MemoryRouter>
-          <StyleGuide />
+          <AuthProvider>
+            <StyleGuide />
+          </AuthProvider>
         </MemoryRouter>
       </ThemeProvider>
     </QueryClientProvider>
@@ -29,6 +32,10 @@ describe('StyleGuide (accessibility)', () => {
         addEventListener: vi.fn(),
         removeEventListener: vi.fn(),
       }))
+    );
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({ ok: true, status: 200, json: async () => ({ email: 'a@b.com', role: 'admin' }) })) as unknown as typeof fetch
     );
   });
 

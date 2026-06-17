@@ -154,10 +154,13 @@ import { sql as sql2 } from "drizzle-orm";
 // src/db/schema.ts
 var schema_exports = {};
 __export(schema_exports, {
-  allowlist: () => allowlist
+  allowlist: () => allowlist,
+  bloodPressureLogs: () => bloodPressureLogs,
+  userProfiles: () => userProfiles,
+  weightLogs: () => weightLogs
 });
 import { sql } from "drizzle-orm";
-import { pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uniqueIndex, uuid, real, integer, date } from "drizzle-orm/pg-core";
 var allowlist = pgTable(
   "allowlist",
   {
@@ -170,6 +173,37 @@ var allowlist = pgTable(
   (table) => [
     // Unicidade case-insensitive por e-mail.
     uniqueIndex("allowlist_email_lower_unique").on(sql`lower(${table.email})`)
+  ]
+);
+var weightLogs = pgTable("weight_logs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userEmail: text("user_email").notNull(),
+  weight: real("weight").notNull(),
+  loggedAt: timestamp("logged_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+});
+var bloodPressureLogs = pgTable("blood_pressure_logs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userEmail: text("user_email").notNull(),
+  systolic: integer("systolic").notNull(),
+  diastolic: integer("diastolic").notNull(),
+  loggedAt: timestamp("logged_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+});
+var userProfiles = pgTable(
+  "user_profiles",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userEmail: text("user_email").notNull(),
+    fullName: text("full_name"),
+    birthDate: date("birth_date"),
+    heightCm: real("height_cm"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
+  },
+  (table) => [
+    // No máximo um perfil por usuário (case-insensitive).
+    uniqueIndex("user_profiles_email_lower_unique").on(sql`lower(${table.userEmail})`)
   ]
 );
 
@@ -397,6 +431,9 @@ authRouter.post("/logout", (_req, res) => {
 // src/allowlist/allowlist.route.ts
 import { Router as Router3 } from "express";
 
+// ../../packages/shared/src/index.ts
+import { z as z5 } from "zod";
+
 // ../../packages/shared/src/auth.ts
 import { z as z2 } from "zod";
 var roleSchema = z2.enum(["admin", "member"]);
@@ -414,6 +451,46 @@ var allowlistEntrySchema = z2.object({
 var allowlistCreateSchema = z2.object({
   email: z2.string().email(),
   role: roleSchema.default("member")
+});
+
+// ../../packages/shared/src/health.ts
+import { z as z3 } from "zod";
+var weightLogInputSchema = z3.object({
+  weight: z3.number({ required_error: "O peso \xE9 obrigat\xF3rio." }).min(20, { message: "O peso m\xEDnimo \xE9 20 kg." }).max(350, { message: "O peso m\xE1ximo \xE9 350 kg." }),
+  loggedAt: z3.string().datetime({ message: "Data inv\xE1lida." }).optional()
+});
+var bpLogInputSchema = z3.object({
+  systolic: z3.number({ required_error: "A press\xE3o sist\xF3lica \xE9 obrigat\xF3ria." }).int().min(40, { message: "A press\xE3o sist\xF3lica m\xEDnima \xE9 40 mmHg." }).max(300, { message: "A press\xE3o sist\xF3lica m\xE1xima \xE9 300 mmHg." }),
+  diastolic: z3.number({ required_error: "A press\xE3o diast\xF3lica \xE9 obrigat\xF3ria." }).int().min(30, { message: "A press\xE3o diast\xF3lica m\xEDnima \xE9 30 mmHg." }).max(200, { message: "A press\xE3o diast\xF3lica m\xE1xima \xE9 200 mmHg." }),
+  loggedAt: z3.string().datetime({ message: "Data inv\xE1lida." }).optional()
+});
+
+// ../../packages/shared/src/profile.ts
+import { z as z4 } from "zod";
+var profileInputSchema = z4.object({
+  fullName: z4.string().trim().max(120, { message: "O nome completo deve ter no m\xE1ximo 120 caracteres." }).optional(),
+  birthDate: z4.string().regex(/^\d{4}-\d{2}-\d{2}$/, { message: "Data de nascimento inv\xE1lida (use AAAA-MM-DD)." }).refine(
+    (value) => {
+      const date2 = /* @__PURE__ */ new Date(`${value}T00:00:00Z`);
+      return !Number.isNaN(date2.getTime());
+    },
+    { message: "Data de nascimento inv\xE1lida." }
+  ).refine(
+    (value) => {
+      const year = Number(value.slice(0, 4));
+      return year >= 1900;
+    },
+    { message: "O ano de nascimento deve ser a partir de 1900." }
+  ).refine(
+    (value) => {
+      const date2 = /* @__PURE__ */ new Date(`${value}T00:00:00Z`);
+      const today = /* @__PURE__ */ new Date();
+      today.setUTCHours(0, 0, 0, 0);
+      return date2.getTime() <= today.getTime();
+    },
+    { message: "A data de nascimento n\xE3o pode estar no futuro." }
+  ).optional(),
+  heightCm: z4.number({ invalid_type_error: "A altura deve ser um n\xFAmero." }).min(50, { message: "A altura m\xEDnima \xE9 50 cm." }).max(250, { message: "A altura m\xE1xima \xE9 250 cm." }).optional()
 });
 
 // src/allowlist/allowlist.route.ts
@@ -468,15 +545,14 @@ import {
   OpenApiGeneratorV3,
   extendZodWithOpenApi
 } from "@asteasolutions/zod-to-openapi";
-import { z as z3 } from "zod";
-extendZodWithOpenApi(z3);
-var healthSchema = z3.object({
-  status: z3.enum(["ok", "degraded"]),
-  db: z3.enum(["up", "down"]).optional(),
-  time: z3.string()
+extendZodWithOpenApi(z5);
+var healthSchema = z5.object({
+  status: z5.enum(["ok", "degraded"]),
+  db: z5.enum(["up", "down"]).optional(),
+  time: z5.string()
 });
-var errorSchema = z3.object({
-  error: z3.object({ code: z3.string(), message: z3.string() })
+var errorSchema = z5.object({
+  error: z5.object({ code: z5.string(), message: z5.string() })
 });
 function buildOpenApiDocument() {
   const registry = new OpenAPIRegistry();
@@ -531,7 +607,7 @@ function buildOpenApiDocument() {
     responses: {
       200: {
         description: "Lista",
-        content: { "application/json": { schema: z3.array(AllowlistEntry) } }
+        content: { "application/json": { schema: z5.array(AllowlistEntry) } }
       },
       401: { description: "Sem sess\xE3o" },
       403: { description: "N\xE3o-admin" }
@@ -554,7 +630,7 @@ function buildOpenApiDocument() {
     method: "delete",
     path: "/api/allowlist/{id}",
     summary: "Remove uma entrada (admin)",
-    request: { params: z3.object({ id: z3.string().uuid() }) },
+    request: { params: z5.object({ id: z5.string().uuid() }) },
     responses: {
       204: { description: "Removido" },
       409: { description: "Opera\xE7\xE3o proibida (\xFAltimo admin)" }
@@ -575,6 +651,323 @@ docsRouter.get("/openapi.json", (_req, res) => {
 });
 docsRouter.use("/", swaggerUi.serve);
 docsRouter.get("/", swaggerUi.setup(document));
+
+// src/health_metrics/metrics.route.ts
+import { Router as Router5 } from "express";
+
+// src/health_metrics/metrics.service.ts
+import { gte, and, eq as eq2, asc } from "drizzle-orm";
+function parseDecimalInput(value) {
+  if (typeof value === "number") return value;
+  if (!value) return null;
+  const normalized = value.trim().replace(",", ".");
+  if (!/^\d+(\.\d+)?$/.test(normalized)) {
+    return null;
+  }
+  const parsed = parseFloat(normalized);
+  return isNaN(parsed) ? null : parsed;
+}
+async function createWeightLog(userEmail, data) {
+  if (typeof data.weight === "string") {
+    const parsed = parseDecimalInput(data.weight);
+    if (parsed === null) {
+      throw new AppError(400, "validation_error", "O peso deve ser um n\xFAmero v\xE1lido.");
+    }
+    data.weight = parsed;
+  }
+  const result = weightLogInputSchema.safeParse(data);
+  if (!result.success) {
+    throw new AppError(400, "validation_error", result.error.errors[0]?.message || "Dados de peso inv\xE1lidos.");
+  }
+  const [inserted] = await db.insert(weightLogs).values({
+    userEmail,
+    weight: result.data.weight,
+    loggedAt: result.data.loggedAt ? new Date(result.data.loggedAt) : /* @__PURE__ */ new Date()
+  }).returning();
+  return inserted;
+}
+async function createBPLog(userEmail, data) {
+  const result = bpLogInputSchema.safeParse(data);
+  if (!result.success) {
+    throw new AppError(400, "validation_error", result.error.errors[0]?.message || "Dados de press\xE3o inv\xE1lidos.");
+  }
+  const [inserted] = await db.insert(bloodPressureLogs).values({
+    userEmail,
+    systolic: result.data.systolic,
+    diastolic: result.data.diastolic,
+    loggedAt: result.data.loggedAt ? new Date(result.data.loggedAt) : /* @__PURE__ */ new Date()
+  }).returning();
+  return inserted;
+}
+function getFilterDate(timeframe) {
+  const now = /* @__PURE__ */ new Date();
+  if (timeframe === "7d") {
+    return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1e3);
+  } else if (timeframe === "30d") {
+    return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1e3);
+  }
+  return null;
+}
+async function getWeightHistory(userEmail, timeframe = "all") {
+  const filterDate = getFilterDate(timeframe);
+  const conditions = [eq2(weightLogs.userEmail, userEmail)];
+  if (filterDate) {
+    conditions.push(gte(weightLogs.loggedAt, filterDate));
+  }
+  return db.select({
+    id: weightLogs.id,
+    weight: weightLogs.weight,
+    loggedAt: weightLogs.loggedAt
+  }).from(weightLogs).where(and(...conditions)).orderBy(asc(weightLogs.loggedAt));
+}
+async function getBPHistory(userEmail, timeframe = "all") {
+  const filterDate = getFilterDate(timeframe);
+  const conditions = [eq2(bloodPressureLogs.userEmail, userEmail)];
+  if (filterDate) {
+    conditions.push(gte(bloodPressureLogs.loggedAt, filterDate));
+  }
+  return db.select({
+    id: bloodPressureLogs.id,
+    systolic: bloodPressureLogs.systolic,
+    diastolic: bloodPressureLogs.diastolic,
+    loggedAt: bloodPressureLogs.loggedAt
+  }).from(bloodPressureLogs).where(and(...conditions)).orderBy(asc(bloodPressureLogs.loggedAt));
+}
+async function updateWeightLog(id, userEmail, data) {
+  if (typeof data.weight === "string") {
+    const parsed = parseDecimalInput(data.weight);
+    if (parsed === null) {
+      throw new AppError(400, "validation_error", "O peso deve ser um n\xFAmero v\xE1lido.");
+    }
+    data.weight = parsed;
+  }
+  const result = weightLogInputSchema.safeParse(data);
+  if (!result.success) {
+    throw new AppError(400, "validation_error", result.error.errors[0]?.message || "Dados inv\xE1lidos.");
+  }
+  const [updated] = await db.update(weightLogs).set({
+    weight: result.data.weight,
+    loggedAt: result.data.loggedAt ? new Date(result.data.loggedAt) : void 0
+  }).where(and(eq2(weightLogs.id, id), eq2(weightLogs.userEmail, userEmail))).returning();
+  if (!updated) {
+    throw new AppError(404, "not_found", "Registro de peso n\xE3o encontrado.");
+  }
+  return updated;
+}
+async function deleteWeightLog(id, userEmail) {
+  const [deleted] = await db.delete(weightLogs).where(and(eq2(weightLogs.id, id), eq2(weightLogs.userEmail, userEmail))).returning();
+  if (!deleted) {
+    throw new AppError(404, "not_found", "Registro de peso n\xE3o encontrado.");
+  }
+  return deleted;
+}
+async function updateBPLog(id, userEmail, data) {
+  const result = bpLogInputSchema.safeParse(data);
+  if (!result.success) {
+    throw new AppError(400, "validation_error", result.error.errors[0]?.message || "Dados inv\xE1lidos.");
+  }
+  const [updated] = await db.update(bloodPressureLogs).set({
+    systolic: result.data.systolic,
+    diastolic: result.data.diastolic,
+    loggedAt: result.data.loggedAt ? new Date(result.data.loggedAt) : void 0
+  }).where(and(eq2(bloodPressureLogs.id, id), eq2(bloodPressureLogs.userEmail, userEmail))).returning();
+  if (!updated) {
+    throw new AppError(404, "not_found", "Registro de press\xE3o arterial n\xE3o encontrado.");
+  }
+  return updated;
+}
+async function deleteBPLog(id, userEmail) {
+  const [deleted] = await db.delete(bloodPressureLogs).where(and(eq2(bloodPressureLogs.id, id), eq2(bloodPressureLogs.userEmail, userEmail))).returning();
+  if (!deleted) {
+    throw new AppError(404, "not_found", "Registro de press\xE3o arterial n\xE3o encontrado.");
+  }
+  return deleted;
+}
+
+// src/health_metrics/metrics.route.ts
+var router = Router5();
+router.get("/weight", async (req, res, next) => {
+  try {
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      res.status(401).json({ error: { code: "unauthenticated", message: "Autentica\xE7\xE3o necess\xE1ria." } });
+      return;
+    }
+    const timeframe = req.query.timeframe;
+    const logs = await getWeightHistory(userEmail, timeframe);
+    res.status(200).json(logs);
+  } catch (error) {
+    next(error);
+  }
+});
+router.post("/weight", async (req, res, next) => {
+  try {
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      res.status(401).json({ error: { code: "unauthenticated", message: "Autentica\xE7\xE3o necess\xE1ria." } });
+      return;
+    }
+    const log = await createWeightLog(userEmail, req.body);
+    res.status(201).json(log);
+  } catch (error) {
+    next(error);
+  }
+});
+router.put("/weight/:id", async (req, res, next) => {
+  try {
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      res.status(401).json({ error: { code: "unauthenticated", message: "Autentica\xE7\xE3o necess\xE1ria." } });
+      return;
+    }
+    const log = await updateWeightLog(req.params.id, userEmail, req.body);
+    res.status(200).json(log);
+  } catch (error) {
+    next(error);
+  }
+});
+router.delete("/weight/:id", async (req, res, next) => {
+  try {
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      res.status(401).json({ error: { code: "unauthenticated", message: "Autentica\xE7\xE3o necess\xE1ria." } });
+      return;
+    }
+    await deleteWeightLog(req.params.id, userEmail);
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+});
+router.get("/blood-pressure", async (req, res, next) => {
+  try {
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      res.status(401).json({ error: { code: "unauthenticated", message: "Autentica\xE7\xE3o necess\xE1ria." } });
+      return;
+    }
+    const timeframe = req.query.timeframe;
+    const logs = await getBPHistory(userEmail, timeframe);
+    res.status(200).json(logs);
+  } catch (error) {
+    next(error);
+  }
+});
+router.post("/blood-pressure", async (req, res, next) => {
+  try {
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      res.status(401).json({ error: { code: "unauthenticated", message: "Autentica\xE7\xE3o necess\xE1ria." } });
+      return;
+    }
+    const log = await createBPLog(userEmail, req.body);
+    res.status(201).json(log);
+  } catch (error) {
+    next(error);
+  }
+});
+router.put("/blood-pressure/:id", async (req, res, next) => {
+  try {
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      res.status(401).json({ error: { code: "unauthenticated", message: "Autentica\xE7\xE3o necess\xE1ria." } });
+      return;
+    }
+    const log = await updateBPLog(req.params.id, userEmail, req.body);
+    res.status(200).json(log);
+  } catch (error) {
+    next(error);
+  }
+});
+router.delete("/blood-pressure/:id", async (req, res, next) => {
+  try {
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      res.status(401).json({ error: { code: "unauthenticated", message: "Autentica\xE7\xE3o necess\xE1ria." } });
+      return;
+    }
+    await deleteBPLog(req.params.id, userEmail);
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+});
+var metrics_route_default = router;
+
+// src/profile/profile.route.ts
+import { Router as Router6 } from "express";
+
+// src/profile/profile.service.ts
+import { eq as eq3, sql as sql4 } from "drizzle-orm";
+function toDto2(row) {
+  return {
+    id: row.id,
+    fullName: row.fullName ?? null,
+    birthDate: row.birthDate ?? null,
+    heightCm: row.heightCm ?? null,
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString()
+  };
+}
+async function getProfile(userEmail) {
+  const [row] = await db.select().from(userProfiles).where(eq3(sql4`lower(${userProfiles.userEmail})`, userEmail.toLowerCase())).limit(1);
+  return row ? toDto2(row) : null;
+}
+async function upsertProfile(userEmail, data) {
+  const result = profileInputSchema.safeParse(data);
+  if (!result.success) {
+    throw new AppError(400, "validation_error", result.error.errors[0]?.message || "Dados de perfil inv\xE1lidos.");
+  }
+  const { fullName, birthDate, heightCm } = result.data;
+  const now = /* @__PURE__ */ new Date();
+  const [existing] = await db.select({ id: userProfiles.id }).from(userProfiles).where(eq3(sql4`lower(${userProfiles.userEmail})`, userEmail.toLowerCase())).limit(1);
+  if (existing) {
+    const [updated] = await db.update(userProfiles).set({
+      fullName: fullName ?? null,
+      birthDate: birthDate ?? null,
+      heightCm: heightCm ?? null,
+      updatedAt: now
+    }).where(eq3(userProfiles.id, existing.id)).returning();
+    return toDto2(updated);
+  }
+  const [inserted] = await db.insert(userProfiles).values({
+    userEmail,
+    fullName: fullName ?? null,
+    birthDate: birthDate ?? null,
+    heightCm: heightCm ?? null
+  }).returning();
+  return toDto2(inserted);
+}
+
+// src/profile/profile.route.ts
+var router2 = Router6();
+router2.get("/", async (req, res, next) => {
+  try {
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      res.status(401).json({ error: { code: "unauthenticated", message: "Autentica\xE7\xE3o necess\xE1ria." } });
+      return;
+    }
+    const profile = await getProfile(userEmail);
+    res.status(200).json(profile);
+  } catch (error) {
+    next(error);
+  }
+});
+router2.put("/", async (req, res, next) => {
+  try {
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      res.status(401).json({ error: { code: "unauthenticated", message: "Autentica\xE7\xE3o necess\xE1ria." } });
+      return;
+    }
+    const profile = await upsertProfile(userEmail, req.body);
+    res.status(200).json(profile);
+  } catch (error) {
+    next(error);
+  }
+});
+var profile_route_default = router2;
 
 // src/app.ts
 function createApp() {
@@ -616,6 +1009,8 @@ function createApp() {
   app.use("/api/auth", authRouter);
   app.use("/api/allowlist", allowlistRouter);
   app.use("/api/docs", docsRouter);
+  app.use("/api/metrics", requireAuth, metrics_route_default);
+  app.use("/api/profile", requireAuth, profile_route_default);
   app.use(notFoundHandler);
   app.use(errorHandler);
   return app;

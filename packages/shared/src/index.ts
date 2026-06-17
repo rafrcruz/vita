@@ -2,6 +2,7 @@
 export { z } from 'zod';
 export * from './auth';
 export * from './health';
+export * from './profile';
 
 export const SHARED_PACKAGE_VERSION = '0.1.0';
 

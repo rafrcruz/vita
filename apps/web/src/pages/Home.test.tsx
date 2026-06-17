@@ -42,11 +42,7 @@ describe('Home (app shell)', () => {
         if (String(url).includes('/metrics/')) {
           return { ok: true, status: 200, json: async () => [] };
         }
-        return {
-          ok: true,
-          status: 200,
-          json: async () => ({ status: 'ok', db: 'up', time: '2026-06-16T00:00:00.000Z' }),
-        };
+        return { ok: true, status: 200, json: async () => ({}) };
       }) as unknown as typeof fetch
     );
   });
@@ -55,18 +51,24 @@ describe('Home (app shell)', () => {
     vi.unstubAllGlobals();
   });
 
-  it('exibe o título e o status saudável vindo da API', async () => {
+  it('exibe o título VITA e o botão Sair no cabeçalho', () => {
     renderHome();
     expect(screen.getByRole('heading', { name: 'VITA' })).toBeInTheDocument();
-    await waitFor(() => {
-      expect(screen.getByTestId('health-status')).toBeInTheDocument();
-    });
+    expect(screen.getByRole('button', { name: 'Sair' })).toBeInTheDocument();
   });
 
-  it('has no accessibility violations', async () => {
+  it('não exibe mais os elementos removidos (subtítulo, status do backend, admin inline)', () => {
+    renderHome();
+    expect(screen.queryByText('Plataforma pessoal de observabilidade de saúde')).not.toBeInTheDocument();
+    expect(screen.queryByText('Status do backend')).not.toBeInTheDocument();
+    expect(screen.queryByText('Administrar allowlist')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('health-status')).not.toBeInTheDocument();
+  });
+
+  it('não tem violações de acessibilidade', async () => {
     const { container } = renderHome();
     await waitFor(() => {
-      expect(screen.getByTestId('health-status')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'VITA' })).toBeInTheDocument();
     });
     const results = await axe(container);
     expect(results).toHaveNoViolations();

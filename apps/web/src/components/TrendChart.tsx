@@ -11,10 +11,32 @@ interface TrendChartProps {
   type: 'weight' | 'bp';
 }
 
+/**
+ * Índices das marcas do eixo X: entre 3 e 6 marcas distribuídas uniformemente,
+ * independentemente da quantidade de pontos (FR-016). Para poucos pontos usa todos.
+ */
+export function computeXTickIndices(n: number): number[] {
+  if (n <= 0) return [];
+  if (n === 1) return [0];
+  const count = Math.min(6, n); // no máximo 6; quando há ≥3 pontos fica no intervalo 3–6
+  const indices: number[] = [];
+  for (let i = 0; i < count; i++) {
+    indices.push(Math.round((i * (n - 1)) / (count - 1)));
+  }
+  return Array.from(new Set(indices));
+}
+
+/** Formata o valor de um ponto conforme a métrica (com unidade). */
+export function formatMetricValue(type: 'weight' | 'bp', val1: number, val2?: number): string {
+  return type === 'weight' ? `${val1} kg` : `${val1}x${val2} mmHg`;
+}
+
 export function TrendChart({ data, type }: TrendChartProps) {
+  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+
   const width = 500;
   const height = 250;
-  const padding = { top: 20, right: 20, bottom: 30, left: 40 };
+  const padding = { top: 20, right: 24, bottom: 34, left: 48 };
 
   // Empty state handling
   if (!data || !Array.isArray(data) || data.length === 0) {
@@ -35,14 +57,14 @@ export function TrendChart({ data, type }: TrendChartProps) {
     );
   }
 
+  const unit = type === 'weight' ? 'kg' : 'mmHg';
+
   // Parse points
-  const points: ChartPoint[] = data.map((item) => {
-    return {
-      date: new Date(item.loggedAt),
-      val1: type === 'weight' ? item.weight! : item.systolic!,
-      val2: type === 'bp' ? item.diastolic! : undefined,
-    };
-  });
+  const points: ChartPoint[] = data.map((item) => ({
+    date: new Date(item.loggedAt),
+    val1: type === 'weight' ? item.weight! : item.systolic!,
+    val2: type === 'bp' ? item.diastolic! : undefined,
+  }));
 
   // Sort by date ascending
   points.sort((a, b) => a.date.getTime() - b.date.getTime());
@@ -52,7 +74,6 @@ export function TrendChart({ data, type }: TrendChartProps) {
   let minY = Math.min(...allYValues);
   let maxY = Math.max(...allYValues);
 
-  // Add padding to Y range to avoid touching the border
   const yRange = maxY - minY;
   if (yRange === 0) {
     minY = minY - 5;
@@ -66,17 +87,14 @@ export function TrendChart({ data, type }: TrendChartProps) {
   const maxX = points[points.length - 1]!.date.getTime();
   const xRange = maxX - minX;
 
-  // Map data coordinates to SVG coordinate system
   const getCoords = (date: Date, val: number) => {
     const xRatio = xRange === 0 ? 0.5 : (date.getTime() - minX) / xRange;
     const yRatio = (val - minY) / (maxY - minY);
-
     const x = padding.left + xRatio * (width - padding.left - padding.right);
     const y = height - padding.bottom - yRatio * (height - padding.top - padding.bottom);
     return { x, y };
   };
 
-  // Generate path coordinates
   const generatePath = (valKey: 'val1' | 'val2') => {
     if (points.length === 0) return '';
     return points
@@ -92,7 +110,7 @@ export function TrendChart({ data, type }: TrendChartProps) {
   const path1 = generatePath('val1');
   const path2 = type === 'bp' ? generatePath('val2') : '';
 
-  // Y-axis grid values (4 lines)
+  // Y-axis grid values (4 lines) com unidade.
   const gridLinesCount = 4;
   const gridLines = Array.from({ length: gridLinesCount }).map((_, i) => {
     const val = minY + (i / (gridLinesCount - 1)) * (maxY - minY);
@@ -100,10 +118,50 @@ export function TrendChart({ data, type }: TrendChartProps) {
     return { val: Math.round(val), y };
   });
 
-  // Format dates for X-axis labels
-  const formatShortDate = (date: Date) => {
-    return date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' });
-  };
+  // X-axis: 3–6 marcas adaptativas; formato de data conforme o período.
+  const useMonthYear = xRange > 180 * 24 * 60 * 60 * 1000; // intervalos longos ("Tudo")
+  const formatTick = (date: Date) =>
+    useMonthYear
+      ? date.toLocaleDateString(undefined, { month: '2-digit', year: '2-digit' })
+      : date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' });
+  const formatFull = (date: Date) =>
+    date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+  const xTickIndices = computeXTickIndices(points.length);
+
+  // Tooltip do ponto ativo (hover/toque/teclado).
+  const active = activeIndex != null ? points[activeIndex] : null;
+  const activeCoords = active ? getCoords(active.date, active.val1) : null;
+  const tooltipW = 124;
+  const tooltipH = type === 'bp' ? 52 : 38;
+  const rawTx = activeCoords ? activeCoords.x - tooltipW / 2 : 0;
+  const tooltipX = Math.min(Math.max(rawTx, padding.left), width - padding.right - tooltipW);
+  const tooltipAbove = activeCoords ? activeCoords.y - tooltipH - 12 > 0 : true;
+  const tooltipY = activeCoords ? (tooltipAbove ? activeCoords.y - tooltipH - 12 : activeCoords.y + 12) : 0;
+
+  const renderCircles = (valKey: 'val1' | 'val2', strokeClass: string) =>
+    points.map((p, idx) => {
+      const val = valKey === 'val1' ? p.val1 : p.val2;
+      if (val === undefined) return null;
+      const { x, y } = getCoords(p.date, val);
+      return (
+        <circle
+          key={`${valKey}-${idx}`}
+          cx={x}
+          cy={y}
+          r={activeIndex === idx ? 6 : 4}
+          className={`fill-background ${strokeClass} stroke-[2.5] cursor-pointer focus:outline-none`}
+          tabIndex={0}
+          role="img"
+          aria-label={`${formatFull(p.date)}: ${formatMetricValue(type, p.val1, p.val2)}`}
+          onMouseEnter={() => setActiveIndex(idx)}
+          onMouseLeave={() => setActiveIndex((cur) => (cur === idx ? null : cur))}
+          onFocus={() => setActiveIndex(idx)}
+          onBlur={() => setActiveIndex((cur) => (cur === idx ? null : cur))}
+          onClick={() => setActiveIndex((cur) => (cur === idx ? null : idx))}
+        />
+      );
+    });
 
   return (
     <div className="w-full border rounded-lg p-4 bg-card text-card-foreground shadow-sm">
@@ -111,8 +169,14 @@ export function TrendChart({ data, type }: TrendChartProps) {
         viewBox={`0 0 ${width} ${height}`}
         className="w-full h-auto overflow-visible"
         xmlns="http://www.w3.org/2000/svg"
+        role="img"
+        aria-label={`Gráfico de evolução de ${type === 'weight' ? 'peso' : 'pressão arterial'} (${unit}). Última medição: ${formatMetricValue(
+          type,
+          points[points.length - 1]!.val1,
+          points[points.length - 1]!.val2
+        )} em ${formatFull(points[points.length - 1]!.date)}.`}
       >
-        {/* Horizontal grid lines */}
+        {/* Horizontal grid lines + Y labels com unidade */}
         {gridLines.map((line, idx) => (
           <g key={idx} className="opacity-20">
             <line
@@ -134,117 +198,86 @@ export function TrendChart({ data, type }: TrendChartProps) {
             </text>
           </g>
         ))}
+        {/* Rótulo da unidade no topo do eixo Y */}
+        <text
+          x={padding.left - 8}
+          y={padding.top - 6}
+          textAnchor="end"
+          className="text-[9px] font-semibold uppercase tracking-wide fill-muted-foreground"
+        >
+          {unit}
+        </text>
 
-        {/* X-axis labels (min, middle, max dates) */}
-        {points.length > 0 && (
-          <g className="opacity-60 text-[10px] fill-muted-foreground">
-            {/* Min date */}
-            <text x={padding.left} y={height - 8} textAnchor="start">
-              {formatShortDate(points[0]!.date)}
-            </text>
-            {/* Max date */}
-            {points.length > 1 && (
-              <text x={width - padding.right} y={height - 8} textAnchor="end">
-                {formatShortDate(points[points.length - 1]!.date)}
+        {/* X-axis labels (3–6 marcas adaptativas) */}
+        <g className="text-[10px] fill-muted-foreground">
+          {xTickIndices.map((i) => {
+            const { x } = getCoords(points[i]!.date, points[i]!.val1);
+            const anchor = i === 0 ? 'start' : i === points.length - 1 ? 'end' : 'middle';
+            return (
+              <text key={i} x={x} y={height - 10} textAnchor={anchor} className="opacity-70">
+                {formatTick(points[i]!.date)}
               </text>
-            )}
-            {/* Middle date */}
-            {points.length > 2 && (
-              <text
-                x={padding.left + (width - padding.left - padding.right) / 2}
-                y={height - 8}
-                textAnchor="middle"
-              >
-                {formatShortDate(points[Math.floor(points.length / 2)]!.date)}
-              </text>
-            )}
-          </g>
-        )}
+            );
+          })}
+        </g>
 
         {/* Lines */}
         {type === 'weight' && path1 && (
           <>
-            <path
-              d={path1}
-              fill="none"
-              stroke="hsl(var(--primary))"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            {points.map((p, idx) => {
-              const { x, y } = getCoords(p.date, p.val1);
-              return (
-                <circle
-                  key={idx}
-                  cx={x}
-                  cy={y}
-                  r="4"
-                  className="fill-background stroke-primary stroke-[2.5]"
-                />
-              );
-            })}
+            <path d={path1} fill="none" stroke="hsl(var(--primary))" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+            {renderCircles('val1', 'stroke-primary')}
           </>
         )}
 
         {type === 'bp' && (
           <>
-            {/* Systolic (SYS) - Rose/Red */}
             {path1 && (
               <>
-                <path
-                  d={path1}
-                  fill="none"
-                  stroke="hsl(var(--destructive))"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                {points.map((p, idx) => {
-                  const { x, y } = getCoords(p.date, p.val1);
-                  return (
-                    <circle
-                      key={idx}
-                      cx={x}
-                      cy={y}
-                      r="4"
-                      className="fill-background stroke-destructive stroke-[2.5]"
-                    />
-                  );
-                })}
+                <path d={path1} fill="none" stroke="hsl(var(--destructive))" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                {renderCircles('val1', 'stroke-destructive')}
               </>
             )}
-
-            {/* Diastolic (DIA) - Blue */}
             {path2 && (
               <>
-                <path
-                  d={path2}
-                  fill="none"
-                  stroke="hsl(var(--info))"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                {points.map((p, idx) => {
-                  const { x, y } = getCoords(p.date, p.val2!);
-                  return (
-                    <circle
-                      key={idx}
-                      cx={x}
-                      cy={y}
-                      r="4"
-                      className="fill-background stroke-info stroke-[2.5]"
-                    />
-                  );
-                })}
+                <path d={path2} fill="none" stroke="hsl(var(--info))" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                {renderCircles('val2', 'stroke-info')}
               </>
             )}
           </>
         )}
+
+        {/* Tooltip do ponto ativo */}
+        {active && activeCoords && (
+          <g aria-hidden="true">
+            <line
+              x1={activeCoords.x}
+              y1={padding.top}
+              x2={activeCoords.x}
+              y2={height - padding.bottom}
+              stroke="currentColor"
+              strokeWidth="1"
+              className="opacity-20"
+            />
+            <rect
+              x={tooltipX}
+              y={tooltipY}
+              width={tooltipW}
+              height={tooltipH}
+              rx="6"
+              className="fill-popover stroke-border"
+              strokeWidth="1"
+            />
+            <text x={tooltipX + 10} y={tooltipY + 16} className="text-[10px] font-medium fill-muted-foreground">
+              {formatFull(active.date)}
+            </text>
+            <text x={tooltipX + 10} y={tooltipY + 31} className="text-[12px] font-bold fill-popover-foreground">
+              {formatMetricValue(type, active.val1, active.val2)}
+            </text>
+          </g>
+        )}
       </svg>
 
-      {/* Legend */}
+      {/* Legend (distinção não depende apenas de cor — há rótulo textual) */}
       <div className="mt-4 flex items-center justify-center gap-6 text-xs text-muted-foreground border-t pt-3">
         {type === 'weight' ? (
           <div className="flex items-center gap-2">

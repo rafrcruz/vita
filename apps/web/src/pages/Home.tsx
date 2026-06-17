@@ -1,36 +1,23 @@
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
-import type { HealthStatus } from '@vita/shared';
-import { apiFetch } from '../lib/api';
-import { useAuth } from '../lib/auth';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { AppShell } from '../components/layout/AppShell';
-import { Button, buttonVariants } from '../components/ui/button';
-import { cn } from '../lib/utils';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
+import { Button } from '../components/ui/button';
+import { useAuth } from '../lib/auth';
+import { Card, CardContent } from '../components/ui/card';
 import { Skeleton } from '../components/ui/skeleton';
-import { ErrorState } from '../components/feedback/ErrorState';
-import { Activity, Plus, TrendingUp, Scale, Heart, Calendar } from 'lucide-react';
+import { Plus, TrendingUp, Scale, Heart, Calendar } from 'lucide-react';
 import { WeightCaptureModal } from '../components/WeightCaptureModal';
 import { BPCaptureModal } from '../components/BPCaptureModal';
 import { TrendChart } from '../components/TrendChart';
 import { useWeightHistory, useBPHistory } from '../services/api';
 import { useState } from 'react';
 
-
 export function Home() {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const [isWeightOpen, setIsWeightOpen] = useState(false);
   const [isBPOpen, setIsBPOpen] = useState(false);
   const [metric, setMetric] = useState<'weight' | 'bp'>('weight');
   const [timeframe, setTimeframe] = useState<'7d' | '30d' | 'all'>('all');
-
-  const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ['health'],
-    queryFn: () => apiFetch<HealthStatus>('/health'),
-  });
 
   const { data: weightData, isLoading: isWeightLoading } = useWeightHistory(timeframe);
   const { data: bpData, isLoading: isBPLoading } = useBPHistory(timeframe);
@@ -51,30 +38,11 @@ export function Home() {
           <h1>VITA</h1>
           <div className="flex items-center gap-1">
             <ThemeToggle />
-            <Link to="/history" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}>
-              Histórico
-            </Link>
             <Button variant="ghost" size="sm" onClick={() => void logout()}>
               Sair
             </Button>
           </div>
         </div>
-        <p className="mt-2 text-muted-foreground">Plataforma pessoal de observabilidade de saúde</p>
-
-        {user && (
-          <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-            <span>{user.email}</span>
-            <Badge variant="secondary" className="uppercase">{user.role}</Badge>
-            {user.role === 'admin' && (
-              <>
-                <span>·</span>
-                <Link to="/admin" className="text-primary hover:text-primary/80">
-                  Administrar allowlist
-                </Link>
-              </>
-            )}
-          </div>
-        )}
 
         {/* Metric Selector segment tabs */}
         <div className="mt-6 flex w-full rounded-lg bg-muted p-1" role="tablist" aria-label="Selecionar métrica">
@@ -171,44 +139,17 @@ export function Home() {
             </Card>
           )}
         </div>
-
-        <Card className="mt-6">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Activity className="h-4 w-4" />
-              Status do backend
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading && <Skeleton className="h-6 w-32" />}
-            {isError && (
-              <ErrorState
-                message={error instanceof Error ? error.message : 'erro desconhecido'}
-                retry={() => void refetch()}
-              />
-            )}
-            {data && (
-              <div className="flex items-center gap-2">
-                <Badge variant={data.status === 'ok' ? 'success' : 'warning'}>
-                  {data.status === 'ok' ? 'Saudável' : 'Degradado'}
-                </Badge>
-                <span className="text-sm text-muted-foreground" data-testid="health-status">
-                  {data.time}
-                </span>
-              </div>
-            )}
-          </CardContent>
-        </Card>
       </div>
 
-      {/* Floating Action Buttons at the bottom of the viewport */}
-      <div className="fixed bottom-6 left-1/2 z-40 w-full max-w-md -translate-x-1/2 px-4">
+      {/* Floating Action Buttons — posicionados acima da BottomNav no mobile para não
+          serem cobertos por ela (FR-022); no desktop (sem BottomNav) ficam mais abaixo. */}
+      <div className="fixed bottom-20 left-1/2 z-50 w-full max-w-md -translate-x-1/2 px-4 md:bottom-6">
         <div className="flex items-center justify-around gap-2 rounded-full border bg-background/80 p-2 shadow-xl backdrop-blur-md">
-          <Button onClick={() => setIsWeightOpen(true)} className="flex-1 rounded-full">
+          <Button onClick={() => setIsWeightOpen(true)} className="min-h-[44px] flex-1 rounded-full">
             <Plus className="mr-1.5 h-4 w-4" />
             Adicionar Peso
           </Button>
-          <Button variant="secondary" onClick={() => setIsBPOpen(true)} className="flex-1 rounded-full">
+          <Button variant="secondary" onClick={() => setIsBPOpen(true)} className="min-h-[44px] flex-1 rounded-full">
             <Plus className="mr-1.5 h-4 w-4" />
             Adicionar Pressão
           </Button>

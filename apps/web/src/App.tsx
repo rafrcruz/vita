@@ -10,6 +10,7 @@ import { Login } from './pages/Login';
 import { AdminAllowlist } from './pages/AdminAllowlist';
 import { StyleGuide } from './pages/StyleGuide';
 import { History } from './pages/History';
+import { Profile } from './pages/Profile';
 
 export function App() {
   return (
@@ -32,6 +33,14 @@ export function App() {
                 element={
                   <ProtectedRoute>
                     <History />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
                   </ProtectedRoute>
                 }
               />

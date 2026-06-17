@@ -11,6 +11,7 @@ import { allowlistRouter } from './allowlist/allowlist.route';
 import { docsRouter } from './docs/docs.route';
 import { requireAuth } from './auth/middleware';
 import metricsRouter from './health_metrics/metrics.route';
+import profileRouter from './profile/profile.route';
 
 
 /** Cria e configura a instância do Express (usada por dev local e serverless). */
@@ -66,6 +67,7 @@ export function createApp(): Express {
   app.use('/api/allowlist', allowlistRouter);
   app.use('/api/docs', docsRouter);
   app.use('/api/metrics', requireAuth, metricsRouter);
+  app.use('/api/profile', requireAuth, profileRouter);
 
 
   // 404 e tratador de erros central por último.
