@@ -69,17 +69,17 @@ Usuário único.
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-| Princípio | Avaliação | Status |
-|-----------|-----------|--------|
-| I. Observabilidade, não aconselhamento médico | Iniciativa puramente visual; não cria cálculos, agregações nem interpretações clínicas (FR-001/FR-003) | ✅ Pass |
-| II. Privacidade e segurança por padrão | Nenhuma mudança de dados, logs, segredos, transporte ou persistência; só apresentação client-side | ✅ Pass |
-| III. Acesso restrito via Google | Login apenas refinado visualmente; fluxo Google + allowlist e permissões intactos (FR-003) | ✅ Pass |
-| IV. Stack definida (PWA online-first) | Mantém React+TS+Tailwind+PWA; **zero dependências novas**; nenhuma mudança de arquitetura | ✅ Pass |
-| V. Simplicidade deliberada | Reduz complexidade: remove markup ad hoc duplicado e o substitui por componentes existentes; não introduz componentes para itens ausentes (accordion, date picker, etc.) — YAGNI | ✅ Pass |
-| VI. Dependências sustentáveis | Nenhuma dependência adicionada ou removida | ✅ Pass |
-| VII. Testes orientados a risco | O risco central é **regressão funcional/visual**; mitigado mantendo a suíte existente verde, `axe` sem novas violações e checklist de inspeção visual. Sem testes só por cobertura | ✅ Pass |
+| Princípio                                     | Avaliação                                                                                                                                                                          | Status  |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| I. Observabilidade, não aconselhamento médico | Iniciativa puramente visual; não cria cálculos, agregações nem interpretações clínicas (FR-001/FR-003)                                                                             | ✅ Pass |
+| II. Privacidade e segurança por padrão        | Nenhuma mudança de dados, logs, segredos, transporte ou persistência; só apresentação client-side                                                                                  | ✅ Pass |
+| III. Acesso restrito via Google               | Login apenas refinado visualmente; fluxo Google + allowlist e permissões intactos (FR-003)                                                                                         | ✅ Pass |
+| IV. Stack definida (PWA online-first)         | Mantém React+TS+Tailwind+PWA; **zero dependências novas**; nenhuma mudança de arquitetura                                                                                          | ✅ Pass |
+| V. Simplicidade deliberada                    | Reduz complexidade: remove markup ad hoc duplicado e o substitui por componentes existentes; não introduz componentes para itens ausentes (accordion, date picker, etc.) — YAGNI   | ✅ Pass |
+| VI. Dependências sustentáveis                 | Nenhuma dependência adicionada ou removida                                                                                                                                         | ✅ Pass |
+| VII. Testes orientados a risco                | O risco central é **regressão funcional/visual**; mitigado mantendo a suíte existente verde, `axe` sem novas violações e checklist de inspeção visual. Sem testes só por cobertura | ✅ Pass |
 
 **Resultado**: PASS — sem violações. Nenhuma entrada em Complexity Tracking necessária.
 
@@ -135,7 +135,7 @@ opção mais simples que elimine a duplicação sem criar uma nova abstração p
 
 > Sem violações de Constituição — nenhuma justificativa de complexidade necessária.
 
-*(Itens deliberadamente FORA de escopo para preservar comportamento: substituir os `window.confirm()`
+_(Itens deliberadamente FORA de escopo para preservar comportamento: substituir os `window.confirm()`
 de exclusão em `History.tsx` por um diálogo estilizado — alteraria a mecânica de interação; e
 introduzir componentes inexistentes hoje — accordion, date picker, calendário, autocomplete, search
-field — que a spec proíbe criar. Ambos registrados em research.md.)*
+field — que a spec proíbe criar. Ambos registrados em research.md.)_

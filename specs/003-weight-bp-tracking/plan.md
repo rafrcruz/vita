@@ -9,6 +9,7 @@
 ## Summary
 
 Implements a health tracking module for body weight and blood pressure in VITA. This plan covers:
+
 - In-place quick entry inputs on the home screen designed for fast, one-handed mobile capture.
 - Timeframe-filtered charts (7D/30D/All) using light SVG components to monitor trends.
 - A dedicated log management page to edit or delete past records.
@@ -36,22 +37,22 @@ Implements a health tracking module for body weight and blood pressure in VITA. 
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - **Principle I: Observabilidade de Saúde, Não Aconselhamento Médico**
-  - *Gate Status*: **PASSED**. The UI and backend will store and visualize weight and BP data purely descriptively (e.g. historical average, raw values) without rendering clinical classifications (e.g., "Hypertension Stage 1") or diagnoses.
+  - _Gate Status_: **PASSED**. The UI and backend will store and visualize weight and BP data purely descriptively (e.g. historical average, raw values) without rendering clinical classifications (e.g., "Hypertension Stage 1") or diagnoses.
 - **Principle II: Privacidade e Segurança de Dados de Saúde por Padrão**
-  - *Gate Status*: **PASSED**. No health data will be logged in server logs. Authenticated users can only see their own records.
+  - _Gate Status_: **PASSED**. No health data will be logged in server logs. Authenticated users can only see their own records.
 - **Principle III: Acesso Restrito e Autenticação via Google**
-  - *Gate Status*: **PASSED**. The routes will utilize the existing `requireAuth` middleware to ensure Google authenticated access matching the allowlist.
+  - _Gate Status_: **PASSED**. The routes will utilize the existing `requireAuth` middleware to ensure Google authenticated access matching the allowlist.
 - **Principle IV: Stack e Arquitetura Definidas (PWA Online-First)**
-  - *Gate Status*: **PASSED**. Built using the existing frontend (React/Vite/Tailwind) and backend (Express/Node) architecture.
+  - _Gate Status_: **PASSED**. Built using the existing frontend (React/Vite/Tailwind) and backend (Express/Node) architecture.
 - **Principle V: Simplicidade Deliberada (Anti-Overengineering)**
-  - *Gate Status*: **PASSED**. We will use standard REST endpoints and a simple database schema. For data visualization, we will implement clean React SVG-based line charts rather than introducing a heavy third-party charting library.
+  - _Gate Status_: **PASSED**. We will use standard REST endpoints and a simple database schema. For data visualization, we will implement clean React SVG-based line charts rather than introducing a heavy third-party charting library.
 - **Principle VI: Dependências e Infraestrutura Sustentáveis**
-  - *Gate Status*: **PASSED**. Only well-maintained, standard monorepo packages (Express, React, Drizzle) will be utilized.
+  - _Gate Status_: **PASSED**. Only well-maintained, standard monorepo packages (Express, React, Drizzle) will be utilized.
 - **Principle VII: Testes Orientados a Risco**
-  - *Gate Status*: **PASSED**. Critical test targets are identified (decimal parsing, validation limits, chronological sorting).
+  - _Gate Status_: **PASSED**. Critical test targets are identified (decimal parsing, validation limits, chronological sorting).
 
 ## Project Structure
 
@@ -82,7 +83,7 @@ apps/api/
 │       ├── metrics.route.ts  # Express Router
 │       ├── metrics.service.ts# Logic for CRUD and sorting
 │       └── metrics.test.ts   # Unit and integration tests
- 
+
 apps/web/
 ├── src/
 │   ├── components/
@@ -100,8 +101,8 @@ apps/web/
 
 ## Complexity Tracking
 
-> *No current violations detected. Clean architecture adhering strictly to VITA Constitution.*
+> _No current violations detected. Clean architecture adhering strictly to VITA Constitution._
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| *None*    | *N/A*      | *N/A*                               |
+| --------- | ---------- | ------------------------------------ |
+| _None_    | _N/A_      | _N/A_                                |

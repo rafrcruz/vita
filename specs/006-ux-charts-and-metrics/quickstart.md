@@ -17,6 +17,7 @@ This guide outlines runnable scenarios to validate the implementation of the UI 
 ## Validation Scenarios
 
 ### Scenario 1: Modal Transition Animation
+
 Validate that the modal animate transition has been polished to fade in centered on desktop.
 
 1. Navigate to the main dashboard (`/`).
@@ -29,6 +30,7 @@ Validate that the modal animate transition has been polished to fade in centered
 ---
 
 ### Scenario 2: Birthdate Keyboard Text Masking
+
 Validate that the birthdate field in Profile screen supports typing with text mask.
 
 1. Navigate to the Profile screen (`/profile`).
@@ -46,6 +48,7 @@ Validate that the birthdate field in Profile screen supports typing with text ma
 ---
 
 ### Scenario 3: Chart Granularity and High Contrast
+
 Validate that the charts display time markers on duplicate days and the Y-axis labels have sufficient contrast.
 
 1. Navigate to the dashboard.
@@ -59,6 +62,7 @@ Validate that the charts display time markers on duplicate days and the Y-axis l
 ---
 
 ### Scenario 4: Analytical Health Indicators
+
 Validate that weight loss average calculations and blood pressure averages calculate correctly following specific formula priorities.
 
 1. Navigate to the weight dashboard.

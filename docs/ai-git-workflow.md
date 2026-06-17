@@ -22,13 +22,13 @@
 
 O usuário **não roda comandos git**. Ele descreve a intenção; a IA executa o ciclo inteiro.
 
-| O usuário diz algo como… | A IA faz |
-| --- | --- |
+| O usuário diz algo como…                                      | A IA faz                                                                  |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | "sobe isso pro GitHub" / "manda pra main" / "atualiza o repo" | branch → commit → push → PR → espera CI → merge (squash) → apaga a branch |
-| "abre um PR mas não mergeia ainda" | branch → commit → push → PR, e **para** (deixa para revisão) |
-| "mergeia o PR #N" | confirma checks verdes → `gh pr merge --squash --delete-branch` |
-| "limpa as branches velhas" | apaga branches já mergeadas (local e remota) |
-| "desfaz / reverte o que subiu" | `git revert` num novo PR (nunca force-push na main) |
+| "abre um PR mas não mergeia ainda"                            | branch → commit → push → PR, e **para** (deixa para revisão)              |
+| "mergeia o PR #N"                                             | confirma checks verdes → `gh pr merge --squash --delete-branch`           |
+| "limpa as branches velhas"                                    | apaga branches já mergeadas (local e remota)                              |
+| "desfaz / reverte o que subiu"                                | `git revert` num novo PR (nunca force-push na main)                       |
 
 Como aprovações exigidas = 0, **não há etapa de "aprovar PR"** no caminho normal — a IA cria e
 mergeia o próprio PR. (O GitHub proíbe o autor de _aprovar_ o próprio PR, mas isso não trava o

@@ -5,7 +5,9 @@
 **Input**: Feature specification from `/specs/006-ux-charts-and-metrics/spec.md`
 
 ## Summary
+
 Improve overall visual styling, input usability, and analytical capabilities of VITA. Specifically:
+
 1. Polish dialog overlay entry/exit visual transition on desktop to fade in centered.
 2. Upgrade birthdate field in user profile to a keyboard-based text input with an automatic date format mask (`DD/MM/YYYY`) that translates from/to the API `YYYY-MM-DD` format.
 3. Adjust Weight chart X-axis to display daily dates (with same-day minimum aggregation) on Tudo/30D, and date+time on 7D. Adjust Blood Pressure chart to always display all measurements with date+time across all timeframes.
@@ -37,17 +39,17 @@ Improve overall visual styling, input usability, and analytical capabilities of 
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-| Principle | Status | Justification |
-|-----------|--------|---------------|
-| **I. Observabilidade de Saúde** | Pass | Calculations are displayed strictly as data summaries. No diagnostic or clinical recommendations are presented. |
-| **II. Privacidade e Segurança** | Pass | Health logs are processed in-memory and are not logged. Transmission is secure. |
-| **III. Acesso Restrito** | Pass | No authentication mechanism changes. Access continues to validate via Google OAuth. |
-| **IV. Stack e Arquitetura** | Pass | Frontend React SPA and backend Node API architecture are strictly maintained. |
-| **V. Simplicidade Deliberada** | Pass | Formulas are implemented as pure TypeScript utility functions on the frontend, avoiding heavy backend aggregations or external query engines. |
-| **VI. Dependências Sustentáveis**| Pass | No new external libraries are added; date masking and math are built with pure JS/TS. |
-| **VII. Testes Orientados a Risco** | Pass | Unit tests cover the calculation formula edge cases (exact matches, earlier dates search, later dates search) to ensure complete data correctness. |
+| Principle                          | Status | Justification                                                                                                                                      |
+| ---------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **I. Observabilidade de Saúde**    | Pass   | Calculations are displayed strictly as data summaries. No diagnostic or clinical recommendations are presented.                                    |
+| **II. Privacidade e Segurança**    | Pass   | Health logs are processed in-memory and are not logged. Transmission is secure.                                                                    |
+| **III. Acesso Restrito**           | Pass   | No authentication mechanism changes. Access continues to validate via Google OAuth.                                                                |
+| **IV. Stack e Arquitetura**        | Pass   | Frontend React SPA and backend Node API architecture are strictly maintained.                                                                      |
+| **V. Simplicidade Deliberada**     | Pass   | Formulas are implemented as pure TypeScript utility functions on the frontend, avoiding heavy backend aggregations or external query engines.      |
+| **VI. Dependências Sustentáveis**  | Pass   | No new external libraries are added; date masking and math are built with pure JS/TS.                                                              |
+| **VII. Testes Orientados a Risco** | Pass   | Unit tests cover the calculation formula edge cases (exact matches, earlier dates search, later dates search) to ensure complete data correctness. |
 
 ---
 
@@ -95,4 +97,4 @@ apps/
 
 ## Complexity Tracking
 
-*No violations detected. Standard implementation patterns are followed.*
+_No violations detected. Standard implementation patterns are followed._

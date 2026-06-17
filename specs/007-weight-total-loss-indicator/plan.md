@@ -28,17 +28,17 @@ Add a "Perda Total" (Total Weight Loss) indicator to the Weight metrics section 
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-| Principle | Status | Justification |
-|-----------|--------|---------------|
-| **I. Observabilidade de Saúde** | Pass | Displays in-memory calculations of weight changes. Does not provide clinical advice or diagnostics. |
-| **II. Privacidade e Segurança** | Pass | Health log details are processed in-memory client-side and not logged. Auth is unchanged. |
-| **III. Acesso Restrito** | Pass | Access is secured using Google OAuth and allowlist check. No modifications to auth. |
-| **IV. Stack e Arquitetura** | Pass | Built within the React TypeScript PWA frontend and Node backend stack. |
-| **V. Simplicidade Deliberada** | Pass | Centralized mathematical calculations in client-side TypeScript utility helper, avoiding database aggregations. |
-| **VI. Dependências Sustentáveis** | Pass | No new external libraries or packages are added. |
-| **VII. Testes Orientados a Risco** | Pass | Risk-oriented unit testing covers all mathematical computations and formatting permutations (loss, gain, zero logs, single log). |
+| Principle                          | Status | Justification                                                                                                                    |
+| ---------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| **I. Observabilidade de Saúde**    | Pass   | Displays in-memory calculations of weight changes. Does not provide clinical advice or diagnostics.                              |
+| **II. Privacidade e Segurança**    | Pass   | Health log details are processed in-memory client-side and not logged. Auth is unchanged.                                        |
+| **III. Acesso Restrito**           | Pass   | Access is secured using Google OAuth and allowlist check. No modifications to auth.                                              |
+| **IV. Stack e Arquitetura**        | Pass   | Built within the React TypeScript PWA frontend and Node backend stack.                                                           |
+| **V. Simplicidade Deliberada**     | Pass   | Centralized mathematical calculations in client-side TypeScript utility helper, avoiding database aggregations.                  |
+| **VI. Dependências Sustentáveis**  | Pass   | No new external libraries or packages are added.                                                                                 |
+| **VII. Testes Orientados a Risco** | Pass   | Risk-oriented unit testing covers all mathematical computations and formatting permutations (loss, gain, zero logs, single log). |
 
 ## Project Structure
 
@@ -73,4 +73,4 @@ apps/
 
 ## Complexity Tracking
 
-*No principles were violated. YAGNI and Simplicidade Deliberada principles are fully followed.*
+_No principles were violated. YAGNI and Simplicidade Deliberada principles are fully followed._

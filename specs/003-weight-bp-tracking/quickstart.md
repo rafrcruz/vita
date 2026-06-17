@@ -17,6 +17,7 @@ This guide outlines runnable scenarios to validate the implementation of weight 
 ## Validation Scenarios
 
 ### Scenario 1: Quick Weight Entry (One-handed flow & parsing)
+
 Validate that a user can quickly register a weight, and that the decimal parser correctly handles Portuguese formatting.
 
 1. Navigate to the main dashboard (`/`).
@@ -34,6 +35,7 @@ Validate that a user can quickly register a weight, and that the decimal parser 
 ---
 
 ### Scenario 2: Quick Blood Pressure Entry
+
 Validate logging of paired systolic and diastolic pressure values.
 
 1. Click the "Adicionar Pressão" button on the dashboard.
@@ -47,6 +49,7 @@ Validate logging of paired systolic and diastolic pressure values.
 ---
 
 ### Scenario 3: Chart Filtering & Empty States
+
 Validate correct visualization of charts, including empty states and timeframe controls.
 
 1. **No Data State**:
@@ -64,6 +67,7 @@ Validate correct visualization of charts, including empty states and timeframe c
 ---
 
 ### Scenario 4: Log Management (Edit / Delete)
+
 Validate auditing and cleanup of past entries.
 
 1. Click on the navigation menu and select "Histórico" to open the dedicated history page `/history`.

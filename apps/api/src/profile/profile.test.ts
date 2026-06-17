@@ -18,7 +18,11 @@ describe('profileInputSchema (validação)', () => {
   });
 
   it('aceita dados válidos', () => {
-    const result = profileInputSchema.safeParse({ fullName: 'Maria Silva', birthDate: '1990-05-12', heightCm: 168 });
+    const result = profileInputSchema.safeParse({
+      fullName: 'Maria Silva',
+      birthDate: '1990-05-12',
+      heightCm: 168,
+    });
     expect(result.success).toBe(true);
   });
 

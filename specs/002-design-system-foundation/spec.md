@@ -30,7 +30,7 @@ design system, provando que a base funciona sem introduzir lógica de negócio n
 - Q: Qual a direção da cor de destaque/identidade visual? → A: **Azul-índigo/violeta** como cor de destaque sobre neutros frios (cinza-ardósia) — estética moderna "tech/premium", confiável.
 - Q: Qual o padrão de navegação primária por formato? → A: **Mobile: barra de abas inferior · Tablet: rail/sidebar recolhível · Desktop/ultrawide: sidebar fixa.**
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Fundação visual com tema claro/escuro persistente (Priority: P1) 🎯 MVP
 
@@ -145,7 +145,7 @@ exemplos de layout por breakpoint, com diretrizes de quando usar cada um.
 - **Offline/erro de rede**: estados de erro/carregamento dos componentes se comportam de forma previsível (a fundação não exige offline, mas não deve quebrar).
 - **Internacionalização de texto**: a fundação assume Português (pt-BR); rótulos não devem estar estruturados de forma a impedir ajustes, mas i18n completa está fora de escopo.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -203,7 +203,7 @@ exemplos de layout por breakpoint, com diretrizes de quando usar cada um.
 - **Componente**: elemento de interface reutilizável com variações e estados definidos (normal, foco/hover, desabilitado, carregando, erro), aparência coerente nos dois temas e contrato de uso documentado no guia.
 - **Breakpoint / Formato**: faixa de largura de tela (smartphone, tablet, desktop, ultrawide) associada a um padrão de layout e navegação.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

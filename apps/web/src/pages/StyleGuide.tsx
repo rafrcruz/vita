@@ -13,12 +13,44 @@ import { Switch } from '../components/ui/switch';
 import { Alert, AlertTitle, AlertDescription } from '../components/feedback/Alert';
 import { EmptyState } from '../components/feedback/EmptyState';
 import { AlertCircle, Info, CheckCircle, AlertTriangle } from 'lucide-react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '../components/ui/sheet';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../components/ui/dialog';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '../components/ui/sheet';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '../components/ui/table';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
 import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
 import { toastSuccess, toastError, toastInfo } from '../lib/toast';
 
@@ -50,7 +82,9 @@ export function StyleGuide() {
 
         <section>
           <h2>Cores (Tokens)</h2>
-          <p className="mb-4 text-sm text-muted-foreground">Paleta índigo/violeta sobre neutros frios</p>
+          <p className="mb-4 text-sm text-muted-foreground">
+            Paleta índigo/violeta sobre neutros frios
+          </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {colorTokens.map((token) => (
               <div key={token.name} className="space-y-2">
@@ -65,7 +99,9 @@ export function StyleGuide() {
           <h2>Tipografia</h2>
           <div className="space-y-4">
             <div>
-              <p className="text-xs text-muted-foreground mb-1">Display (text-metric · números de destaque)</p>
+              <p className="text-xs text-muted-foreground mb-1">
+                Display (text-metric · números de destaque)
+              </p>
               <p className="text-metric">72,5</p>
             </div>
             <div>
@@ -96,7 +132,10 @@ export function StyleGuide() {
           <div className="flex items-end gap-2">
             {[1, 2, 3, 4, 6, 8, 12, 16].map((size) => (
               <div key={size} className="text-center">
-                <div className="bg-primary rounded" style={{ width: `${size * 4}px`, height: `${size * 4}px` }} />
+                <div
+                  className="bg-primary rounded"
+                  style={{ width: `${size * 4}px`, height: `${size * 4}px` }}
+                />
                 <p className="text-xs mt-1">{size}</p>
               </div>
             ))}
@@ -148,9 +187,11 @@ export function StyleGuide() {
         <section>
           <h2>Movimento</h2>
           <p className="text-sm text-muted-foreground">
-            Microinterações discretas com duração de 120–200&nbsp;ms (tokens <span className="font-mono">duration-fast</span>,{' '}
-            <span className="font-mono">duration-DEFAULT</span>, <span className="font-mono">duration-slow</span>) e easing
-            único. Tudo respeita <span className="font-mono">prefers-reduced-motion</span>.
+            Microinterações discretas com duração de 120–200&nbsp;ms (tokens{' '}
+            <span className="font-mono">duration-fast</span>,{' '}
+            <span className="font-mono">duration-DEFAULT</span>,{' '}
+            <span className="font-mono">duration-slow</span>) e easing único. Tudo respeita{' '}
+            <span className="font-mono">prefers-reduced-motion</span>.
           </p>
         </section>
 
@@ -290,10 +331,16 @@ export function StyleGuide() {
             Notificações alinhadas às cores semânticas do design system (não à paleta do sonner).
           </p>
           <div className="flex flex-wrap gap-4">
-            <Button variant="outline" onClick={() => toastSuccess('Operação concluída com sucesso.')}>
+            <Button
+              variant="outline"
+              onClick={() => toastSuccess('Operação concluída com sucesso.')}
+            >
               Toast de sucesso
             </Button>
-            <Button variant="outline" onClick={() => toastError('Não foi possível concluir a operação.')}>
+            <Button
+              variant="outline"
+              onClick={() => toastError('Não foi possível concluir a operação.')}
+            >
               Toast de erro
             </Button>
             <Button variant="outline" onClick={() => toastInfo('Mensagem informativa.')}>
@@ -313,7 +360,8 @@ export function StyleGuide() {
                 <DialogHeader>
                   <DialogTitle>Confirmar Ação</DialogTitle>
                   <DialogDescription>
-                    Esta é uma descrição informativa do modal. Pressione Esc ou clique fora para fechar.
+                    Esta é uma descrição informativa do modal. Pressione Esc ou clique fora para
+                    fechar.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="py-4">Conteúdo customizável do modal.</div>
@@ -378,12 +426,16 @@ export function StyleGuide() {
               <TableBody>
                 <TableRow>
                   <TableCell className="font-medium">ana.silva@exemplo.com</TableCell>
-                  <TableCell><Badge variant="success">Ativo</Badge></TableCell>
+                  <TableCell>
+                    <Badge variant="success">Ativo</Badge>
+                  </TableCell>
                   <TableCell className="text-right">admin</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">pedro.santos@exemplo.com</TableCell>
-                  <TableCell><Badge variant="secondary">Pendente</Badge></TableCell>
+                  <TableCell>
+                    <Badge variant="secondary">Pendente</Badge>
+                  </TableCell>
                   <TableCell className="text-right">member</TableCell>
                 </TableRow>
               </TableBody>
@@ -395,7 +447,9 @@ export function StyleGuide() {
           <h2>Seleção e Rádios</h2>
           <div className="space-y-4 max-w-sm">
             <div>
-              <Label htmlFor="guide-select" className="mb-2 block">Dropdown Select</Label>
+              <Label htmlFor="guide-select" className="mb-2 block">
+                Dropdown Select
+              </Label>
               <Select defaultValue="member">
                 <SelectTrigger id="guide-select">
                   <SelectValue placeholder="Selecione um papel" />
@@ -411,11 +465,15 @@ export function StyleGuide() {
               <RadioGroup defaultValue="member">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="member" id="r-member" />
-                  <Label htmlFor="r-member" className="font-normal">Membro</Label>
+                  <Label htmlFor="r-member" className="font-normal">
+                    Membro
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="admin" id="r-admin" />
-                  <Label htmlFor="r-admin" className="font-normal">Administrador</Label>
+                  <Label htmlFor="r-admin" className="font-normal">
+                    Administrador
+                  </Label>
                 </div>
               </RadioGroup>
             </div>

@@ -30,7 +30,11 @@ export async function getProfile(userEmail: string): Promise<UserProfile | null>
 export async function upsertProfile(userEmail: string, data: unknown): Promise<UserProfile> {
   const result = profileInputSchema.safeParse(data);
   if (!result.success) {
-    throw new AppError(400, 'validation_error', result.error.errors[0]?.message || 'Dados de perfil inválidos.');
+    throw new AppError(
+      400,
+      'validation_error',
+      result.error.errors[0]?.message || 'Dados de perfil inválidos.'
+    );
   }
 
   const { fullName, birthDate, heightCm } = result.data;

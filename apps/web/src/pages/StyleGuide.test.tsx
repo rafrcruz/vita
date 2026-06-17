@@ -35,7 +35,11 @@ describe('StyleGuide (accessibility)', () => {
     );
     vi.stubGlobal(
       'fetch',
-      vi.fn(async () => ({ ok: true, status: 200, json: async () => ({ email: 'a@b.com', role: 'admin' }) })) as unknown as typeof fetch
+      vi.fn(async () => ({
+        ok: true,
+        status: 200,
+        json: async () => ({ email: 'a@b.com', role: 'admin' }),
+      })) as unknown as typeof fetch
     );
   });
 

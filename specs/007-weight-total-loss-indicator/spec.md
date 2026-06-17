@@ -8,7 +8,7 @@
 
 **Input**: User description: "Quero um pequeno ajustes. Na parte do PESO, nos indicadores, eu quero inserir mais um indicador. Será o indicador de Perda Total, que vai mostrar em kg qual foi a perda total considerando o peso do primeiro registro, menos o peso atual (menor peso registrado no ultimo dia em que teve registro). deve ficar na ordem ultima medição, peso atual, perda total, ai as perdas semanais de 7D, 30D e Total. sempre implementar tomando o cuidado para continuar bacana tanto na experiencia no computador como no celular."
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - View Weight Total Loss Indicator (Priority: P1)
 
@@ -57,7 +57,7 @@ As a user accessing VITA from both mobile and desktop devices, I want the weight
   - The first record's weight should be determined correctly. If multiple logs exist on the very first day, we use the first logged record chronologically.
   - The current weight is defined as the lowest weight recorded on the most recent day containing data (matching existing "Peso atual" logic).
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -84,7 +84,7 @@ As a user accessing VITA from both mobile and desktop devices, I want the weight
 
 - **WeightRecord**: Represents a single weight measurement, containing `weight` (numeric value), `loggedAt` (date/time of recording).
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

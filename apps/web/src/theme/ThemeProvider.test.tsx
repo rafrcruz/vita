@@ -49,7 +49,12 @@ describe('ThemeProvider', () => {
             },
           };
         }
-        return { matches: false, media: query, addEventListener: vi.fn(), removeEventListener: vi.fn() };
+        return {
+          matches: false,
+          media: query,
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+        };
       })
     );
   });
@@ -119,8 +124,15 @@ describe('ThemeProvider', () => {
   });
 
   it('T6: falls back to light when localStorage/matchMedia unavailable', () => {
-    vi.stubGlobal('matchMedia', vi.fn(() => { throw new Error('unavailable'); }));
-    const spy = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('unavailable'); });
+    vi.stubGlobal(
+      'matchMedia',
+      vi.fn(() => {
+        throw new Error('unavailable');
+      })
+    );
+    const spy = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('unavailable');
+    });
 
     render(
       <ThemeProvider>
@@ -139,9 +151,19 @@ describe('ThemeProvider', () => {
       'matchMedia',
       vi.fn((query: string) => {
         if (query === '(prefers-reduced-motion: reduce)') {
-          return { matches: motionMatches, media: query, addEventListener: vi.fn(), removeEventListener: vi.fn() };
+          return {
+            matches: motionMatches,
+            media: query,
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+          };
         }
-        return { matches: false, media: query, addEventListener: vi.fn(), removeEventListener: vi.fn() };
+        return {
+          matches: false,
+          media: query,
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+        };
       })
     );
 

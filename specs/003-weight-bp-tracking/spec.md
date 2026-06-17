@@ -16,7 +16,7 @@
 - **Q**: Como deve ser definido o período de tempo (escala do eixo X) exibido no gráfico da tela principal? → **A**: Disponibilizar botões de seleção rápida ("7D", "30D" e "Tudo"), com "Tudo" selecionado por padrão.
 - **Q**: Onde situar a lista de registros antigos e suas ações de edição/exclusão na arquitetura da interface? → **A**: Criar uma página/tela inteiramente separada e dedicada ao histórico de registros, acessada através de um menu de navegação.
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Registro Rápido de Peso Corporal (Priority: P1)
 
@@ -85,7 +85,7 @@ Como usuário cuidadoso, eu quero ver meus registros antigos organizados em uma 
 - **Valores biologicamente implausíveis ou extremos**: Caso o usuário insira pesos extremos (ex: `< 20 kg` ou `> 350 kg`) ou pressões arteriais implausíveis (ex: sistólica `< 40` ou `> 300`), o sistema deve exibir um aviso de confirmação na tela ("Este valor está fora dos limites normais. Tem certeza de que deseja salvar?"), prevenindo erros grosseiros de digitação sem bloquear dados médicos atípicos reais.
 - **Falta de conexão no envio**: Como a aplicação opera online-first (Princípio IV), se houver falha de rede ao tentar registrar uma medição, o sistema deve exibir um alerta amigável de erro informando a falha de conexão e manter o formulário preenchido para que o usuário tente novamente, em vez de descartar os dados inseridos.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -124,7 +124,7 @@ Como usuário cuidadoso, eu quero ver meus registros antigos organizados em uma 
     - `loggedAt` (DateTime com fuso horário): O momento do registro ou definido pelo usuário.
     - `createdAt` (DateTime): Timestamp interno de criação.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

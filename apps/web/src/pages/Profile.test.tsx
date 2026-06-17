@@ -37,7 +37,11 @@ describe('Profile', () => {
       'fetch',
       vi.fn(async (url: string) => {
         if (String(url).includes('/auth/me')) {
-          return { ok: true, status: 200, json: async () => ({ email: 'a@b.com', role: 'member' }) };
+          return {
+            ok: true,
+            status: 200,
+            json: async () => ({ email: 'a@b.com', role: 'member' }),
+          };
         }
         if (String(url).includes('/profile')) {
           return { ok: true, status: 200, json: async () => null };
@@ -94,7 +98,9 @@ describe('Profile', () => {
     await user.click(screen.getByRole('button', { name: 'Salvar' }));
 
     await waitFor(() => {
-      expect(screen.getByText('Data de nascimento inválida. Use o formato DD/MM/AAAA.')).toBeInTheDocument();
+      expect(
+        screen.getByText('Data de nascimento inválida. Use o formato DD/MM/AAAA.')
+      ).toBeInTheDocument();
     });
   });
 });

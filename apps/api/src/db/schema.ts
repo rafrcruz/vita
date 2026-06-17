@@ -1,5 +1,14 @@
 import { sql } from 'drizzle-orm';
-import { pgTable, text, timestamp, uniqueIndex, uuid, real, integer, date } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+  real,
+  integer,
+  date,
+} from 'drizzle-orm/pg-core';
 
 // Allowlist: e-mails autorizados a acessar a aplicação (ver data-model.md).
 export const allowlist = pgTable(

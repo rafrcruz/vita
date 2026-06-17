@@ -11,15 +11,15 @@ sem realizar tais cálculos nesta feature.
 
 ### Campos
 
-| Campo        | Tipo (DB)                     | Nulo? | Regras / Validação                                                        |
-|--------------|-------------------------------|-------|---------------------------------------------------------------------------|
-| `id`         | `uuid` PK (defaultRandom)     | não   | Identificador interno.                                                     |
-| `userEmail`  | `text`                        | não   | E-mail do dono. **Único** (índice único, case-insensitive). FK lógica ao usuário autenticado. |
-| `fullName`   | `text`                        | sim   | Trim; comprimento ≤ 120; opcional.                                         |
-| `birthDate`  | `date` (requer import `date` em `schema.ts`) | sim   | Formato `YYYY-MM-DD` (Drizzle retorna string); não pode ser futura; ano ≥ 1900; opcional. |
-| `heightCm`   | `real`                        | sim   | Faixa plausível 50–250 cm; opcional.                                       |
-| `createdAt`  | `timestamptz` (defaultNow)    | não   | Auditoria.                                                                 |
-| `updatedAt`  | `timestamptz` (defaultNow)    | não   | Atualizado em cada upsert.                                                 |
+| Campo       | Tipo (DB)                                    | Nulo? | Regras / Validação                                                                            |
+| ----------- | -------------------------------------------- | ----- | --------------------------------------------------------------------------------------------- |
+| `id`        | `uuid` PK (defaultRandom)                    | não   | Identificador interno.                                                                        |
+| `userEmail` | `text`                                       | não   | E-mail do dono. **Único** (índice único, case-insensitive). FK lógica ao usuário autenticado. |
+| `fullName`  | `text`                                       | sim   | Trim; comprimento ≤ 120; opcional.                                                            |
+| `birthDate` | `date` (requer import `date` em `schema.ts`) | sim   | Formato `YYYY-MM-DD` (Drizzle retorna string); não pode ser futura; ano ≥ 1900; opcional.     |
+| `heightCm`  | `real`                                       | sim   | Faixa plausível 50–250 cm; opcional.                                                          |
+| `createdAt` | `timestamptz` (defaultNow)                   | não   | Auditoria.                                                                                    |
+| `updatedAt` | `timestamptz` (defaultNow)                   | não   | Atualizado em cada upsert.                                                                    |
 
 ### Índices
 

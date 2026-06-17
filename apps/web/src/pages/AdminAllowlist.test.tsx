@@ -38,7 +38,11 @@ describe('AdminAllowlist (accessibility)', () => {
       'fetch',
       vi.fn(async (url: string) => {
         if (String(url).includes('/auth/me')) {
-          return { ok: true, status: 200, json: async () => ({ email: 'admin@test.com', role: 'admin' }) };
+          return {
+            ok: true,
+            status: 200,
+            json: async () => ({ email: 'admin@test.com', role: 'admin' }),
+          };
         }
         if (String(url).includes('/allowlist')) {
           return { ok: true, status: 200, json: async () => [] };
@@ -90,11 +94,19 @@ describe('AdminAllowlist (accessibility)', () => {
       'fetch',
       vi.fn(async (url: string) => {
         if (String(url).includes('/auth/me')) {
-          return { ok: true, status: 200, json: async () => ({ email: 'admin@test.com', role: 'admin' }) };
+          return {
+            ok: true,
+            status: 200,
+            json: async () => ({ email: 'admin@test.com', role: 'admin' }),
+          };
         }
         if (String(url).includes('/allowlist')) {
           // POST fails
-          return { ok: false, status: 400, json: async () => ({ error: { message: 'E-mail já cadastrado' } }) };
+          return {
+            ok: false,
+            status: 400,
+            json: async () => ({ error: { message: 'E-mail já cadastrado' } }),
+          };
         }
         return { ok: true, status: 200, json: async () => ({}) };
       }) as unknown as typeof fetch

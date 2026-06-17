@@ -7,7 +7,9 @@ router.get('/', async (req, res, next) => {
   try {
     const userEmail = req.user?.email;
     if (!userEmail) {
-      res.status(401).json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
+      res
+        .status(401)
+        .json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
       return;
     }
     const profile = await getProfile(userEmail);
@@ -21,7 +23,9 @@ router.put('/', async (req, res, next) => {
   try {
     const userEmail = req.user?.email;
     if (!userEmail) {
-      res.status(401).json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
+      res
+        .status(401)
+        .json({ error: { code: 'unauthenticated', message: 'Autenticação necessária.' } });
       return;
     }
     const profile = await upsertProfile(userEmail, req.body);

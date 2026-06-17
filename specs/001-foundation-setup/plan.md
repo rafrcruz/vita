@@ -18,6 +18,7 @@ funcionalidade de negócio do domínio de saúde.
 **Language/Version**: TypeScript 5.x em Node.js 22.x (LTS, runtime da Vercel); ES2022 modules.
 
 **Primary Dependencies**:
+
 - Frontend: React 18, Vite 5, Tailwind CSS 3, React Router 6, TanStack Query 5,
   react-hook-form + Zod, vite-plugin-pwa (Workbox), @sentry/react.
 - Backend: Express 4, Zod, Drizzle ORM + drizzle-kit, @neondatabase/serverless,
@@ -38,6 +39,7 @@ funcionalidade de negócio do domínio de saúde.
 expectativas padrão de app web (respostas interativas, cold start serverless aceitável).
 
 **Constraints**:
+
 - Online-first; PWA mínimo (instalável + service worker), sem offline-sync.
 - Stateless: sessão em cookie `httpOnly`/`Secure` (token assinado), sem store de sessão no servidor.
 - Nenhum segredo versionado; configuração via variáveis de ambiente validadas por Zod.
@@ -59,23 +61,23 @@ expectativas padrão de app web (respostas interativas, cold start serverless ac
    rollback via restauração/branch do Neon nos ambientes efêmeros e SQL de reversão manual em
    emergências (FR-006 já reconciliado na spec).
 3. **Gate de CI bloqueante exige branch protection**: o GitHub Actions roda lint/typecheck/test no
-   PR, mas só **bloqueia o merge** se configurado como *required status check* na branch protection.
+   PR, mas só **bloqueia o merge** se configurado como _required status check_ na branch protection.
    O deploy (Vercel Git integration) ocorre **pós-merge** no push para `main`. A configuração de
    branch protection é um passo explícito (automatizável via GitHub API/CLI).
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-| Princípio | Avaliação |
-|-----------|-----------|
-| I. Observabilidade, não aconselhamento médico | ✅ Nenhuma funcionalidade de saúde nesta feature. |
-| II. Privacidade e segurança por padrão | ✅ HTTPS, cookie `httpOnly`/`Secure`, segredos fora do repo, sem dados sensíveis em logs, Zod env validation. |
-| III. Acesso restrito via Google | ✅ Google OAuth exclusivo + allowlist com bootstrap seguro e proteção contra allowlist vazia. |
-| IV. Stack e arquitetura definidas (PWA online-first) | ✅ React/TS/Tailwind PWA + Node/Express/TS; offline fora de escopo. |
-| V. Simplicidade deliberada | ✅ npm workspaces (zero tooling extra), stateless (sem store de sessão), libs mínimas. Ver Complexity Tracking. |
-| VI. Dependências e infraestrutura sustentáveis | ✅ Libs modernas/ativas/adotadas; Vercel/Neon/Sentry/GitHub free tier. |
-| VII. Testes orientados a risco | ✅ Vitest cobrindo gate de auth/allowlist, health, validação de env; sem testes só por cobertura. |
+| Princípio                                            | Avaliação                                                                                                       |
+| ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| I. Observabilidade, não aconselhamento médico        | ✅ Nenhuma funcionalidade de saúde nesta feature.                                                               |
+| II. Privacidade e segurança por padrão               | ✅ HTTPS, cookie `httpOnly`/`Secure`, segredos fora do repo, sem dados sensíveis em logs, Zod env validation.   |
+| III. Acesso restrito via Google                      | ✅ Google OAuth exclusivo + allowlist com bootstrap seguro e proteção contra allowlist vazia.                   |
+| IV. Stack e arquitetura definidas (PWA online-first) | ✅ React/TS/Tailwind PWA + Node/Express/TS; offline fora de escopo.                                             |
+| V. Simplicidade deliberada                           | ✅ npm workspaces (zero tooling extra), stateless (sem store de sessão), libs mínimas. Ver Complexity Tracking. |
+| VI. Dependências e infraestrutura sustentáveis       | ✅ Libs modernas/ativas/adotadas; Vercel/Neon/Sentry/GitHub free tier.                                          |
+| VII. Testes orientados a risco                       | ✅ Vitest cobrindo gate de auth/allowlist, health, validação de env; sem testes só por cobertura.               |
 
 **Resultado**: PASS (sem violações não justificadas). Ver Complexity Tracking para itens com
 justificativa. **Re-check pós-Phase 1**: PASS — o design (data-model, contracts, quickstart) não
@@ -140,11 +142,11 @@ Web e API são deployados como **dois projetos Vercel separados**, cada um com s
 
 ## Complexity Tracking
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|--------------------------------------|
-| Express rodando em serverless (Vercel) | Constitution exige Express; deploy preferido é Vercel | Funções Vercel "puras" evitariam o adaptador, mas contrariam a stack mandatada (Express). Adaptador é mínimo (export do app). |
-| Rewrite `/api/*` no web | Manter cookie first-party com 2 projetos Vercel | Domínio único com subdomínios `app.`/`api.` exigiria custear/gerir um domínio; rewrite é gratuito e reproduzível. |
-| `packages/shared` (3º pacote) | Evitar divergência de schemas entre web e API (Zod único) | Duplicar schemas nos dois apps geraria drift e bugs de contrato; o pacote é leve e sem build próprio (TS via paths). |
+| Violation                              | Why Needed                                                | Simpler Alternative Rejected Because                                                                                          |
+| -------------------------------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Express rodando em serverless (Vercel) | Constitution exige Express; deploy preferido é Vercel     | Funções Vercel "puras" evitariam o adaptador, mas contrariam a stack mandatada (Express). Adaptador é mínimo (export do app). |
+| Rewrite `/api/*` no web                | Manter cookie first-party com 2 projetos Vercel           | Domínio único com subdomínios `app.`/`api.` exigiria custear/gerir um domínio; rewrite é gratuito e reproduzível.             |
+| `packages/shared` (3º pacote)          | Evitar divergência de schemas entre web e API (Zod único) | Duplicar schemas nos dois apps geraria drift e bugs de contrato; o pacote é leve e sem build próprio (TS via paths).          |
 
 ## Phase 0 — Research
 

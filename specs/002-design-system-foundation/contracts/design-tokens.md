@@ -32,11 +32,11 @@ Contrato da camada de tokens. Valida FR-001..FR-004, FR-010, SC-004.
 
 ## Regras de conformidade
 
-| # | Regra |
-|---|-------|
-| K1 | Componentes referenciam tokens via classes Tailwind mapeadas; sem cores/medidas hardcoded |
-| K2 | Todo par texto/superfície atende contraste WCAG 2.1 AA nos dois temas (auditável) |
-| K3 | `--ring` provê foco visível em todos os elementos interativos (FR-022) |
-| K4 | A escala tipográfica define hierarquia clara: display, h1–h3, body, caption, label |
-| K5 | Espaçamento segue a escala base 4px do Tailwind (sem números mágicos) |
-| K6 | Tokens de `--chart-*` existem mas nenhum gráfico é implementado nesta feature |
+| #   | Regra                                                                                     |
+| --- | ----------------------------------------------------------------------------------------- |
+| K1  | Componentes referenciam tokens via classes Tailwind mapeadas; sem cores/medidas hardcoded |
+| K2  | Todo par texto/superfície atende contraste WCAG 2.1 AA nos dois temas (auditável)         |
+| K3  | `--ring` provê foco visível em todos os elementos interativos (FR-022)                    |
+| K4  | A escala tipográfica define hierarquia clara: display, h1–h3, body, caption, label        |
+| K5  | Espaçamento segue a escala base 4px do Tailwind (sem números mágicos)                     |
+| K6  | Tokens de `--chart-*` existem mas nenhum gráfico é implementado nesta feature             |

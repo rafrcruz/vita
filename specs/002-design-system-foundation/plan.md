@@ -52,17 +52,17 @@ visual + reconstrução de 3 telas existentes. Usuário único (single-owner)
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-| Princípio | Avaliação | Status |
-|-----------|-----------|--------|
-| I. Observabilidade, não aconselhamento médico | Feature puramente de UI/fundação; nenhuma funcionalidade de saúde, cálculo ou agregação (FR-029) | ✅ Pass |
-| II. Privacidade e segurança por padrão | Só persiste preferência de tema (não-sensível) em `localStorage`; sem segredos, sem log de dados de saúde, HTTPS inalterado | ✅ Pass |
-| III. Acesso restrito via Google | Login é reskinado mantendo exclusivamente o fluxo Google + allowlist; sem novo mecanismo de identidade | ✅ Pass |
-| IV. Stack definida (PWA online-first) | Mantém React+TS+Tailwind+PWA. Bibliotecas adicionadas são **aditivas dentro da stack** (Radix/RHF/etc. são UI sobre React/Tailwind), não substituição de stack base → não requer emenda | ✅ Pass |
-| V. Simplicidade deliberada | Componentes copiados para o repo (sem framework de UI opaco); adiciona só primitivos necessários; **adia** Framer Motion e bibliotecas de gráficos (YAGNI) | ✅ Pass |
-| VI. Dependências sustentáveis | Radix, RHF, zod, lucide, sonner, CVA, tailwind-merge: modernas, amplamente adotadas, ativamente mantidas, bem documentadas | ✅ Pass |
-| VII. Testes orientados a risco | Testes para lógica de tema (persistência, modo Sistema, FOUC), acessibilidade das telas-vitrine/guia e comportamento responsivo do shell; sem testes só por cobertura | ✅ Pass |
+| Princípio                                     | Avaliação                                                                                                                                                                               | Status  |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| I. Observabilidade, não aconselhamento médico | Feature puramente de UI/fundação; nenhuma funcionalidade de saúde, cálculo ou agregação (FR-029)                                                                                        | ✅ Pass |
+| II. Privacidade e segurança por padrão        | Só persiste preferência de tema (não-sensível) em `localStorage`; sem segredos, sem log de dados de saúde, HTTPS inalterado                                                             | ✅ Pass |
+| III. Acesso restrito via Google               | Login é reskinado mantendo exclusivamente o fluxo Google + allowlist; sem novo mecanismo de identidade                                                                                  | ✅ Pass |
+| IV. Stack definida (PWA online-first)         | Mantém React+TS+Tailwind+PWA. Bibliotecas adicionadas são **aditivas dentro da stack** (Radix/RHF/etc. são UI sobre React/Tailwind), não substituição de stack base → não requer emenda | ✅ Pass |
+| V. Simplicidade deliberada                    | Componentes copiados para o repo (sem framework de UI opaco); adiciona só primitivos necessários; **adia** Framer Motion e bibliotecas de gráficos (YAGNI)                              | ✅ Pass |
+| VI. Dependências sustentáveis                 | Radix, RHF, zod, lucide, sonner, CVA, tailwind-merge: modernas, amplamente adotadas, ativamente mantidas, bem documentadas                                                              | ✅ Pass |
+| VII. Testes orientados a risco                | Testes para lógica de tema (persistência, modo Sistema, FOUC), acessibilidade das telas-vitrine/guia e comportamento responsivo do shell; sem testes só por cobertura                   | ✅ Pass |
 
 **Resultado**: PASS — sem violações. Nenhuma entrada em Complexity Tracking necessária.
 
@@ -124,5 +124,5 @@ provider de tema isolado em `src/theme/`. As telas existentes são migradas in-p
 
 > Sem violações de Constituição — nenhuma justificativa de complexidade necessária.
 
-*(Decisão consciente de NÃO adotar agora: Framer Motion para animações e qualquer biblioteca de
-gráficos/charts — ambas adiadas para quando uma feature de negócio exigir, conforme Princípio V.)*
+_(Decisão consciente de NÃO adotar agora: Framer Motion para animações e qualquer biblioteca de
+gráficos/charts — ambas adiadas para quando uma feature de negócio exigir, conforme Princípio V.)_

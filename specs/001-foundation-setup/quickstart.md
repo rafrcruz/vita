@@ -68,15 +68,15 @@ npm run dev                       # sobe web (Vite) e api (Express) em paralelo
 
 ## Comandos esperados (raiz do monorepo)
 
-| Script | Função |
-|--------|--------|
-| `npm run dev` | sobe web + api localmente |
-| `npm run build` | build de web e api |
-| `npm run lint` | ESLint em todos os workspaces |
-| `npm run typecheck` | `tsc --noEmit` em todos os workspaces |
-| `npm run test` | Vitest (unit + integration) |
+| Script                | Função                                    |
+| --------------------- | ----------------------------------------- |
+| `npm run dev`         | sobe web + api localmente                 |
+| `npm run build`       | build de web e api                        |
+| `npm run lint`        | ESLint em todos os workspaces             |
+| `npm run typecheck`   | `tsc --noEmit` em todos os workspaces     |
+| `npm run test`        | Vitest (unit + integration)               |
 | `npm run db:generate` | gera migration a partir do schema Drizzle |
-| `npm run db:migrate` | aplica migrations |
+| `npm run db:migrate`  | aplica migrations                         |
 
 ## Notas de operação por agentes de IA
 

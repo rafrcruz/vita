@@ -31,7 +31,6 @@
 - [x] T003 Export health validation schemas and types in `packages/shared/src/index.ts`
 - [x] T004 Build shared package to update monorepo dependencies by running `npm run build --prefix packages/shared`
 
-
 ---
 
 ## Phase 2: Foundational (Blocking Prerequisites)
@@ -44,7 +43,6 @@
 - [x] T006 Apply migrations to the Neon Postgres database by running `npm run db:migrate --prefix apps/api`
 - [x] T007 [P] Create Express router for health metrics in `apps/api/src/health_metrics/metrics.route.ts`
 - [x] T008 Mount health metrics router under `/api/metrics` using requireAuth guard in `apps/api/src/app.ts`
-
 
 **Checkpoint**: Foundation ready - user story implementation can now begin.
 

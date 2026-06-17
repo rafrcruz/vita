@@ -11,8 +11,21 @@ import { AppShell } from '../components/layout/AppShell';
 import { Button, buttonVariants } from '../components/ui/button';
 import { cn } from '../lib/utils';
 import { FormField } from '../components/ui/form';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '../components/ui/table';
 import { Badge } from '../components/ui/badge';
 import { Label } from '../components/ui/label';
 import { Alert, AlertDescription } from '../components/feedback/Alert';
@@ -47,7 +60,8 @@ export function AdminAllowlist() {
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['allowlist'] });
 
   const addMutation = useMutation({
-    mutationFn: (data: FormData) => apiFetch('/allowlist', { method: 'POST', body: JSON.stringify(data) }),
+    mutationFn: (data: FormData) =>
+      apiFetch('/allowlist', { method: 'POST', body: JSON.stringify(data) }),
     onSuccess: () => {
       methods.reset();
       setError(null);
@@ -80,7 +94,10 @@ export function AdminAllowlist() {
         </div>
 
         <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)} className="mt-6 flex flex-wrap items-end gap-4">
+          <form
+            onSubmit={methods.handleSubmit(onSubmit)}
+            className="mt-6 flex flex-wrap items-end gap-4"
+          >
             <FormField<FormData>
               name="email"
               label="E-mail"
@@ -141,7 +158,9 @@ export function AdminAllowlist() {
                   <TableRow key={entry.id}>
                     <TableCell>{entry.email}</TableCell>
                     <TableCell>
-                      <Badge variant={entry.role === 'admin' ? 'default' : 'secondary'}>{entry.role}</Badge>
+                      <Badge variant={entry.role === 'admin' ? 'default' : 'secondary'}>
+                        {entry.role}
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <Button

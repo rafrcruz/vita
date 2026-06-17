@@ -9,15 +9,16 @@ controle de schema. **Nenhuma** entidade de saúde é introduzida.
 
 E-mail autorizado a acessar a aplicação e seu papel.
 
-| Campo | Tipo | Regras |
-|-------|------|--------|
-| `id` | uuid (PK) | gerado pelo banco |
-| `email` | text | **único** (case-insensitive), formato de e-mail válido (Zod `.email()`), normalizado para lowercase |
-| `role` | enum `admin` \| `member` | default `member` |
-| `created_at` | timestamptz | default `now()` |
-| `created_by` | text (e-mail) \| null | quem adicionou (null para os semeados) |
+| Campo        | Tipo                     | Regras                                                                                              |
+| ------------ | ------------------------ | --------------------------------------------------------------------------------------------------- |
+| `id`         | uuid (PK)                | gerado pelo banco                                                                                   |
+| `email`      | text                     | **único** (case-insensitive), formato de e-mail válido (Zod `.email()`), normalizado para lowercase |
+| `role`       | enum `admin` \| `member` | default `member`                                                                                    |
+| `created_at` | timestamptz              | default `now()`                                                                                     |
+| `created_by` | text (e-mail) \| null    | quem adicionou (null para os semeados)                                                              |
 
 **Regras de negócio**:
+
 - Unicidade por `email` normalizado (lowercase) — índice único.
 - Pelo menos um `admin` deve existir após o bootstrap; o sistema **não** permite remover o último
   `admin` (proteção contra lockout) nem esvaziar a allowlist a ponto de conceder acesso irrestrito.
@@ -31,11 +32,11 @@ autenticações subsequentes (sessões já emitidas expiram naturalmente — TTL
 
 Não há tabela. A sessão é um **JWT assinado** transportado em cookie `httpOnly`/`Secure`.
 
-| Claim | Conteúdo |
-|-------|----------|
-| `sub` | identificador do usuário (e-mail normalizado) |
-| `role` | `admin` \| `member` (cópia no momento da emissão) |
-| `iat` / `exp` | emissão e expiração (TTL curto, ex.: 1h–24h) |
+| Claim         | Conteúdo                                          |
+| ------------- | ------------------------------------------------- |
+| `sub`         | identificador do usuário (e-mail normalizado)     |
+| `role`        | `admin` \| `member` (cópia no momento da emissão) |
+| `iat` / `exp` | emissão e expiração (TTL curto, ex.: 1h–24h)      |
 
 **Observações**: por ser stateless, mudanças de papel/remoção da allowlist só têm efeito pleno na
 próxima emissão (após expiração/relogin). TTL curto mitiga a janela. Logout limpa o cookie.

@@ -29,7 +29,7 @@ validações, integrações, permissões e lógica de aplicação permanecem **e
 A direção de identidade visual estabelecida na 002 (azul-índigo/violeta sobre neutros frios) é
 **preservada e refinada**, não substituída — esta iniciativa não é um rebranding.
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Consistência visual global e tokens uniformizados (Priority: P1) 🎯 MVP
 
@@ -204,7 +204,7 @@ validações); e uniformidade de tamanho, peso e alinhamento dos ícones.
 - **Regressão funcional**: nenhum ajuste visual pode quebrar testes existentes nem alterar o
   comportamento observável de qualquer fluxo.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -316,7 +316,7 @@ validações); e uniformidade de tamanho, peso e alinhamento dos ícones.
   definida na 002, cujo aproveitamento de espaço e ritmo visual são refinados, preservando o padrão
   de navegação por formato.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

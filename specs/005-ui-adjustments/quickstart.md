@@ -25,18 +25,21 @@ Autenticar com uma conta Google que esteja na allowlist.
 ## Cenários de validação
 
 ### 1. Ícone PWA (P1)
+
 - Build de produção (`cd apps/web && npm run build && npm run preview`) e abrir no celular
   (ou DevTools → Application → Manifest).
 - **Esperado**: manifest lista os ícones (192/512/maskable); "Adicionar à tela inicial" cria
   atalho com o ícone próprio; em iOS, `apple-touch-icon` é usado. Sem quadrado cinza com "V".
 
 ### 2. Cabeçalho enxuto + Histórico no menu (P1)
+
 - Abrir `/` em desktop e mobile.
 - **Esperado**: topo só com seleção de tema e "Sair"; **sem** subtítulo "Plataforma pessoal…";
   **sem** linha de e-mail/ADMIN/"Administrar allowlist"; **sem** card "Status do backend";
   "Histórico" acessível pelo menu (não como botão no topo).
 
 ### 3. Perfil funcional (P1)
+
 - Acessar "Perfil" pelo menu → preencher nome completo, data de nascimento e altura → Salvar.
 - Recarregar a página e reabrir "Perfil".
 - **Esperado**: navega para uma tela real (não link quebrado); salvar mostra toast de sucesso;
@@ -46,6 +49,7 @@ Autenticar com uma conta Google que esteja na allowlist.
   `birthDate` futura retorna 400 (ver contrato).
 
 ### 4. Gráfico mais informativo (P2)
+
 - Em desktop, passar o mouse sobre pontos do gráfico (Peso e Pressão).
 - **Esperado**: tooltip mostra valor (+ data) do ponto; eixo X com **3–6 marcas de data**
   distribuídas uniformemente e sem sobreposição nos três períodos (7D/30D/Tudo), com formato
@@ -55,18 +59,21 @@ Autenticar com uma conta Google que esteja na allowlist.
   erro visual.
 
 ### 5. Navegação mobile sem colisão (P2)
+
 - Em viewport mobile, observar a barra inferior.
 - **Esperado**: barra com "Início" + botão de menu (três tracinhos) que abre Admin/Histórico/
   Perfil; os botões "Adicionar Peso"/"Adicionar Pressão" ficam totalmente clicáveis (não cobertos
   pela barra). "Admin" respeita o papel do usuário.
 
 ### 6. Modal de captura com teclado aberto (P3)
+
 - Em mobile (ou DevTools device mode), abrir "Adicionar Peso"/"Adicionar Pressão".
 - **Esperado**: teclado numérico abre automaticamente; com o teclado aberto, campo, "Alterar
   data", "Cancelar" e "Salvar" permanecem visíveis (modal ancorado ao topo no mobile). Em
   desktop, o modal continua centralizado.
 
 ### 7. Acessibilidade básica (transversal, FR-027–031, SC-008)
+
 - Navegar pela aplicação **somente com teclado** (Tab/Shift+Tab/Enter/Esc): abrir o menu mobile
   (botão "três tracinhos"), a tela de Perfil e os modais de captura.
 - Inspecionar nomes acessíveis (DevTools → Accessibility) do botão de menu e dos controles do

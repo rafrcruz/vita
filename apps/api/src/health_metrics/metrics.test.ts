@@ -6,7 +6,8 @@ import { weightLogs, bloodPressureLogs } from '../db/schema';
 import { createApp } from '../app';
 import { SESSION_COOKIE_NAME, issueSessionToken } from '../auth/session';
 
-const isDbAvailable = !!process.env.DATABASE_URL &&
+const isDbAvailable =
+  !!process.env.DATABASE_URL &&
   !process.env.DATABASE_URL.includes('localhost') &&
   !process.env.DATABASE_URL.includes('127.0.0.1');
 
@@ -55,9 +56,7 @@ describe.skipIf(!isDbAvailable)('Rotas /api/metrics/weight', () => {
   });
 
   it('retorna 401 sem autenticação', async () => {
-    const res = await request(app)
-      .post('/api/metrics/weight')
-      .send({ weight: 75.5 });
+    const res = await request(app).post('/api/metrics/weight').send({ weight: 75.5 });
     expect(res.status).toBe(401);
   });
 
@@ -148,152 +147,164 @@ describe.skipIf(!isDbAvailable)('Rotas /api/metrics/blood-pressure', () => {
   });
 });
 
-describe.skipIf(!isDbAvailable)('GET /api/metrics/weight e GET /api/metrics/blood-pressure (histórico e filtros)', () => {
-  const app = createApp();
-  const testEmail = 'metrics-get-test@example.com';
-  let token: string;
+describe.skipIf(!isDbAvailable)(
+  'GET /api/metrics/weight e GET /api/metrics/blood-pressure (histórico e filtros)',
+  () => {
+    const app = createApp();
+    const testEmail = 'metrics-get-test@example.com';
+    let token: string;
 
-  beforeEach(async () => {
-    token = await issueSessionToken({ sub: testEmail, role: 'member' });
+    beforeEach(async () => {
+      token = await issueSessionToken({ sub: testEmail, role: 'member' });
 
-    // Seed mock data with different timestamps:
-    // 1. 10 days ago (outside 7d filter, inside 30d and all)
-    // 2. 2 days ago (inside 7d, 30d, and all)
-    const tenDaysAgo = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000);
-    const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+      // Seed mock data with different timestamps:
+      // 1. 10 days ago (outside 7d filter, inside 30d and all)
+      // 2. 2 days ago (inside 7d, 30d, and all)
+      const tenDaysAgo = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000);
+      const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
 
-    await db.insert(weightLogs).values([
-      { userEmail: testEmail, weight: 80.0, loggedAt: tenDaysAgo },
-      { userEmail: testEmail, weight: 81.0, loggedAt: twoDaysAgo },
-    ]);
+      await db.insert(weightLogs).values([
+        { userEmail: testEmail, weight: 80.0, loggedAt: tenDaysAgo },
+        { userEmail: testEmail, weight: 81.0, loggedAt: twoDaysAgo },
+      ]);
 
-    await db.insert(bloodPressureLogs).values([
-      { userEmail: testEmail, systolic: 130, diastolic: 85, loggedAt: tenDaysAgo },
-      { userEmail: testEmail, systolic: 120, diastolic: 80, loggedAt: twoDaysAgo },
-    ]);
-  });
+      await db.insert(bloodPressureLogs).values([
+        { userEmail: testEmail, systolic: 130, diastolic: 85, loggedAt: tenDaysAgo },
+        { userEmail: testEmail, systolic: 120, diastolic: 80, loggedAt: twoDaysAgo },
+      ]);
+    });
 
-  afterEach(async () => {
-    await db.delete(weightLogs).where(eq(weightLogs.userEmail, testEmail));
-    await db.delete(bloodPressureLogs).where(eq(bloodPressureLogs.userEmail, testEmail));
-  });
+    afterEach(async () => {
+      await db.delete(weightLogs).where(eq(weightLogs.userEmail, testEmail));
+      await db.delete(bloodPressureLogs).where(eq(bloodPressureLogs.userEmail, testEmail));
+    });
 
-  it('retorna histórico completo em ordem cronológica por padrão', async () => {
-    const res = await request(app)
-      .get('/api/metrics/weight')
-      .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`);
+    it('retorna histórico completo em ordem cronológica por padrão', async () => {
+      const res = await request(app)
+        .get('/api/metrics/weight')
+        .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`);
 
-    expect(res.status).toBe(200);
-    expect(res.body.length).toBe(2);
-    // Chronological order: oldest first (or newest first? The spec says "exposição cronológica",
-    // wait, usually graphs show oldest to newest (left to right), and history lists show newest first.
-    // Let's check: the query for graph should return oldest to newest so it plots left to right.
-    // Let's assert oldest first (or adjust accordingly).
-    expect(res.body[0].weight).toBe(80.0);
-    expect(res.body[1].weight).toBe(81.0);
-  });
+      expect(res.status).toBe(200);
+      expect(res.body.length).toBe(2);
+      // Chronological order: oldest first (or newest first? The spec says "exposição cronológica",
+      // wait, usually graphs show oldest to newest (left to right), and history lists show newest first.
+      // Let's check: the query for graph should return oldest to newest so it plots left to right.
+      // Let's assert oldest first (or adjust accordingly).
+      expect(res.body[0].weight).toBe(80.0);
+      expect(res.body[1].weight).toBe(81.0);
+    });
 
-  it('filtra peso por 7d', async () => {
-    const res = await request(app)
-      .get('/api/metrics/weight?timeframe=7d')
-      .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`);
+    it('filtra peso por 7d', async () => {
+      const res = await request(app)
+        .get('/api/metrics/weight?timeframe=7d')
+        .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`);
 
-    expect(res.status).toBe(200);
-    expect(res.body.length).toBe(1);
-    expect(res.body[0].weight).toBe(81.0);
-  });
+      expect(res.status).toBe(200);
+      expect(res.body.length).toBe(1);
+      expect(res.body[0].weight).toBe(81.0);
+    });
 
-  it('filtra pressão por 7d', async () => {
-    const res = await request(app)
-      .get('/api/metrics/blood-pressure?timeframe=7d')
-      .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`);
+    it('filtra pressão por 7d', async () => {
+      const res = await request(app)
+        .get('/api/metrics/blood-pressure?timeframe=7d')
+        .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`);
 
-    expect(res.status).toBe(200);
-    expect(res.body.length).toBe(1);
-    expect(res.body[0].systolic).toBe(120);
-  });
-});
+      expect(res.status).toBe(200);
+      expect(res.body.length).toBe(1);
+      expect(res.body[0].systolic).toBe(120);
+    });
+  }
+);
 
-describe.skipIf(!isDbAvailable)('PUT e DELETE /api/metrics/weight/:id e /api/metrics/blood-pressure/:id', () => {
-  const app = createApp();
-  const testEmail = 'metrics-manage-test@example.com';
-  let token: string;
-  let weightId: string;
-  let bpId: string;
+describe.skipIf(!isDbAvailable)(
+  'PUT e DELETE /api/metrics/weight/:id e /api/metrics/blood-pressure/:id',
+  () => {
+    const app = createApp();
+    const testEmail = 'metrics-manage-test@example.com';
+    let token: string;
+    let weightId: string;
+    let bpId: string;
 
-  beforeEach(async () => {
-    token = await issueSessionToken({ sub: testEmail, role: 'member' });
+    beforeEach(async () => {
+      token = await issueSessionToken({ sub: testEmail, role: 'member' });
 
-    // Seed mock data
-    const [weightLog] = await db.insert(weightLogs).values({
-      userEmail: testEmail,
-      weight: 85.0,
-    }).returning();
-    weightId = weightLog!.id;
+      // Seed mock data
+      const [weightLog] = await db
+        .insert(weightLogs)
+        .values({
+          userEmail: testEmail,
+          weight: 85.0,
+        })
+        .returning();
+      weightId = weightLog!.id;
 
-    const [bpLog] = await db.insert(bloodPressureLogs).values({
-      userEmail: testEmail,
-      systolic: 140,
-      diastolic: 90,
-    }).returning();
-    bpId = bpLog!.id;
-  });
+      const [bpLog] = await db
+        .insert(bloodPressureLogs)
+        .values({
+          userEmail: testEmail,
+          systolic: 140,
+          diastolic: 90,
+        })
+        .returning();
+      bpId = bpLog!.id;
+    });
 
-  afterEach(async () => {
-    await db.delete(weightLogs).where(eq(weightLogs.userEmail, testEmail));
-    await db.delete(bloodPressureLogs).where(eq(bloodPressureLogs.userEmail, testEmail));
-  });
+    afterEach(async () => {
+      await db.delete(weightLogs).where(eq(weightLogs.userEmail, testEmail));
+      await db.delete(bloodPressureLogs).where(eq(bloodPressureLogs.userEmail, testEmail));
+    });
 
-  it('permite atualizar um peso existente', async () => {
-    const res = await request(app)
-      .put(`/api/metrics/weight/${weightId}`)
-      .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`)
-      .send({ weight: 84.5 });
+    it('permite atualizar um peso existente', async () => {
+      const res = await request(app)
+        .put(`/api/metrics/weight/${weightId}`)
+        .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`)
+        .send({ weight: 84.5 });
 
-    expect(res.status).toBe(200);
-    expect(res.body.weight).toBe(84.5);
-  });
+      expect(res.status).toBe(200);
+      expect(res.body.weight).toBe(84.5);
+    });
 
-  it('retorna 404 ao atualizar um peso inexistente ou de outro usuário', async () => {
-    const fakeUuid = '00000000-0000-0000-0000-000000000000';
-    const res = await request(app)
-      .put(`/api/metrics/weight/${fakeUuid}`)
-      .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`)
-      .send({ weight: 84.5 });
+    it('retorna 404 ao atualizar um peso inexistente ou de outro usuário', async () => {
+      const fakeUuid = '00000000-0000-0000-0000-000000000000';
+      const res = await request(app)
+        .put(`/api/metrics/weight/${fakeUuid}`)
+        .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`)
+        .send({ weight: 84.5 });
 
-    expect(res.status).toBe(404);
-  });
+      expect(res.status).toBe(404);
+    });
 
-  it('permite deletar um peso existente', async () => {
-    const res = await request(app)
-      .delete(`/api/metrics/weight/${weightId}`)
-      .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`);
+    it('permite deletar um peso existente', async () => {
+      const res = await request(app)
+        .delete(`/api/metrics/weight/${weightId}`)
+        .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`);
 
-    expect(res.status).toBe(204);
+      expect(res.status).toBe(204);
 
-    const check = await db.select().from(weightLogs).where(eq(weightLogs.id, weightId));
-    expect(check.length).toBe(0);
-  });
+      const check = await db.select().from(weightLogs).where(eq(weightLogs.id, weightId));
+      expect(check.length).toBe(0);
+    });
 
-  it('permite atualizar uma pressão existente', async () => {
-    const res = await request(app)
-      .put(`/api/metrics/blood-pressure/${bpId}`)
-      .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`)
-      .send({ systolic: 135, diastolic: 85 });
+    it('permite atualizar uma pressão existente', async () => {
+      const res = await request(app)
+        .put(`/api/metrics/blood-pressure/${bpId}`)
+        .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`)
+        .send({ systolic: 135, diastolic: 85 });
 
-    expect(res.status).toBe(200);
-    expect(res.body.systolic).toBe(135);
-    expect(res.body.diastolic).toBe(85);
-  });
+      expect(res.status).toBe(200);
+      expect(res.body.systolic).toBe(135);
+      expect(res.body.diastolic).toBe(85);
+    });
 
-  it('permite deletar uma pressão existente', async () => {
-    const res = await request(app)
-      .delete(`/api/metrics/blood-pressure/${bpId}`)
-      .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`);
+    it('permite deletar uma pressão existente', async () => {
+      const res = await request(app)
+        .delete(`/api/metrics/blood-pressure/${bpId}`)
+        .set('Cookie', `${SESSION_COOKIE_NAME}=${token}`);
 
-    expect(res.status).toBe(204);
+      expect(res.status).toBe(204);
 
-    const check = await db.select().from(bloodPressureLogs).where(eq(bloodPressureLogs.id, bpId));
-    expect(check.length).toBe(0);
-  });
-});
+      const check = await db.select().from(bloodPressureLogs).where(eq(bloodPressureLogs.id, bpId));
+      expect(check.length).toBe(0);
+    });
+  }
+);

@@ -11,19 +11,19 @@ Formato de erro segue o padrão da plataforma: `{ "error": { "code": string, "me
 ```ts
 // Entrada (PUT) — todos os campos opcionais (FR-014)
 type ProfileInput = {
-  fullName?: string;     // trim, ≤ 120
-  birthDate?: string;    // "YYYY-MM-DD", não futura, ano ≥ 1900
-  heightCm?: number;     // 50–250
+  fullName?: string; // trim, ≤ 120
+  birthDate?: string; // "YYYY-MM-DD", não futura, ano ≥ 1900
+  heightCm?: number; // 50–250
 };
 
 // Resposta
 type UserProfile = {
   id: string;
   fullName: string | null;
-  birthDate: string | null;   // "YYYY-MM-DD"
+  birthDate: string | null; // "YYYY-MM-DD"
   heightCm: number | null;
-  createdAt: string;          // ISO 8601
-  updatedAt: string;          // ISO 8601
+  createdAt: string; // ISO 8601
+  updatedAt: string; // ISO 8601
 };
 ```
 
@@ -68,15 +68,15 @@ Cria ou atualiza (upsert) o perfil do usuário autenticado. Idempotente.
 
 ### Casos de validação (referência para testes)
 
-| Entrada                          | Resultado            |
-|----------------------------------|----------------------|
-| `{}` (tudo vazio)                | 200 — salva parcial  |
-| `birthDate` = data futura        | 400 validation_error |
-| `birthDate` = "1899-01-01"       | 400 validation_error |
-| `heightCm` = 10                  | 400 validation_error |
-| `heightCm` = 300                 | 400 validation_error |
-| `fullName` com 200 caracteres    | 400 validation_error |
-| dados válidos                    | 200 — UserProfile    |
+| Entrada                       | Resultado            |
+| ----------------------------- | -------------------- |
+| `{}` (tudo vazio)             | 200 — salva parcial  |
+| `birthDate` = data futura     | 400 validation_error |
+| `birthDate` = "1899-01-01"    | 400 validation_error |
+| `heightCm` = 10               | 400 validation_error |
+| `heightCm` = 300              | 400 validation_error |
+| `fullName` com 200 caracteres | 400 validation_error |
+| dados válidos                 | 200 — UserProfile    |
 
 ## Observações
 

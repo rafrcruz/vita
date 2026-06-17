@@ -23,7 +23,7 @@
 
 **Purpose**: Project initialization and validation of workspace cleanliness.
 
-- [X] T001 Verify workspace cleanliness and run tests to establish baseline in package.json
+- [x] T001 Verify workspace cleanliness and run tests to establish baseline in package.json
 
 ---
 
@@ -33,8 +33,8 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [X] T002 Implement calculateWeightTotalLoss utility function in apps/web/src/utils/metrics.ts
-- [X] T003 [P] Add unit tests for calculateWeightTotalLoss in apps/web/src/utils/metrics.test.ts
+- [x] T002 Implement calculateWeightTotalLoss utility function in apps/web/src/utils/metrics.ts
+- [x] T003 [P] Add unit tests for calculateWeightTotalLoss in apps/web/src/utils/metrics.test.ts
 
 **Checkpoint**: Foundation ready - calculations are verified and tested. User story UI components can now be built.
 
@@ -48,8 +48,8 @@
 
 ### Implementation for User Story 1
 
-- [X] T004 [US1] Update Home page calculatedWeightMetrics React memo selector to compute totalLoss in apps/web/src/pages/Home.tsx
-- [X] T005 [US1] Create indicator card markup and display value for Perda Total in apps/web/src/pages/Home.tsx
+- [x] T004 [US1] Update Home page calculatedWeightMetrics React memo selector to compute totalLoss in apps/web/src/pages/Home.tsx
+- [x] T005 [US1] Create indicator card markup and display value for Perda Total in apps/web/src/pages/Home.tsx
 
 **Checkpoint**: At this point, the "Perda Total" metric should be fully functional, calculated, and visible.
 
@@ -63,8 +63,8 @@
 
 ### Implementation for User Story 2
 
-- [X] T006 [US2] Update Weight indicator cards layout structure and order in apps/web/src/pages/Home.tsx
-- [X] T007 [P] [US2] Apply Tailwind CSS responsive grid classes to the indicators container in apps/web/src/pages/Home.tsx
+- [x] T006 [US2] Update Weight indicator cards layout structure and order in apps/web/src/pages/Home.tsx
+- [x] T007 [P] [US2] Apply Tailwind CSS responsive grid classes to the indicators container in apps/web/src/pages/Home.tsx
 
 **Checkpoint**: All user stories should now be independently functional, responsive, and matching the requested order.
 
@@ -74,8 +74,8 @@
 
 **Purpose**: Verification and final quality adjustments.
 
-- [X] T008 [P] Run Vitest unit tests suite with npm run test to verify all mathematical formulas pass
-- [X] T009 Run quickstart.md validation in specs/007-weight-total-loss-indicator/quickstart.md to verify user flows manually on desktop and mobile viewports
+- [x] T008 [P] Run Vitest unit tests suite with npm run test to verify all mathematical formulas pass
+- [x] T009 Run quickstart.md validation in specs/007-weight-total-loss-indicator/quickstart.md to verify user flows manually on desktop and mobile viewports
 
 ---
 

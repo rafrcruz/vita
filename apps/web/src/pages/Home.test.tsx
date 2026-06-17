@@ -59,7 +59,9 @@ describe('Home (app shell)', () => {
 
   it('não exibe mais os elementos removidos (subtítulo, status do backend, admin inline)', () => {
     renderHome();
-    expect(screen.queryByText('Plataforma pessoal de observabilidade de saúde')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Plataforma pessoal de observabilidade de saúde')
+    ).not.toBeInTheDocument();
     expect(screen.queryByText('Status do backend')).not.toBeInTheDocument();
     expect(screen.queryByText('Administrar allowlist')).not.toBeInTheDocument();
     expect(screen.queryByTestId('health-status')).not.toBeInTheDocument();
@@ -87,8 +89,8 @@ describe('Home (app shell)', () => {
             status: 200,
             json: async () => [
               { id: '1', weight: 80.0, loggedAt: '2026-06-10T12:00:00Z' },
-              { id: '2', weight: 75.0, loggedAt: '2026-06-17T12:00:00Z' }
-            ]
+              { id: '2', weight: 75.0, loggedAt: '2026-06-17T12:00:00Z' },
+            ],
           };
         }
         if (String(url).includes('/metrics/bp')) {
@@ -114,4 +116,3 @@ describe('Home (app shell)', () => {
     expect(screen.getByText(/-5[.,]0 kg$/)).toBeInTheDocument();
   });
 });
-
