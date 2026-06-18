@@ -4,6 +4,7 @@ import {
   text,
   timestamp,
   uniqueIndex,
+  index,
   uuid,
   real,
   integer,
@@ -28,22 +29,36 @@ export const allowlist = pgTable(
   ]
 );
 
-export const weightLogs = pgTable('weight_logs', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  userEmail: text('user_email').notNull(),
-  weight: real('weight').notNull(),
-  loggedAt: timestamp('logged_at', { withTimezone: true }).notNull().defaultNow(),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-});
+export const weightLogs = pgTable(
+  'weight_logs',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userEmail: text('user_email').notNull(),
+    weight: real('weight').notNull(),
+    loggedAt: timestamp('logged_at', { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    // Acelera o histórico por usuário ordenado por data (getWeightHistory).
+    index('weight_logs_user_logged_idx').on(table.userEmail, table.loggedAt),
+  ]
+);
 
-export const bloodPressureLogs = pgTable('blood_pressure_logs', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  userEmail: text('user_email').notNull(),
-  systolic: integer('systolic').notNull(),
-  diastolic: integer('diastolic').notNull(),
-  loggedAt: timestamp('logged_at', { withTimezone: true }).notNull().defaultNow(),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-});
+export const bloodPressureLogs = pgTable(
+  'blood_pressure_logs',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userEmail: text('user_email').notNull(),
+    systolic: integer('systolic').notNull(),
+    diastolic: integer('diastolic').notNull(),
+    loggedAt: timestamp('logged_at', { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    // Acelera o histórico por usuário ordenado por data (getBPHistory).
+    index('bp_logs_user_logged_idx').on(table.userEmail, table.loggedAt),
+  ]
+);
 
 // Perfil do usuário: 1 linha por usuário (ver data-model.md). Campos opcionais.
 export const userProfiles = pgTable(

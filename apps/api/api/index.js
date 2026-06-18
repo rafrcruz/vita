@@ -165,6 +165,7 @@ import {
   text,
   timestamp,
   uniqueIndex,
+  index,
   uuid,
   real,
   integer,
@@ -184,21 +185,35 @@ var allowlist = pgTable(
     uniqueIndex("allowlist_email_lower_unique").on(sql`lower(${table.email})`)
   ]
 );
-var weightLogs = pgTable("weight_logs", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userEmail: text("user_email").notNull(),
-  weight: real("weight").notNull(),
-  loggedAt: timestamp("logged_at", { withTimezone: true }).notNull().defaultNow(),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
-});
-var bloodPressureLogs = pgTable("blood_pressure_logs", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userEmail: text("user_email").notNull(),
-  systolic: integer("systolic").notNull(),
-  diastolic: integer("diastolic").notNull(),
-  loggedAt: timestamp("logged_at", { withTimezone: true }).notNull().defaultNow(),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
-});
+var weightLogs = pgTable(
+  "weight_logs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userEmail: text("user_email").notNull(),
+    weight: real("weight").notNull(),
+    loggedAt: timestamp("logged_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+  },
+  (table) => [
+    // Acelera o histórico por usuário ordenado por data (getWeightHistory).
+    index("weight_logs_user_logged_idx").on(table.userEmail, table.loggedAt)
+  ]
+);
+var bloodPressureLogs = pgTable(
+  "blood_pressure_logs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userEmail: text("user_email").notNull(),
+    systolic: integer("systolic").notNull(),
+    diastolic: integer("diastolic").notNull(),
+    loggedAt: timestamp("logged_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+  },
+  (table) => [
+    // Acelera o histórico por usuário ordenado por data (getBPHistory).
+    index("bp_logs_user_logged_idx").on(table.userEmail, table.loggedAt)
+  ]
+);
 var userProfiles = pgTable(
   "user_profiles",
   {
@@ -1076,11 +1091,11 @@ function createApp() {
       credentials: true
     })
   );
+  app.use(httpLogger);
   app.use(rateLimiter);
   app.use(express.json());
   app.use(cookieParser());
   app.use(csrfProtection);
-  app.use(httpLogger);
   app.use("/api/health", healthRouter);
   app.use("/api/auth", authRouter);
   app.use("/api/allowlist", allowlistRouter);

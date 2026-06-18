@@ -50,7 +50,7 @@ authRouter.get(
 
     const role = await getRole(email);
     if (!role) {
-      // Fora da allowlist: acesso negado (FR-011).
+      // Fora da allowlist: acesso negado.
       res
         .status(403)
         .type('html')

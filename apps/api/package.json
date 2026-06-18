@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "npm run db:migrate && tsc -p tsconfig.json --noEmit && esbuild api/index.ts --bundle --platform=node --target=node22 --format=esm --external:express --external:cors --external:cookie-parser --external:helmet --external:dotenv --external:drizzle-orm --external:@sentry/node --external:@neondatabase/serverless --external:google-auth-library --external:jose --external:pino --external:pino-http --external:swagger-ui-express --external:zod --external:@asteasolutions/zod-to-openapi --external:csurf --external:express-rate-limit --outfile=api/index.js",
+    "build": "npm run db:migrate && tsc -p tsconfig.json --noEmit && npm run bundle",
+    "bundle": "esbuild api/index.ts --bundle --platform=node --target=node22 --format=esm --external:express --external:cors --external:cookie-parser --external:helmet --external:dotenv --external:drizzle-orm --external:@sentry/node --external:@neondatabase/serverless --external:google-auth-library --external:jose --external:pino --external:pino-http --external:swagger-ui-express --external:zod --external:@asteasolutions/zod-to-openapi --external:csurf --external:express-rate-limit --outfile=api/index.js",
     "start": "tsx src/server.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",

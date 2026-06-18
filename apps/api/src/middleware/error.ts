@@ -24,7 +24,7 @@ export const notFoundHandler: RequestHandler = (_req, res) => {
 
 /**
  * Tratador de erros central: responde sempre no formato { error: { code, message } },
- * sem vazar stack/detalhes internos ou segredos (FR-017).
+ * sem vazar stack, detalhes internos ou segredos.
  */
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof AppError) {
@@ -35,7 +35,7 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   }
 
   logger.error({ err }, 'Erro não tratado');
-  captureException(err); // reporta erros não tratados ao Sentry (FR-016)
+  captureException(err); // reporta erros não tratados ao Sentry
   const body: ApiError = {
     error: {
       code: 'internal_error',

@@ -4,6 +4,24 @@
 conservadora), cada um com motivo, risco e recomendação futura. Nenhum altera comportamento
 sem revisão; nenhum remove funcionalidade.
 
+> **Atualização — follow-up (PR de melhorias, mesma data)**: após revisão, os seguintes itens
+> foram **aplicados** num PR único e testado (validados contra o baseline):
+> - ✅ **P-FRONT-001** — code splitting (lazy routes + `manualChunks`): bundle inicial caiu de
+>   935 kB para ~101 kB; `recharts` (360 kB) agora só carrega em Home/History.
+> - ✅ **P-FRONT-002** — `/style-guide` agora é lazy (fora do bundle inicial); acesso preservado.
+> - ✅ **P-PERF-002** — índice `(user_email, logged_at)` em weight/BP logs (migração 0003, aditiva).
+> - ✅ **P-SEG-001** — CSP `report-only` + headers de segurança no `apps/web/vercel.json`
+>   (camada do HTML — não no helmet da API, que serve só JSON).
+> - ✅ **P-BACK-003** — `httpLogger` reordenado para antes do rate limiter/CSRF.
+> - ✅ **P-BACK-004** — refs de FR obsoletas removidas (error.ts, auth.route.ts).
+> - ✅ **P-DEVEX-002** — job de CI (não-required) que valida o frescor do bundle da API.
+>
+> **Permanecem adiados** (com a justificativa abaixo): **P-BACK-001/P-DEVEX-004** (desacoplar
+> `db:migrate` do build **quebraria a aplicação de migrações no deploy Vercel** — o build É o
+> mecanismo de migração), **P-SEG-002** (deps — o Dependabot já abre PRs; editar o lockfile no
+> Windows é o risco cross-platform documentado), **P-DEVEX-001** (Husky — mexe no lockfile,
+> baixo valor) e **P-DEVEX-003** (Node local — ambiente, não é mudança de repositório).
+
 ## Prioridades de revisão (ordenadas)
 
 ### P-FRONT-001 / P-PERF-001 — Code splitting do frontend (Severidade: ALTO)
