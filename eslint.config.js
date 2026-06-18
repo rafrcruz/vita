@@ -1,4 +1,4 @@
-// Flat ESLint config (ESLint 9) for the VITA monorepo.
+// Flat ESLint config (ESLint 10) for the VITA monorepo.
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
