@@ -1,0 +1,2 @@
+CREATE INDEX "bp_logs_user_logged_idx" ON "blood_pressure_logs" USING btree ("user_email","logged_at");--> statement-breakpoint
+CREATE INDEX "weight_logs_user_logged_idx" ON "weight_logs" USING btree ("user_email","logged_at");

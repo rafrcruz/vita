@@ -66,4 +66,26 @@ export default defineConfig({
       '/api': 'http://localhost:3001',
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // Separa libs pesadas em chunks próprios e cacheáveis. Combinado com o
+        // lazy loading das rotas (ver App.tsx), mantém o bundle inicial enxuto.
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('recharts') || id.includes('/d3-') || id.includes('victory-vendor')) {
+              return 'charts';
+            }
+            if (
+              id.includes('/react-router') ||
+              id.includes('/react-dom/') ||
+              id.includes('/react/')
+            ) {
+              return 'react-vendor';
+            }
+          }
+        },
+      },
+    },
+  },
 });

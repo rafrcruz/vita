@@ -57,11 +57,13 @@ export function createApp(): Express {
     })
   );
 
+  // Logger primeiro: registra todas as requisições, inclusive as rejeitadas
+  // por rate limiting ou CSRF.
+  app.use(httpLogger);
   app.use(rateLimiter);
   app.use(express.json());
   app.use(cookieParser());
   app.use(csrfProtection);
-  app.use(httpLogger);
 
   // Rotas da API (todas sob /api).
   app.use('/api/health', healthRouter);

@@ -59,3 +59,26 @@ jobs:
       - uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  bundle-check:
+    name: Frescor do bundle da API
+    runs-on: ubuntu-latest
+    # Informativo (não-required na branch protection): detecta bundle serverless
+    # desatualizado em relação ao src. O bundle (apps/api/api/index.js) é versionado
+    # e o esbuild é reprodutível, então um diff aqui indica que faltou rebuildar.
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Recompila só o bundle (sem db:migrate) e falha se diferir do commitado.
+      - run: npm -w @vita/api run bundle
+      - name: Verificar se o bundle commitado está atualizado
+        run: |
+          if ! git diff --quiet -- apps/api/api/index.js; then
+            echo "::error::apps/api/api/index.js está desatualizado. Rode 'npm -w @vita/api run bundle' e commite o resultado."
+            git --no-pager diff -- apps/api/api/index.js
+            exit 1
+          fi
