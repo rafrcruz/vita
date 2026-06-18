@@ -47,11 +47,12 @@ apps/
 packages/
 └── shared/              # Schemas Zod e tipos TypeScript compartilhados
 docs/
+├── ai-git-workflow.md   # Fluxo de branch/PR/merge conduzido por IA
 ├── deploy.md            # Guia de deploy na Vercel e branch protection
+├── design-system.md     # Tokens, componentes e diretrizes de UI
 └── provisioning.md      # Guia de provisionamento de recursos e matriz de segredos
 .specify/                # Spec Kit: constituição, templates e especificações
-specs/
-└── 001-foundation-setup/ # Especificação e plano da fundação técnica
+specs/                   # Especificações e planos por feature (001 … em diante)
 ```
 
 ## Desenvolvimento
@@ -80,13 +81,16 @@ Para rodar o projeto localmente, siga os passos abaixo:
 
 | Script                | Descrição                                                              |
 | --------------------- | ---------------------------------------------------------------------- |
-| `npm run dev`         | Inicia o frontend (Vite) e backend (Express) localmente com hot-reload |
-| `npm run build`       | Compila o frontend e backend para produção                             |
-| `npm run lint`        | Executa o ESLint em todo o monorepo                                    |
-| `npm run typecheck`   | Executa a checagem de tipos do TypeScript                              |
-| `npm run test`        | Executa a suíte de testes com Vitest                                   |
-| `npm run db:generate` | Gera novas migrations a partir do schema Drizzle                       |
-| `npm run db:migrate`  | Executa as migrations pendentes no banco Neon                          |
+| `npm run dev`           | Inicia o frontend (Vite) e backend (Express) localmente com hot-reload         |
+| `npm run build`         | Compila frontend e backend para produção. ⚠️ O build da API executa `db:migrate` antes de compilar — requer `DATABASE_URL` acessível |
+| `npm run lint`          | Executa o ESLint em todo o monorepo                                            |
+| `npm run format`        | Formata o repositório com Prettier                                             |
+| `npm run typecheck`     | Executa a checagem de tipos do TypeScript                                      |
+| `npm run test`          | Executa a suíte de testes com Vitest                                           |
+| `npm run test:coverage` | Executa os testes com relatório de cobertura (V8)                              |
+| `npm run db:generate`   | Gera novas migrations a partir do schema Drizzle                               |
+| `npm run db:migrate`    | Executa as migrations pendentes no banco Neon                                  |
+| `npm run db:seed`       | Semeia o(s) administrador(es) inicial(is) (`ADMIN_EMAILS`)                      |
 
 Para mais detalhes sobre a validação ponta a ponta e a arquitetura técnica da fundação, consulte o [quickstart.md](file:///c:/projects/vita/specs/001-foundation-setup/quickstart.md).
 
