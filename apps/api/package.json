@@ -17,7 +17,7 @@
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.3.0",
     "@neondatabase/serverless": "^0.10.4",
-    "@sentry/node": "^10.58.0",
+    "@sentry/node": "^10.59.0",
     "@vita/shared": "*",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
